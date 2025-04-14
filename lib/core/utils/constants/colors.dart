@@ -31,8 +31,8 @@ class AppColors {
 
   
   // Text Colors
-  static const Color textPrimary = Color(0xFF212121); // Darker shade for better readability
-  static const Color textSecondary = Color(0xFF757575); // Neutral grey for secondary text
+  static const Color textPrimary = Color(0xFF174D31); // Darker shade for better readability
+  static const Color textSecondary = Color(0xFF878788); // Neutral grey for secondary text
   static const Color textWhite = Colors.white;
 
   //button color
