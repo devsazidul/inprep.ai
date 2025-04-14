@@ -13,4 +13,5 @@ class IconPath{
   static const String activeprogressicon= "assets/icons/activeprogress.png";
   static const String activeinterviewicon= "assets/icons/activeinterview.png";
   static const String deactivehomeicon= "assets/icons/deactivehome.png";
+  static const String profileicon = "assets/icons/profile.png";
 }
