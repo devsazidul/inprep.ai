@@ -4,29 +4,44 @@ class AppColors {
   AppColors._();
 
   // Brand Colors
-  static const Color primary = Color(0xFF1E3A5F); // Darker primary for a more professional look
-  static const Color secondary = Color(0xFFFEC601); // Bright yellow for highlights and accents
-  static const Color accent = Color(0xFF89A7FF); // Softer blue for a modern touch
+  static const Color primary = Color(0xFF1E3A5F); 
+  static const Color secondary = Color(0xFFFEC601); 
+  static const Color accent = Color(0xFF89A7FF); 
 
   // Gradient Colors
   static const Gradient linearGradient = LinearGradient(
     begin: Alignment(0.0, 0.0),
     end: Alignment(0.707, -0.707),
     colors: [
-      Color(0xFFFFF9A9E),
+      Color(0xFFFF9A9E),
       Color(0xFFFAD0C4),
       Color(0xFFFAD0C4),
     ],
   );
+  //splash screen color
+  static const Gradient splashlinearGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFF1E7B1E),
+      Color(0xFF000000),
+    ],
+  );
+
+
+  
   // Text Colors
   static const Color textPrimary = Color(0xFF212121); // Darker shade for better readability
   static const Color textSecondary = Color(0xFF757575); // Neutral grey for secondary text
   static const Color textWhite = Colors.white;
 
+  //button color
+  static const Color buttonColor = Color(0xff37B874);
+
   // Background Colors
   static const Color backgroundLight = Color(0xFFF9FAFB); // Light neutral for clean look
   static const Color backgroundDark = Color(0xFF121212); // Dark background for contrast in dark mode
-  static const Color primaryBackground = Color(0xFFFFFFFF); // Pure white for primary content areas
+  static const Color primaryBackground = Color(0xFFF6F6F7); // Pure white for primary content areas
 
   // Surface Colors
   static const Color surfaceLight = Color(0xFFE0E0E0); // Light grey for elevated surfaces
