@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/features/authentication/controller/login_screen_controller.dart';
+import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/routes/app_routes.dart';
 import '../../../core/common/styles/global_text_style.dart';
 import '../../../core/common/widgets/auhe_custom_textfiled.dart'
@@ -101,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 32),
                 CustomContinueButton(
                   onTap: () {
-                    //
+                  Get.to(BottomNavbarView());
                   },
                   textColor:
                       loginController.emailController.text.isEmpty &&
@@ -208,7 +209,7 @@ class LoginScreen extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 8), 
                     GestureDetector(
                       onTap: () {
                         Get.toNamed(AppRoute.signupScreen);
