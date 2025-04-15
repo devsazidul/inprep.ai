@@ -62,7 +62,7 @@ class CardWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              height: 82,
+              height: MediaQuery.of(context).size.height * 0.096,
               child: SfCartesianChart(
                 primaryXAxis: CategoryAxis(
                   isVisible: false, 
