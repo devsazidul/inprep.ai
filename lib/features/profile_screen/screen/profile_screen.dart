@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
@@ -24,14 +26,40 @@ class ProfileScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: Image.asset(IconPath.profileicon),
-                  ),
+                  CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius:
+                              58, // Slightly smaller radius for the inner CircleAvatar
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius:
+                                80, // Even smaller for the innermost CircleAvatar
+                            backgroundImage:
+                                profileController
+                                        .selectedImagePath
+                                        .value
+                                        .isEmpty
+                                    ? (profileController
+                                            .logoUrl
+                                            .value
+                                            .isNotEmpty
+                                        ? NetworkImage(
+                                          profileController.logoUrl.value,
+                                        )
+                                        : AssetImage(IconPath.profileicon)
+                                            as ImageProvider)
+                                    : FileImage(
+                                      File(
+                                        profileController
+                                            .selectedImagePath
+                                            .value,
+                                      ),
+                                    ),
+                          ),
+                        ),
+                      ),
                 ],
               ),
               SizedBox(height: 16),
@@ -54,7 +82,10 @@ class ProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 12),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  profileController.showImagePicker(context);
+                  profileController.toggleEdit();
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -88,34 +119,92 @@ class ProfileScreen extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
 
-                child: Column(
-                  
-                  children: [
-                    CustomProfileTextField(
-                      label: "Full Name",
-                      controller: profileController.fullNameController,
-                      hintText: "Jakob Vaccaro",
-                      enabled: profileController.isEditing.value,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12,
+                    right: 12,
+                    top: 5,
+                    bottom: 5,
+                  ),
+                  child: Column(
+                    children: [
+                      CustomProfileTextField(
+                        label: "Full Name",
+                        controller: profileController.fullNameController,
+                        hintText: "Jakob Vaccaro",
+                        enabled: profileController.isEditing.value,
+                      ),
+                      CustomProfileTextField(
+                        label: "Email",
+                        controller: profileController.fullNameController,
+                        hintText: "Jakob@gmail.com",
+                        enabled: profileController.isEditing.isFalse,
+                      ),
+                      CustomProfileTextField(
+                        label: "Experience Level",
+                        controller: profileController.fullNameController,
+                        hintText: "Intermideate",
+                        enabled: profileController.isEditing.value,
+                      ),
+                      CustomProfileTextField(
+                        label: "Preferred interview Focus",
+                        controller: profileController.preferredController,
+                        hintText: "Technical",
+                        enabled: profileController.isEditing.value,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Performance",
+                    style: getTextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff212121),
                     ),
-                    CustomProfileTextField(
-                      label: "Email",
-                      controller: profileController.fullNameController,
-                      hintText: "Jakob@gmail.com",
-                      enabled: profileController.isEditing.value,
-                    ),
-                    CustomProfileTextField(
-                      label: "Experience Level",
-                      controller: profileController.fullNameController,
-                      hintText: "Software Engineer",
-                      enabled: profileController.isEditing.value,
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12,
+                    right: 12,
+                    top: 5,
+                    bottom: 5,
+                  ),
+                  child: Column(
+                    children: [
+                      CustomProfileTextField(
+                        label: "Interview Taken",
+                        controller: profileController.interviewController,
+                        hintText: "18",
+                        enabled: profileController.isEditing.isFalse,
+                      ),
+                      CustomProfileTextField(
+                        label: "Confidence",
+                        controller: profileController.confidenceController,
+                        hintText: "80%",
+                        enabled: profileController.isEditing.isFalse,
+                      ),
+                      
+                      
+                    ],
+                  ),
                 ),
               ),
             ],

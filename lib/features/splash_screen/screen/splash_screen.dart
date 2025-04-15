@@ -12,10 +12,12 @@ class SplashScreen extends StatelessWidget {
     Get.put(SplashScreenController());
 
     return CupertinoPageScaffold(
-      child: Container(
-        decoration: BoxDecoration(gradient: AppColors.splashlinearGradient),
-        child: Center(child: Image.asset(IconPath.splash, width: 270)),
-      ),
-    );
+  child: Container(
+    decoration: BoxDecoration(
+      gradient: AppColors.splashlinearGradient,
+    ),
+    child: Center(child: Image.asset(IconPath.splash, width: double.infinity)),
+  ),
+);
   }
 }

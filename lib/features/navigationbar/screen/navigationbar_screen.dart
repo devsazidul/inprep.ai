@@ -65,21 +65,25 @@ class BottomNavbarView extends StatelessWidget {
                                       controller.selectedIndex.value == index
                                           ? LinearGradient(
                                             colors: [
-                                              Colors.blue,
-                                              Colors.green,
+                                              Color(0xff37BB74),
+                                              Color(0xff298755),
                                             ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
                                           )
                                           : null, // Apply gradient only to selected
                                 ),
-                                padding: EdgeInsets.all(controller.selectedIndex.value == index ? 9 : 0),
+                                padding: EdgeInsets.all(
+                                  controller.selectedIndex.value == index
+                                      ? 9
+                                      : 0,
+                                ),
                                 child: Image.asset(
                                   controller.selectedIndex.value == index
                                       ? navItems[index]['active']!
                                       : navItems[index]['inactive']!,
-                                  width: 25, // Keep the width constant
-                                  height: 25, // Keep height constant as well
+                                  width: 25, 
+                                  height: 25,
                                   fit: BoxFit.contain,
                                 ),
                               ),
