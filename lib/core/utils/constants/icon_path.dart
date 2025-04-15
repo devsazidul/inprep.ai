@@ -16,4 +16,5 @@ class IconPath{
   static const String profileicon = "assets/icons/profile.png";
   static const String searchIcon = "assets/icons/search.png";
   static const String resumeIcon = "assets/icons/resume.png";
+  static const String codeIcon = "assets/icons/codeIcon.png";
 }
