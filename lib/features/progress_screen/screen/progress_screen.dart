@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
-import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/progress_screen/screen/line_chart.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/grid_chart.dart';
 
@@ -129,7 +128,7 @@ class ProgressScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 60),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.22),
                 ],
               ),
             ),

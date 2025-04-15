@@ -37,9 +37,9 @@ class AvailableMockInterviews extends StatelessWidget {
                       
                      ]           
                     ); 
-                    print("The title is ${availablemockinterviews['title']}");
-                    print("The title is ${availablemockinterviews['image']}");
-                    print("The title is ${availablemockinterviews['positions']}");
+                    debugPrint("The title is ${availablemockinterviews['title']}");
+                    debugPrint("The title is ${availablemockinterviews['image']}");
+                    debugPrint("The title is ${availablemockinterviews['positions']}");
                   },
                   child: Container(
                     width: double.infinity,
