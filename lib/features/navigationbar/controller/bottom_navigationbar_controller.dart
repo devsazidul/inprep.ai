@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/features/home_screen/screen/home_screen.dart';
-import 'package:inprep_ai/features/interview_screen/screen/interview_screen.dart';
+import 'package:inprep_ai/features/interview/interview_lists/view/interview_list_view.dart';
 import 'package:inprep_ai/features/profile_screen/screen/profile_screen.dart';
 import 'package:inprep_ai/features/progress_screen/screen/progress_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart'
@@ -19,7 +19,7 @@ class BottomNavbarController extends GetxController {
       case 0:
         return HomeScreen();
       case 1:
-        return InterviewScreen();
+        return InterviewListView();
       case 2:
         return ProgressScreen();
       default:

@@ -102,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 32),
                 CustomContinueButton(
                   onTap: () {
-                  Get.to(BottomNavbarView());
+                  Get.offAll(BottomNavbarView());
                   },
                   textColor:
                       loginController.emailController.text.isEmpty &&
