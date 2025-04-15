@@ -16,7 +16,7 @@ class SplashScreen extends StatelessWidget {
     decoration: BoxDecoration(
       gradient: AppColors.splashlinearGradient,
     ),
-    child: Center(child: Image.asset(IconPath.splash, width: 148)),
+    child: Center(child: Image.asset(IconPath.splash, width: double.infinity)),
   ),
 );
 
