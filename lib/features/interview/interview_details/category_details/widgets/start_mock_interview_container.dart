@@ -11,35 +11,38 @@ class StartMockInterviewContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 250,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Color(0xFF37B874), 
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 24, 
-          vertical: 13,
-        ), 
-        child: Row(
-          children: [
-            Text("Start Mock Interview", 
-             style: getTextStyle(
-              color: Colors.white, 
-              fontWeight: FontWeight.w500, 
-              fontSize: 16
-             ),
-            
-            ), 
-            SizedBox(
-              width: 10,
-            ), 
-            Icon(Icons.play_arrow, 
-             color: Colors.white,
-             size: 20,
-            ),
-          ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 250,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Color(0xFF37B874), 
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 24, 
+            vertical: 13,
+          ), 
+          child: Row(
+            children: [
+              Text("Start Mock Interview", 
+               style: getTextStyle(
+                color: Colors.white, 
+                fontWeight: FontWeight.w500, 
+                fontSize: 16
+               ),
+              
+              ), 
+              SizedBox(
+                width: 10,
+              ), 
+              Icon(Icons.play_arrow, 
+               color: Colors.white,
+               size: 20,
+              ),
+            ],
+          ),
         ),
       ),
     );
