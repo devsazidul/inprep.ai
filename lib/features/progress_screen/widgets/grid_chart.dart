@@ -36,8 +36,8 @@ class CardWidget extends StatelessWidget {
     }
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),),
-      elevation: 5,
+        borderRadius: BorderRadius.circular(10),
+      ),
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(11.0),

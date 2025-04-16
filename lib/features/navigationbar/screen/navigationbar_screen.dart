@@ -38,14 +38,13 @@ class BottomNavbarView extends StatelessWidget {
               child: Obx(
                 () => ClipRRect(
                   borderRadius: BorderRadius.circular(79),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(79),
-                    ),
+                  child: Material(
+                    elevation: 8, // Add elevation here
+                    borderRadius: BorderRadius.circular(79),
+                    color: Colors.transparent, // Make Material background transparent
                     child: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 70,
                       decoration: BoxDecoration(
                         color: const Color(0xFFffffff),
                         borderRadius: BorderRadius.circular(79),
@@ -60,17 +59,16 @@ class BottomNavbarView extends StatelessWidget {
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-
                                   gradient:
                                       controller.selectedIndex.value == index
                                           ? LinearGradient(
-                                            colors: [
-                                              Color(0xff37BB74),
-                                              Color(0xff298755),
-                                            ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          )
+                                              colors: [
+                                                Color(0xff37BB74),
+                                                Color(0xff298755),
+                                              ],
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                            )
                                           : null, // Apply gradient only to selected
                                 ),
                                 padding: EdgeInsets.all(
