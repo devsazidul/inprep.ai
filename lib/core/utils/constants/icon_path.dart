@@ -19,4 +19,9 @@ class IconPath{
   static const String resumeIcon = "assets/icons/resume.png";
   static const String codeIcon = "assets/icons/codeIcon.png";
   static const String arrowForward = "assets/icons/arrowForward.png";
+  static const String homeprofile = "assets/icons/homeprofile.png";
+  static const String pause = "assets/icons/pause.png";
+  static const String manicon = "assets/icons/manicon.png";
+  static const String greenicon = "assets/icons/greenicon.png";
+  static const String chatbot = "assets/icons/chatbot.png";
 }
