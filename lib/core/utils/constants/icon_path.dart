@@ -24,4 +24,7 @@ class IconPath{
   static const String manicon = "assets/icons/manicon.png";
   static const String greenicon = "assets/icons/greenicon.png";
   static const String chatbot = "assets/icons/chatbot.png";
+  static const String speechIcon = "assets/icons/speechIcon.png";
+  static const String bodyLanguage = "assets/icons/bodyLanguage.png";
+  static const String retakeIcon = "assets/icons/retake.png";
 }
