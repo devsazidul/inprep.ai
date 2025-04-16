@@ -5,6 +5,7 @@ import 'package:inprep_ai/features/interview/interview_details/category_details/
 import 'package:inprep_ai/features/interview/interview_details/category_details/widgets/overview_widget.dart';
 import 'package:inprep_ai/features/interview/interview_details/category_details/widgets/start_mock_interview_container.dart';
 import 'package:inprep_ai/features/interview/interview_details/category_details/widgets/what_to_expect.dart' show WhatToExpect;
+import 'package:inprep_ai/features/interview/interview_details/start_interview/view/start_interview_view.dart' show StartInterviewView;
 
 class CategoryDetailsView extends StatelessWidget {
    CategoryDetailsView({super.key});
@@ -28,7 +29,9 @@ class CategoryDetailsView extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    StartMockInterviewContainer(onTap: (){}), 
+                    StartMockInterviewContainer(onTap: (){
+                      Get.to(()=> StartInterviewView()); 
+                    }), 
                     SizedBox(
                       height: 30,
                     ),
