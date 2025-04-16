@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/features/interview/interview_details/start_interview/view/over_all_feedback.dart' show OverAllFeedback;
+import 'package:inprep_ai/features/interview/interview_details/start_interview/view/question_wise_feedback.dart' show QuestionWiseFeedback;
+import 'package:inprep_ai/features/interview/interview_details/start_interview/view/start_interview_view.dart' show StartInterviewView;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:camera/camera.dart';
 
@@ -17,6 +19,7 @@ class StartInterviewController extends GetxController {
   Timer? recordingTimer;
   final maxRecordingTime = 180;  
   String? videoPath;
+  var questionNumber = 1.obs; 
 
    @override
   void onInit() {
@@ -156,4 +159,35 @@ class StartInterviewController extends GetxController {
       }
     }
   }
+
+
+  void onNextQuestion() {
+    if (questionNumber.value < questions.length) {
+      Get.to(() => QuestionWiseFeedback());
+    } else {
+      Get.off(() => OverAllFeedback());
+    }
+  }
+
+  void onFeedbackNext() {
+    if (questionNumber.value < questions.length) {
+      questionNumber.value++;
+      Get.off(() => StartInterviewView());
+    } else {
+      Get.off(() => OverAllFeedback());
+    }
+  }
+
+
+  List <Map<String, dynamic>> toImprove = [
+    {
+      'title' : 'Try to slow your speech slightly to improve clarity.'
+    },
+    {
+      'title' : 'Use hand gestures that emphasize your points.'
+    },
+    {
+      'title' : 'Post-interview, enhance your body language. You excelled in eye contact and posture; just keep your arms relaxed and use gestures to highlight your points.'
+    },
+  ]; 
 }
