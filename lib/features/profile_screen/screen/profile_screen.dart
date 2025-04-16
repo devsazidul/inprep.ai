@@ -23,44 +23,61 @@ class ProfileScreen extends StatelessWidget {
             padding: EdgeInsets.all(12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                          radius: 60,
+                    Stack(
+                      children:[ CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius:
+                              58, // Slightly smaller radius for the inner CircleAvatar
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
                             radius:
-                                58, // Slightly smaller radius for the inner CircleAvatar
-                            backgroundColor: Colors.white,
-                            child: CircleAvatar(
-                              radius:
-                                  80, // Even smaller for the innermost CircleAvatar
-                              backgroundImage:
-                                  profileController
-                                          .selectedImagePath
-                                          .value
-                                          .isEmpty
-                                      ? (profileController
-                                              .logoUrl
-                                              .value
-                                              .isNotEmpty
-                                          ? NetworkImage(
-                                            profileController.logoUrl.value,
-                                          )
-                                          : AssetImage(IconPath.profileicon)
-                                              as ImageProvider)
-                                      : FileImage(
-                                        File(
-                                          profileController
-                                              .selectedImagePath
-                                              .value,
-                                        ),
+                                80, // Even smaller for the innermost CircleAvatar
+                            backgroundImage:
+                                profileController.selectedImagePath.value.isEmpty
+                                    ? (profileController.logoUrl.value.isNotEmpty
+                                        ? NetworkImage(
+                                          profileController.logoUrl.value,
+                                        )
+                                        : AssetImage(IconPath.profileicon)
+                                            as ImageProvider)
+                                    : FileImage(
+                                      File(
+                                        profileController.selectedImagePath.value,
                                       ),
-                            ),
+                                    ),
                           ),
                         ),
+                      ),
+                      Transform.translate(
+                        offset: Offset(15, 95),
+                        child: GestureDetector(
+                          onTap: (){
+                            profileController.showImagePicker(context);
+                          },
+                          child: Container(
+                            height: 24,
+                            width: 24,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25)
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              size: 12,
+                              color: Color(0xff37BB74),
+                            )
+                          ),
+                        )
+                      )
+                      ]
+                    ),
                   ],
                 ),
                 SizedBox(height: 16),
@@ -84,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(height: 12),
                 GestureDetector(
                   onTap: () {
-                    profileController.showImagePicker(context);
+                    
                     profileController.toggleEdit();
                   },
                   child: Row(
@@ -122,7 +139,7 @@ class ProfileScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-          
+
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 12,
@@ -180,7 +197,7 @@ class ProfileScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-          
+
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 12,
@@ -202,15 +219,11 @@ class ProfileScreen extends StatelessWidget {
                           hintText: "80%",
                           enabled: profileController.isEditing.isFalse,
                         ),
-                        
-                        
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 80,
-                ),
+                SizedBox(height: 80),
               ],
             ),
           ),
