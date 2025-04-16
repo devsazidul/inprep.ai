@@ -69,7 +69,7 @@ class BottomNavbarView extends StatelessWidget {
                                               begin: Alignment.topCenter,
                                               end: Alignment.bottomCenter,
                                             )
-                                          : null, // Apply gradient only to selected
+                                          : null,
                                 ),
                                 padding: EdgeInsets.all(
                                   controller.selectedIndex.value == index

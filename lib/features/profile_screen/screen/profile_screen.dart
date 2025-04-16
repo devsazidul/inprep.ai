@@ -23,60 +23,69 @@ class ProfileScreen extends StatelessWidget {
             padding: EdgeInsets.all(12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              
+
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Stack(
-                      children:[ CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius:
-                              58, // Slightly smaller radius for the inner CircleAvatar
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
                             radius:
-                                80, // Even smaller for the innermost CircleAvatar
-                            backgroundImage:
-                                profileController.selectedImagePath.value.isEmpty
-                                    ? (profileController.logoUrl.value.isNotEmpty
-                                        ? NetworkImage(
-                                          profileController.logoUrl.value,
-                                        )
-                                        : AssetImage(IconPath.profileicon)
-                                            as ImageProvider)
-                                    : FileImage(
-                                      File(
-                                        profileController.selectedImagePath.value,
+                                58, // Slightly smaller radius for the inner CircleAvatar
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              radius:
+                                  80, // Even smaller for the innermost CircleAvatar
+                              backgroundImage:
+                                  profileController
+                                          .selectedImagePath
+                                          .value
+                                          .isEmpty
+                                      ? (profileController
+                                              .logoUrl
+                                              .value
+                                              .isNotEmpty
+                                          ? NetworkImage(
+                                            profileController.logoUrl.value,
+                                          )
+                                          : AssetImage(IconPath.profileicon)
+                                              as ImageProvider)
+                                      : FileImage(
+                                        File(
+                                          profileController
+                                              .selectedImagePath
+                                              .value,
+                                        ),
                                       ),
-                                    ),
+                            ),
                           ),
                         ),
-                      ),
-                      Transform.translate(
-                        offset: Offset(15, 95),
-                        child: GestureDetector(
-                          onTap: (){
-                            profileController.showImagePicker(context);
-                          },
-                          child: Container(
-                            height: 24,
-                            width: 24,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25)
+                        Transform.translate(
+                          offset: Offset(15, 95),
+                          child: GestureDetector(
+                            onTap: () {
+                              profileController.showImagePicker(context);
+                            },
+                            child: Container(
+                              height: 24,
+                              width: 24,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Icon(
+                                Icons.edit,
+                                size: 12,
+                                color: Color(0xff37BB74),
+                              ),
                             ),
-                            child: Icon(
-                              Icons.edit,
-                              size: 12,
-                              color: Color(0xff37BB74),
-                            )
                           ),
-                        )
-                      )
-                      ]
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -101,7 +110,6 @@ class ProfileScreen extends StatelessWidget {
                 SizedBox(height: 12),
                 GestureDetector(
                   onTap: () {
-                    
                     profileController.toggleEdit();
                   },
                   child: Row(
@@ -120,6 +128,7 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -153,25 +162,25 @@ class ProfileScreen extends StatelessWidget {
                           label: "Full Name",
                           controller: profileController.fullNameController,
                           hintText: "Jakob Vaccaro",
-                          enabled: profileController.isEditing.value,
-                        ),
-                        CustomProfileTextField(
-                          label: "Email",
-                          controller: profileController.fullNameController,
-                          hintText: "Jakob@gmail.com",
                           enabled: profileController.isEditing.isFalse,
                         ),
                         CustomProfileTextField(
+                          label: "Email",
+                          controller: profileController.emailController,
+                          hintText: "Jakob@gmail.com",
+                          enabled: false,
+                        ),
+                        CustomProfileTextField(
                           label: "Experience Level",
-                          controller: profileController.fullNameController,
+                          controller: profileController.experiecnceController,
                           hintText: "Intermideate",
-                          enabled: profileController.isEditing.value,
+                          enabled: profileController.isEditing.isFalse,
                         ),
                         CustomProfileTextField(
                           label: "Preferred interview Focus",
                           controller: profileController.preferredController,
                           hintText: "Technical",
-                          enabled: profileController.isEditing.value,
+                          enabled: profileController.isEditing.isFalse,
                         ),
                       ],
                     ),
@@ -211,13 +220,13 @@ class ProfileScreen extends StatelessWidget {
                           label: "Interview Taken",
                           controller: profileController.interviewController,
                           hintText: "18",
-                          enabled: profileController.isEditing.isFalse,
+                          enabled: false,
                         ),
                         CustomProfileTextField(
                           label: "Confidence",
                           controller: profileController.confidenceController,
                           hintText: "80%",
-                          enabled: profileController.isEditing.isFalse,
+                          enabled: false,
                         ),
                       ],
                     ),
