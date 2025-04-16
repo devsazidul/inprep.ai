@@ -4,7 +4,7 @@ import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
-import 'package:inprep_ai/features/progress_screen/screen/line_chart.dart';
+import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
