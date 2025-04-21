@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/features/authentication/controller/login_screen_controller.dart';
+import 'package:inprep_ai/features/authentication/screen/forget_password_screen.dart' show ForgetPasswordScreen;
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/routes/app_routes.dart';
 import '../../../core/common/styles/global_text_style.dart';
@@ -121,7 +122,7 @@ class LoginScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   child: GestureDetector(
                     onTap: () {
-                      Get.toNamed(AppRoute.forgotPasswordScreen);
+                      Get.to(ForgetPasswordScreen());
                     },
                     child: Text(
                       'Forgot Password?',
