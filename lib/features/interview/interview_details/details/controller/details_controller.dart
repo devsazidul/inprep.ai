@@ -36,6 +36,9 @@ class DetailsController extends GetxController {
       'title': 'Mobile App Developer', 
     }, 
     {
+      'title': 'Problem Solving', 
+    }, 
+    {
       'title': 'Software Engineer in Test', 
     }, 
     {
