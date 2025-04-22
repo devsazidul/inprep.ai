@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 
-class CustomButton extends StatelessWidget {
-  const CustomButton({
+class CustomButton1 extends StatelessWidget {
+  const CustomButton1({
     super.key,
     required this.title,
     this.backgroundColor = Colors.red,

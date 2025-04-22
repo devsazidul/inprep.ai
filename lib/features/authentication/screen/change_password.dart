@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/common/widgets/custom_button.dart';
 import '../../../core/common/styles/global_text_style.dart' show getTextStyle;
 import '../../../core/common/widgets/auhe_custom_textfiled.dart'
     show AuthCustomTextField;
-import '../../../core/common/widgets/custom_button.dart' show CustomButton;
+
 import '../controller/change_password_controller.dart'
     show SpChangePasswordController;
 
@@ -107,7 +108,7 @@ class ChangePassword extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 44.0),
-                CustomButton(
+                CustomButton1(
                   title: 'Change',
                   textcolor: Colors.white,
                   backgroundColor: Color(0xFF37B874),

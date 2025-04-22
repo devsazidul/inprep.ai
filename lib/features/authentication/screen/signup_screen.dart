@@ -192,7 +192,7 @@ class SignupScreen extends StatelessWidget {
               ),
               SizedBox(height: 32),
               Obx(
-                () => CustomButton(
+                () => CustomButton1(
                   title: 'Sign Up',
                   textcolor:
                       singupController.isFromValid.value
