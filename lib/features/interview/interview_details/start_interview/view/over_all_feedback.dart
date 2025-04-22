@@ -66,7 +66,7 @@ class OverAllFeedback extends StatelessWidget {
                   SizedBox(
                     width: 5,
                   ), 
-                  Text('Speech',
+                  Text('Articulation',
                    style: getTextStyle(
                     color: Color(0xFF212121), 
                     fontSize: 20, 
@@ -98,7 +98,7 @@ class OverAllFeedback extends StatelessWidget {
                   SizedBox(
                     width: 5,
                   ), 
-                  Text('Body Language',
+                  Text('Behavioural Cue',
                    style: getTextStyle(
                     color: Color(0xFF212121), 
                     fontSize: 20, 
