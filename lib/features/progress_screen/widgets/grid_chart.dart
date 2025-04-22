@@ -14,7 +14,7 @@ class CardWidget extends StatelessWidget {
     Color changeColor = Color(0xff1E6540);
 
     if (index == 0) {
-      title = 'Content Quality';
+      title = 'Content Accuracy';
       percentage = 75;
       change = '+5%';
       changeColor = Colors.green;
