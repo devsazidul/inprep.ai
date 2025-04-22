@@ -19,17 +19,17 @@ class CardWidget extends StatelessWidget {
       change = '+5%';
       changeColor = Colors.green;
     } else if (index == 1) {
-      title = 'Body Language';
+      title = 'Behavioural Cue';
       percentage = 60;
       change = '-10%';
       changeColor = Colors.red;
     } else if (index == 2) {
-      title = 'Speech Clarity';
+      title = 'Articulation Clarity';
       percentage = 85;
       change = '+15%';
       changeColor = Colors.green;
     } else if (index == 3) {
-      title = 'Confidence';
+      title = 'Inprep Score';
       percentage = 80;
       change = 'Stable';
       changeColor = Colors.black;
