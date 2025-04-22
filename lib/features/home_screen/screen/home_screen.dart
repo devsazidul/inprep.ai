@@ -4,6 +4,7 @@ import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
+import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_setup.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -16,9 +17,14 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primaryBackground,
 
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Image.asset(IconPath.homeprofile, height: 48, width: 48),
+        leading: GestureDetector(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileSetup()));
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Image.asset(IconPath.homeprofile, height: 48, width: 48),
+          ),
         ),
         title: Column(
           children: [

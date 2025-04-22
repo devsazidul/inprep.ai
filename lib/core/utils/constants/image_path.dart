@@ -14,4 +14,5 @@ class ImagePath {
   static const String yellowframe = 'assets/images/yellowframe.png';
   static const String greenframe = 'assets/images/greenframe.png';
   static const String blueframe = 'assets/images/blueframe.png';
+  static const String hellow1 = 'assets/images/hello1.png';
 }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart' show getTextStyle;
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
+
 import 'package:inprep_ai/features/authentication/controller/forget_password_controller.dart';
 import 'package:inprep_ai/routes/app_routes.dart' show AppRoute; 
 
@@ -107,7 +108,7 @@ class OtpSentScreen extends StatelessWidget {
             SizedBox(
               height: 40,
             ), 
-            CustomButton(
+            CustomButton1(
               backgroundColor: Color(0xFF37B874),
               textcolor: Colors.white,
               borderColor: Color(0xFF37B874),
