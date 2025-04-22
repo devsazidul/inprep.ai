@@ -11,8 +11,16 @@ import 'package:inprep_ai/features/profile_setup.dart/widgets/country_ui.dart';
 
 // ignore: must_be_immutable
 class AboutMe extends StatelessWidget {
-  
-  AboutMe({super.key});
+  final ValueNotifier<List<String>> selectedSkillsNotifier;
+  final Function(String) onAddSkill;
+  final Function(String) onRemoveSkill;
+
+  AboutMe({
+    super.key,
+    required this.selectedSkillsNotifier,
+    required this.onAddSkill,
+    required this.onRemoveSkill,
+  });
 
   ProfileSetupcontroller profileSetupcontroller = Get.put(
     ProfileSetupcontroller(),
@@ -38,7 +46,7 @@ class AboutMe extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -67,16 +75,12 @@ class AboutMe extends StatelessWidget {
                   controller: profileSetupcontroller.citycontroller,
                   text: "",
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                SizedBox(height: 8),
                 CountryPickerView(
                   model: countryModel,
                   controller: countryController,
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                SizedBox(height: 8),
                 Text(
                   "Skills",
                   style: getTextStyle(
@@ -85,6 +89,67 @@ class AboutMe extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
+                SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(border: OutlineInputBorder()),
+                  items:
+                      [
+                            'UI/UX Design',
+                            'Frontend Development',
+                            'Backend Development',
+                          ]
+                          .map(
+                            (skill) => DropdownMenuItem(
+                              value: skill,
+                              child: Text(skill),
+                            ),
+                          )
+                          .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      onAddSkill(value);
+                    }
+                  },
+                  hint: Text('Select a skill'),
+                ),
+                SizedBox(height: 10),
+                ValueListenableBuilder<List<String>>(
+                  valueListenable: selectedSkillsNotifier,
+                  builder: (context, selectedSkills, child) {
+                    return Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children:
+                          selectedSkills.map((skill) {
+                            return Chip(
+                              label: Text(skill,
+                              style: getTextStyle(
+                                color: Color(0xFF37BB74),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              ),
+                              deleteIcon: Icon(
+                                Icons.cancel,
+                                size: 20,
+                                color: Color(0xFF37BB74),
+                              ),
+                              onDeleted: () => onRemoveSkill(skill),
+                              backgroundColor: Color(0xffEBF8F1),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(20),
+                                
+                              ),
+                            );
+                          }).toList(),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 48,
+                ),
+                
               ],
             ),
           ),

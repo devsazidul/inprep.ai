@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/utils.dart';
+import 'package:inprep_ai/core/common/widgets/custom_button.dart';
+import 'package:inprep_ai/features/home_screen/screen/home_screen.dart';
+import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/experience.dart';
 
@@ -7,16 +12,38 @@ class ProfileSlider extends StatelessWidget {
   final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(0);
   final PageController pageController = PageController();
   final int totalPages = 3;
+  final ValueNotifier<List<String>> selectedSkillsNotifier =
+      ValueNotifier<List<String>>([]);
 
-  void nextPage() {
+  void nextPage(BuildContext context) {
     if (currentPageNotifier.value < totalPages - 1) {
+      // Move to the next slide
       currentPageNotifier.value++;
       pageController.nextPage(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+    } else {
+      // Navigate to a new screen when on the last slide
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => HomeScreen()),
+      // );
+      Get.offAll(BottomNavbarView());
     }
   }
+
+  void addSkill(String skill) {
+    if (!selectedSkillsNotifier.value.contains(skill)) {
+      selectedSkillsNotifier.value = [...selectedSkillsNotifier.value, skill];
+    }
+  }
+
+  void removeSkill(String skill) {
+    selectedSkillsNotifier.value =
+        selectedSkillsNotifier.value.where((s) => s != skill).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,43 +53,57 @@ class ProfileSlider extends StatelessWidget {
           child: Column(
             children: [
               ValueListenableBuilder<int>(
-              valueListenable: currentPageNotifier,
-              builder: (context, currentPage, child) {
-                return Row(
-                  children: List.generate(totalPages, (index) {
-                    return Expanded(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4.0),
-                        height: 5.0,
-                        decoration: BoxDecoration(
-                          color: index <= currentPage ? Colors.green : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(5.0),
+                valueListenable: currentPageNotifier,
+                builder: (context, currentPage, child) {
+                  return Row(
+                    children: List.generate(totalPages, (index) {
+                      return Expanded(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 4.0),
+                          height: 2.0,
+                          decoration: BoxDecoration(
+                            color:
+                                index <= currentPage
+                                    ? Colors.green
+                                    : Colors.grey[300],
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-                );
-              },
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: PageView(
-                controller: pageController,
-                physics: NeverScrollableScrollPhysics(),
-                onPageChanged: (index) {
-                  currentPageNotifier.value = index;
+                      );
+                    }),
+                  );
                 },
-                children: [
-                  AboutMe(),
-                  Experience(),
-                  Container(),
-                ],
               ),
-            ),
+              SizedBox(height: 20),
+              Expanded(
+                child: PageView(
+                  controller: pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) {
+                    currentPageNotifier.value = index;
+                  },
+                  children: [
+                    AboutMe(
+                      selectedSkillsNotifier: selectedSkillsNotifier,
+                      onAddSkill: addSkill,
+                      onRemoveSkill: removeSkill,
+                    ),
+                    Experience(),
+                    Container(),
+                  ],
+                ),
+              ),
+              SizedBox(height: 48),
+              CustomButton1(
+                title: "Continure",
+                textcolor: Color(0xffffffff),
+                backgroundColor: Color(0xff37BB74),
+                onPress: () => nextPage(context),
+              ),
             ],
           ),
-          )
         ),
+      ),
     );
   }
 }

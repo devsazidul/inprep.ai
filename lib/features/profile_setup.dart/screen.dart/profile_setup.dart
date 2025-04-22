@@ -86,9 +86,7 @@ class ProfileSetup extends StatelessWidget {
                   height: 48,
                   textColor: Colors.white,
                   buttonColor: Color(0xff37BB74),
-                  onTap: (){
-                    
-                  },
+                  onTap: () {},
                 ),
                 SizedBox(height: 16),
                 CustomButton1(
@@ -97,7 +95,10 @@ class ProfileSetup extends StatelessWidget {
                   borderColor: Color(0xff37BB74),
                   backgroundColor: Colors.white,
                   onPress: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileSlider()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfileSlider()),
+                    );
                   },
                 ),
               ],
