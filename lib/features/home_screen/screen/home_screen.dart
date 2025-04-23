@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/state_manager.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
+import 'package:inprep_ai/core/common/widgets/custom_button.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
+import 'package:inprep_ai/features/view_jobs/screen/view_job_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -92,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.66,
+                        width: MediaQuery.of(context).size.width * 0.935,
                         height: 50,
                         decoration: BoxDecoration(
                           color: const Color(0xff37B874),
@@ -117,6 +121,17 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: 15),
+                CustomButton1(
+                  
+                  title: "View Jobs", 
+                  onPress: () {
+                    Get.to(ViewJobScreen());
+                  },
+                  backgroundColor: Colors.transparent,
+                  borderColor: Color(0xff37B874),
+                  textcolor: Color(0xff37b874),
+                  ),
                 SizedBox(height: 40),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -186,9 +201,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 16,
-                ),
+                SizedBox(height: 16),
                 Container(
                   height: 171,
                   width: double.infinity,
@@ -227,9 +240,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 16,
-                ),
+                SizedBox(height: 16),
                 Container(
                   height: 171,
                   width: double.infinity,
