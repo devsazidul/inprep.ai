@@ -7,11 +7,20 @@ class ChooseplanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Dynamic padding and spacing
+    final padding = screenWidth * 0.04;
+    final spacing = screenHeight * 0.02;
+    final titleFontSize = screenWidth * 0.06;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -21,12 +30,12 @@ class ChooseplanScreen extends StatelessWidget {
                     "Choose Your Plan",
                     style: getTextStyle(
                       color: const Color(0xff212121),
-                      fontSize: 24,
+                      fontSize: titleFontSize,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                const SizedBox(height: 15),
+                SizedBox(height: spacing),
                 // Free Plan
                 PlanCard(
                   planTitle: "Free Plan",
@@ -46,7 +55,7 @@ class ChooseplanScreen extends StatelessWidget {
                   buttonColor: const Color(0xff37BB74),
                   onPress: () {},
                 ),
-                const SizedBox(height: 15),
+                SizedBox(height: spacing),
                 // Premium Plan
                 PlanCard(
                   planTitle: "Premium Plan",
@@ -66,7 +75,7 @@ class ChooseplanScreen extends StatelessWidget {
                   buttonColor: const Color(0xff37BB74),
                   onPress: () {},
                 ),
-                const SizedBox(height: 15),
+                SizedBox(height: spacing),
                 // Pay-Per-Interview
                 PlanCard(
                   planTitle: "Pay-Per-Interview",

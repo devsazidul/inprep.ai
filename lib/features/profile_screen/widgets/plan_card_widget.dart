@@ -27,42 +27,54 @@ class PlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen width for responsive scaling
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Dynamic padding based on screen width
+    final padding = screenWidth * 0.04; // 4% of screen width
+    // Dynamic font sizes
+    final titleFontSize = screenWidth * 0.05; // 5% of screen width
+    final descriptionFontSize = screenWidth * 0.035;
+    final priceFontSize = screenWidth * 0.09;
+    final priceSuffixFontSize = screenWidth * 0.04;
+    final featureFontSize = screenWidth * 0.04;
+
     return Container(
-      height: 528,
       width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: padding),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xffE0E0E1), width: 1),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(padding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               planTitle,
               style: getTextStyle(
-                fontSize: 20,
+                fontSize: titleFontSize,
                 fontWeight: FontWeight.w600,
                 color: const Color(0xff3A4C67),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: padding / 2),
             Text(
               description,
               style: getTextStyle(
                 color: const Color(0xff676768),
-                fontSize: 14,
+                fontSize: descriptionFontSize,
                 fontWeight: FontWeight.w400,
               ),
             ),
-            const SizedBox(height: 18),
+            SizedBox(height: padding),
             Row(
               children: [
                 Text(
                   price,
                   style: getTextStyle(
-                    fontSize: 36,
+                    fontSize: priceFontSize,
                     fontWeight: FontWeight.w700,
                     color: priceColor,
                   ),
@@ -70,42 +82,47 @@ class PlanCard extends StatelessWidget {
                 Text(
                   priceSuffix,
                   style: getTextStyle(
-                    fontSize: 16,
+                    fontSize: priceSuffixFontSize,
                     fontWeight: FontWeight.w700,
                     color: const Color(0xff174D31),
                   ),
                 ),
               ],
             ),
+            SizedBox(height: padding / 2),
             Text(
               "What's included",
               style: getTextStyle(
-                fontSize: 18,
+                fontSize: titleFontSize * 0.9,
                 fontWeight: FontWeight.w600,
                 color: const Color(0xff3A4C67),
               ),
             ),
-            const SizedBox(height: 15),
-            ...features.map(
-              (feature) => Padding(
-                padding: const EdgeInsets.only(bottom: 13.5),
-                child: Row(
-                  children: [
-                    Image.asset(IconPath.checkbox),
-                    const SizedBox(width: 8),
-                    Text(
-                      feature,
-                      style: getTextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xff3A4C67),
+            SizedBox(height: padding),
+            ...features.map((feature) => Padding(
+                  padding: EdgeInsets.only(bottom: padding * 0.8),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        IconPath.checkbox,
+                        width: featureFontSize * 1.2, // Scale checkbox size
+                        height: featureFontSize * 1.2,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
+                      SizedBox(width: padding / 2),
+                      Expanded(
+                        child: Text(
+                          feature,
+                          style: getTextStyle(
+                            fontSize: featureFontSize,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xff3A4C67),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            SizedBox(height: padding),
             CustomButton1(
               title: "Get Started",
               onPress: onPress,
