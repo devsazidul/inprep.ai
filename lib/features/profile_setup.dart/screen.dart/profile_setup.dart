@@ -45,37 +45,42 @@ class ProfileSetup extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12),
-                Container(
-                  height: 119,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Color(0xffEbf8f1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(14),
-                    child: Column(
-                      children: [
-                        Image.asset(IconPath.backup, height: 32, width: 32),
-                        SizedBox(height: 8),
-                        Text(
-                          "Select File",
-                          style: getTextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xff212121),
+                GestureDetector(
+                  onTap: () {
+                    
+                  },
+                  child: Container(
+                    height: 119,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Color(0xffEbf8f1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(14),
+                      child: Column(
+                        children: [
+                          Image.asset(IconPath.backup, height: 32, width: 32),
+                          SizedBox(height: 8),
+                          Text(
+                            "Select File",
+                            style: getTextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff212121),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          "Supported Formats: JPEG, PNG",
-                          style: getTextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff898989),
+                          SizedBox(height: 8),
+                          Text(
+                            "Supported Formats: JPEG, PNG",
+                            style: getTextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff898989),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

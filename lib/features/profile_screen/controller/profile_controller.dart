@@ -10,6 +10,7 @@ class ProfileController extends GetxController {
   final TextEditingController preferredController = TextEditingController();
   final TextEditingController interviewController = TextEditingController();
   final TextEditingController confidenceController = TextEditingController();
+  final TextEditingController currentplanController = TextEditingController();
 
   var isEditing = false.obs;
   final logoUrl = ''.obs;

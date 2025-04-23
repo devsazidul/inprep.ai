@@ -6,12 +6,12 @@ import 'package:inprep_ai/routes/app_routes.dart';
 import '../../../core/common/widgets/auhe_custom_textfiled.dart'
     show AuthCustomTextField;
 import '../../../core/common/widgets/custom_button.dart';
-import '../controller/signup_screen_controller.dart' show SpSignupController;
+import '../controller/signup_screen_controller.dart' show SignupController;
 
 // ignore: must_be_immutable
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
-  SpSignupController singupController = Get.put(SpSignupController());
+  SignupController singupController = Get.put(SignupController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,7 +201,7 @@ class SignupScreen extends StatelessWidget {
                   onPress:
                       singupController.isFromValid.value
                           ? () {
-                            Get.toNamed(AppRoute.otpSentScreen);
+                            Get.toNamed(AppRoute.profileslider);
                           }
                           : null,
                   backgroundColor:
