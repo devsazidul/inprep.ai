@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
-import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
+import 'package:inprep_ai/features/personalized_interviewers/view/personalized_interviewer_screen.dart' show PersonalizedInterviewerScreen;
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/education_cirtificate.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/experience.dart';
@@ -28,7 +28,7 @@ class ProfileSlider extends StatelessWidget {
       //   context,
       //   MaterialPageRoute(builder: (context) => HomeScreen()),
       // );
-      Get.offAll(BottomNavbarView());
+      Get.to(PersonalizedInterviewerScreen());
     }
   }
 
