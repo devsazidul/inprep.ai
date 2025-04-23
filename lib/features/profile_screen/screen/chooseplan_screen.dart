@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/features/profile_screen/widgets/plan_card_widget.dart';
+import 'package:inprep_ai/features/subscription/controller/subscription_controller.dart';
+import 'package:inprep_ai/features/subscription/service/stripe_service.dart';
 
 class ChooseplanScreen extends StatelessWidget {
-  const ChooseplanScreen({super.key});
+   ChooseplanScreen({super.key});
+
+  final SubscriptionController controller = Get.put(SubscriptionController());
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +58,9 @@ class ChooseplanScreen extends StatelessWidget {
                   ],
                   priceColor: const Color(0xff37BB74),
                   buttonColor: const Color(0xff37BB74),
-                  onPress: () {},
+                  onPress: () {
+
+                  },
                 ),
                 SizedBox(height: spacing),
                 // Premium Plan
@@ -73,7 +80,10 @@ class ChooseplanScreen extends StatelessWidget {
                   ],
                   priceColor: const Color(0xff37BB74),
                   buttonColor: const Color(0xff37BB74),
-                  onPress: () {},
+                  onPress: () {
+                    
+                    StripeService.makePayment(500, "usd"); 
+                  },
                 ),
                 SizedBox(height: spacing),
                 // Pay-Per-Interview
