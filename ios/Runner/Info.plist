@@ -53,5 +53,9 @@
 	<string>Inprep AI needs photo library access to save and retrieve photos and videos.</string>
 	<key>NSPhotoLibraryAddOnlyUsageDescription</key>
 	<string>Inprep AI needs permission to save photos and videos to your photo library.</string>
+	<key>NSCameraUsageDescription</key>
+<string>Scan your card to add it automatically</string>
+<key>NSCameraUsageDescription</key>
+<string>To scan cards</string>
 </dict>
 </plist>
