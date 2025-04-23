@@ -9,7 +9,6 @@ import '../features/authentication/screen/change_password.dart'
     show ChangePassword;
 
 class AppRoute {
-
   static String loginScreen = "/loginScreen";
   static String signupScreen = "/signupScreen";
   static String otpSentScreen = "/otpSentScreen";
@@ -30,6 +29,7 @@ class AppRoute {
   static String getsplashscreen() => splashscreen;
   static String getsplash1Screen1() => splash1Screen1;
   static String getviewJobScreen() => viewJobScreen;
+  static String getprofileslider() => profileslider;
 
   static List<GetPage> routes = [
     GetPage(name: loginScreen, page: () => LoginScreen()),
@@ -38,5 +38,6 @@ class AppRoute {
     GetPage(name: splashscreen, page: () => SplashScreen()),
     GetPage(name: splash1Screen1, page: () => Splash1Screen1()),
     GetPage(name: viewJobScreen, page: () => ViewJobScreen()),
+    GetPage(name: profileslider, page: () => ProfileSlider()),
   ];
 }

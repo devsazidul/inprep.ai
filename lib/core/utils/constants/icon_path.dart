@@ -30,4 +30,5 @@ class IconPath{
   static const String backup = "assets/icons/backup.png";
   static const String dropdown = "assets/icons/dropdown.png";
   static const String checkbox = "assets/icons/checkbox.png";
+  static const String filter = "assets/icons/filter.png";
 }
