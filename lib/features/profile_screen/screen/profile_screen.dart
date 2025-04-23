@@ -128,7 +128,7 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -232,7 +232,66 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 80),
+                SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Subscription",
+                      style: getTextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xff212121),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 12,
+                      right: 12,
+                      top: 5,
+                      bottom: 5,
+                    ),
+                    child: Column(
+                      children: [
+                        CustomProfileTextField(
+                          label: "Current Plan",
+                          controller: profileController.currentplanController,
+                          hintText: "Free",
+                          enabled: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: GestureDetector(
+                            onTap: (){
+                              
+                            },
+                            child: Text(
+                              "Upgrade",
+                              style: getTextStyle(
+                                color: Color(0xff37BB74),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 90),
               ],
             ),
           ),

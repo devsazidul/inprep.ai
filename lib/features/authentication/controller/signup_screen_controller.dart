@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class SpSignupController extends GetxController {
+class SignupController extends GetxController {
   // Declare the controllers for text fields
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController1 = TextEditingController();

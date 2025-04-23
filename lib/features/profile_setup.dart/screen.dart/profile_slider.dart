@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
-import 'package:inprep_ai/features/home_screen/screen/home_screen.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/about_me.dart';
+import 'package:inprep_ai/features/profile_setup.dart/screen.dart/education_cirtificate.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/experience.dart';
 
 // ignore: use_key_in_widget_constructors
@@ -89,7 +88,7 @@ class ProfileSlider extends StatelessWidget {
                       onRemoveSkill: removeSkill,
                     ),
                     Experience(),
-                    Container(),
+                    EducationCertificate(),
                   ],
                 ),
               ),
