@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
+import 'package:inprep_ai/features/profile_screen/screen/chooseplan_screen.dart';
 import 'package:inprep_ai/features/profile_screen/widgets/custom_profile_textfield.dart';
 
 import '../controller/profile_controller.dart';
@@ -268,14 +269,12 @@ class ProfileScreen extends StatelessWidget {
                           hintText: "Free",
                           enabled: false,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        SizedBox(height: 10),
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: GestureDetector(
-                            onTap: (){
-                              
+                            onTap: () {
+                              Get.to(ChooseplanScreen());
                             },
                             child: Text(
                               "Upgrade",
@@ -286,7 +285,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
