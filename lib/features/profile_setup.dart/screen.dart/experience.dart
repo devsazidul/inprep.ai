@@ -6,9 +6,7 @@ import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupco
 // ignore: must_be_immutable
 class Experience extends StatelessWidget {
   Experience({super.key});
-  ProfileSetupcontroller profileSetupcontroller = Get.put(
-    ProfileSetupcontroller(),
-  );
+  final ProfileSetupcontroller profileSetupcontroller = Get.find<ProfileSetupcontroller>(); 
 
   @override
   Widget build(BuildContext context) {
