@@ -1,29 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/controllers/job_details_controller.dart';
 
-void main() {
-  runApp(MyApp());
-}
+class JobDetailsScreen extends StatelessWidget {
+  final JobDetailsController controller = Get.put(JobDetailsController());
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SoftwareDeveloperScreen(),
-    );
-  }
-}
-
-class SoftwareDeveloperController extends GetxController {
-  var inprepScore = 80.obs;
-  final feedback =
-      'Simplify coding challenge explanations into concise sections with clear examples. Point out common pitfalls and offer strategies to avoid them. Include debugging tips and optimization strategies for enhanced learning.';
-}
-
-class SoftwareDeveloperScreen extends StatelessWidget {
-  final SoftwareDeveloperController controller =
-      Get.put(SoftwareDeveloperController());
+  JobDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +21,14 @@ class SoftwareDeveloperScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.back();
+                    },
                   ),
                   SizedBox(width: 8),
                   Text(
                     'Software Developer',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                 ],
               ),
@@ -61,9 +42,21 @@ class SoftwareDeveloperScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildInfoRow('Company', 'Tech Innovators Inc.', Colors.green),
-                    buildInfoRow('Location', 'San Francisco, CA', Colors.green),
-                    buildInfoRow('Apply Date', 'April 10, 2025', Colors.green),
+                    buildInfoRow(
+                      'Company',
+                      'Tech Innovators Inc.',
+                      Color(0xFF37B874),
+                    ),
+                    buildInfoRow(
+                      'Location',
+                      'San Francisco, CA',
+                      Color(0xFF37B874),
+                    ),
+                    buildInfoRow(
+                      'Apply Date',
+                      'April 10, 2025',
+                      Color(0xFF37B874),
+                    ),
                   ],
                 ),
               ),
@@ -85,18 +78,23 @@ class SoftwareDeveloperScreen extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF37B874),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
                   ),
                   onPressed: () {},
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Start Mock Interview'),
+                      Text(
+                        'Start Mock Interview',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       SizedBox(width: 8),
                       Icon(Icons.play_arrow),
                     ],
@@ -107,45 +105,22 @@ class SoftwareDeveloperScreen extends StatelessWidget {
               Text('Previous Interview Results', style: sectionTitleStyle()),
               SizedBox(height: 8),
               Text('Inprep Score', style: bodyStyle()),
-              Obx(() => Text(
-                    '${controller.inprepScore}/100',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
-                  )),
+              Obx(
+                () => Text(
+                  '${controller.inprepScore}/100',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
               SizedBox(height: 8),
               Text('Feedback', style: bodyStyle()),
               SizedBox(height: 4),
-              Text(
-                controller.feedback,
-                style: bodyStyle(),
-              ),
+              Text(controller.feedback, style: bodyStyle()),
               SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Icon(Icons.home),
-                    Icon(Icons.school),
-                    Icon(Icons.bar_chart),
-                    Icon(Icons.person),
-                  ],
-                ),
-              ),
+             
             ],
           ),
         ),

@@ -7,6 +7,7 @@ import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
+import 'package:inprep_ai/features/job_screens/myjob.dart' show MyJobsScreen;
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 import 'package:inprep_ai/features/view_jobs/screen/view_job_screen.dart';
 
@@ -123,15 +124,14 @@ class HomeScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 15),
                 CustomButton1(
-                  
-                  title: "View Jobs", 
+                  title: "View Jobs",
                   onPress: () {
-                    Get.to(ViewJobScreen());
+                    Get.to(MyJobsScreen());
                   },
                   backgroundColor: Colors.transparent,
                   borderColor: Color(0xff37B874),
                   textcolor: Color(0xff37b874),
-                  ),
+                ),
                 SizedBox(height: 40),
                 Align(
                   alignment: Alignment.centerLeft,
