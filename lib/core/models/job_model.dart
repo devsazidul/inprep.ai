@@ -5,11 +5,5 @@ class Job {
   final String date;
   final bool applied;
 
-  Job({
-    required this.title,
-    required this.company,
-    required this.location,
-    required this.date,
-    required this.applied,
-  });
+  Job(this.title, this.company, this.location, this.date, this.applied);
 }

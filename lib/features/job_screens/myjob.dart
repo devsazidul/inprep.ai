@@ -1,64 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/controllers/job_controller.dart';
+import 'package:inprep_ai/features/job_screens/job_details.dart';
+import 'package:inprep_ai/features/job_screens/new_filter_screen.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class JobController extends GetxController {
-  var jobs =
-      [
-        Job(
-          "Software Developer",
-          "Tech Innovators Inc.",
-          "San Francisco, CA",
-          "April 10, 2025",
-          false,
-        ),
-        Job(
-          "Product Manager",
-          "Creative Solutions LLC",
-          "Austin, TX",
-          "May 15, 2025",
-          true,
-        ),
-        Job("UX Designer", "Design Co.", "New York, NY", "June 20, 2025", true),
-        Job(
-          "Data Analyst",
-          "Insightful Data",
-          "Chicago, IL",
-          "July 1, 2025",
-          false,
-        ),
-        Job(
-          "Marketing Specialist",
-          "Brand Builders",
-          "Los Angeles, CA",
-          "August 5, 2025",
-          true,
-        ),
-      ].obs;
-}
-
-class Job {
-  final String title;
-  final String company;
-  final String location;
-  final String date;
-  final bool applied;
-
-  Job(this.title, this.company, this.location, this.date, this.applied);
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(home: JobScreen(), debugShowCheckedModeBanner: false);
-  }
-}
-
-class JobScreen extends StatelessWidget {
+class MyJobsScreen extends StatelessWidget {
   final JobController controller = Get.put(JobController());
+
+  MyJobsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -98,38 +47,46 @@ class JobScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        children: [
-                          // Icon(Icons.search, color: Colors.grey),
-                          // SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Search for jobs...',
-                                hintStyle: TextStyle(
-                                  color: Color(0xFFABB7C2),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          // Search Icon
-                          //Icon(Icons.search, color: Colors.grey),
-                          Image.asset(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search for jobs...',
+                        hintStyle: TextStyle(
+                          color: Color(0xFFABB7C2),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.all(
+                            12.0,
+                          ), // adjust spacing as needed
+                          child: Image.asset(
                             "assets/icons/job_screen_icons/search.png",
+                            width: 20,
+                            height: 20,
                           ),
-                        ],
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
                     ),
                   ),
+
                   SizedBox(width: 10),
 
                   // Filter Icon
@@ -139,9 +96,29 @@ class JobScreen extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child:
-                    //Icon(Icons.filter_alt_outlined, color: Colors.black),
-                    Image.asset("assets/icons/job_screen_icons/filter.png"),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.dialog(
+                          AlertDialog(
+                            //title: Center(child: Text("Filter")),
+                            content: SingleChildScrollView(
+                              child: FilterScreen(),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text("Apply"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      child: Image.asset(
+                        "assets/icons/job_screen_icons/filter.png",
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -208,8 +185,6 @@ class JobScreen extends StatelessWidget {
 
                                 // Location and Date
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -274,13 +249,19 @@ class JobScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          CircleAvatar(
-                            radius: 16,
-                            backgroundColor: Color(0xFF37B874),
-                            child: Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 16,
+                          //  NAVIGATION -- Go to the Job Details screen
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => JobDetailsScreen());
+                            },
+                            child: CircleAvatar(
+                              radius: 16,
+                              backgroundColor: Color(0xFF37B874),
+                              child: Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                                size: 16,
+                              ),
                             ),
                           ),
                         ],
@@ -288,22 +269,6 @@ class JobScreen extends StatelessWidget {
                     );
                   },
                 ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(Icons.home, size: 28, color: Color(0xFF878788)),
-                  Icon(Icons.school, size: 28, color: Color(0xFF878788)),
-                  Icon(Icons.auto_graph, size: 28, color: Color(0xFF878788)),
-                  Icon(Icons.person, size: 28, color: Color(0xFF878788)),
-                ],
               ),
             ),
           ],
