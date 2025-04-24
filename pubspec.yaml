@@ -64,6 +64,7 @@ dependencies:
 
   #payment
   flutter_stripe: ^11.5.0
+  file_picker: ^10.1.2
 
 dev_dependencies:
   flutter_test:

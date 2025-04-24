@@ -15,4 +15,6 @@ class ImagePath {
   static const String greenframe = 'assets/images/greenframe.png';
   static const String blueframe = 'assets/images/blueframe.png';
   static const String hellow1 = 'assets/images/hello1.png';
+  static const String robot = 'assets/images/robot.png';
+  static const String upload = 'assets/images/upload.png';
 }

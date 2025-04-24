@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
+import 'package:inprep_ai/features/profile_setup.dart/screen.dart/upload_resume_screen.dart' show UploadResumeScreen;
 import 'package:inprep_ai/routes/app_routes.dart';
 import '../../../core/common/widgets/auhe_custom_textfiled.dart'
     show AuthCustomTextField;
@@ -201,7 +202,7 @@ class SignupScreen extends StatelessWidget {
                   onPress:
                       singupController.isFromValid.value
                           ? () {
-                            Get.toNamed(AppRoute.profileslider);
+                            Get.to(UploadResumeScreen()); 
                           }
                           : null,
                   backgroundColor:

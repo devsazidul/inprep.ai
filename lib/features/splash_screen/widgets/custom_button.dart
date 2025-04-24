@@ -6,6 +6,7 @@ class CustomButton extends StatelessWidget {
   final Color? textColor;
   final Color? buttonColor;
   final VoidCallback? onTap;
+  final Color? borderColor;
   final double width;
   final double height;
   final bool? isBorder; // Corrected spelling of isBoder to isBorder
@@ -16,6 +17,7 @@ class CustomButton extends StatelessWidget {
     required this.width,
     required this.height,
     this.textColor,
+    this.borderColor,
     this.buttonColor,
     this.onTap,
     this.isBorder,
@@ -34,7 +36,7 @@ class CustomButton extends StatelessWidget {
             border:
                 isBorder == true
                     ? Border.all(
-                      color: Colors.white,
+                      color: borderColor ?? Colors.transparent,
                     ) // Apply border conditionally
                     : null,
             borderRadius: BorderRadius.circular(12),
