@@ -97,6 +97,7 @@ class MyJobsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: GestureDetector(
+                      // Alert Dialog for Filter
                       onTap: () {
                         Get.dialog(
                           AlertDialog(
