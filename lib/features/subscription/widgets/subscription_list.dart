@@ -93,12 +93,15 @@ class SubscriptionList extends StatelessWidget {
                               height: 24,
                             ),
                             SizedBox(width: 8),
-                            Text(
-                              "${subscription['included'][i]}",
-                              style: GoogleFonts.poppins(
-                                color: Color(0xFF3A4C67),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.73,
+                              child: Text(
+                                "${subscription['included'][i]}",
+                                style: GoogleFonts.poppins(
+                                  color: Color(0xFF3A4C67),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
