@@ -150,7 +150,7 @@ class CardWidget extends StatelessWidget {
                     SizedBox(
                       height:
                           MediaQuery.of(context).size.height *
-                          0.0998, // Adjust chart height based on screen height
+                          0.097, // Adjust chart height based on screen height
                       child: SfCartesianChart(
                         primaryXAxis: CategoryAxis(isVisible: false),
                         primaryYAxis: NumericAxis(isVisible: false),
