@@ -95,7 +95,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.935,
+                        width: MediaQuery.of(context).size.width * 0.933,
                         height: 50,
                         decoration: BoxDecoration(
                           color: const Color(0xff37B874),
