@@ -3,14 +3,16 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/education_controller.dart';
+import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart';
 
 class EducationCertificate extends StatelessWidget {
-  const EducationCertificate({super.key});
+  EducationCertificate({super.key});
 
+  final EducationController educationController = Get.put(
+    EducationController(),
+  );
   @override
   Widget build(BuildContext context) {
-    final EducationController controller = Get.put(EducationController());
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -37,7 +39,7 @@ class EducationCertificate extends StatelessWidget {
                   () => ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.rowCount.value,
+                    itemCount: educationController.rowCount.value,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 20),
@@ -111,7 +113,7 @@ class EducationCertificate extends StatelessWidget {
                 const SizedBox(height: 10),
                 GestureDetector(
                   onTap: () {
-                    controller.addRow();
+                    educationController.addRow();
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -164,51 +166,79 @@ class EducationCertificate extends StatelessWidget {
                   () => ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.certificateCount.value,
+                    itemCount: educationController.certificateCount.value,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            height: 119,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffEbf8f1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(14),
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    IconPath.backup,
-                                    height: 32,
-                                    width: 32,
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: GestureDetector(
+                              onTap: () async {
+                                await educationController.pickFile(index);
+                              },
+                              child: Container(
+                                height: 119,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffEbf8f1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14),
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        IconPath.backup,
+                                        height: 32,
+                                        width: 32,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Select File",
+                                        style: getTextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: const Color(0xff212121),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Supported Formats: JPEG, PNG, PDF, DOC",
+                                        style: getTextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff898989),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    "Select File",
-                                    style: getTextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: const Color(0xff212121),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    "Supported Formats: JPEG, PNG",
-                                    style: getTextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color(0xff898989),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          // Only show if file is selected for this index
+                          Obx(() {
+                            final fileName =
+                                educationController.selectedFileNames.length >
+                                        index
+                                    ? educationController
+                                        .selectedFileNames[index]
+                                    : null;
+                            return fileName != null
+                                ? Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    "Selected File: $fileName",
+                                    style: getTextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff212121),
+                                    ),
+                                  ),
+                                )
+                                : SizedBox.shrink(); // Show nothing if no file selected
+                          }),
+                        ],
                       );
                     },
                   ),
@@ -216,7 +246,7 @@ class EducationCertificate extends StatelessWidget {
                 SizedBox(height: 18),
                 GestureDetector(
                   onTap: () {
-                    controller.addCertificate();
+                    educationController.addCertificate();
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -269,7 +299,7 @@ class EducationCertificate extends StatelessWidget {
                   () => ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: controller.awardCount.value,
+                    itemCount: educationController.awardCount.value,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: 5),
@@ -281,7 +311,7 @@ class EducationCertificate extends StatelessWidget {
                 SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
-                    controller.addAwards();
+                    educationController.addAwards();
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

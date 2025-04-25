@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/controllers/job_controller.dart';
 import 'package:inprep_ai/features/job_screens/job_details.dart';
 import 'package:inprep_ai/features/job_screens/new_filter_screen.dart';
@@ -23,9 +24,11 @@ class MyJobsScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
+
                   //Icon(Icons.arrow_back_ios, color: Colors.black),
 
                   InkWell(onTap: (){Get.back();}, child: Image.asset('assets/icons/job_screen_icons/back_arrow.png')),
+
 
                   SizedBox(width: 80),
                   Text(
@@ -39,8 +42,6 @@ class MyJobsScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Search and Filter
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
@@ -74,9 +75,7 @@ class MyJobsScreen extends StatelessWidget {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         suffixIcon: Padding(
-                          padding: const EdgeInsets.all(
-                            12.0,
-                          ), // adjust spacing as needed
+                          padding: const EdgeInsets.all(12.0),
                           child: Image.asset(
                             "assets/icons/job_screen_icons/search.png",
                             width: 20,
@@ -91,7 +90,6 @@ class MyJobsScreen extends StatelessWidget {
 
                   SizedBox(width: 10),
 
-                  // Filter Icon
                   Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -99,11 +97,9 @@ class MyJobsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: GestureDetector(
-                      // Alert Dialog for Filter
                       onTap: () {
                         Get.dialog(
                           AlertDialog(
-                            //title: Center(child: Text("Filter")),
                             content: SingleChildScrollView(
                               child: FilterScreen(),
                             ),
@@ -127,7 +123,6 @@ class MyJobsScreen extends StatelessWidget {
               ),
             ),
 
-            // Job List
             Expanded(
               child: Obx(
                 () => ListView.builder(
@@ -144,7 +139,7 @@ class MyJobsScreen extends StatelessWidget {
                         boxShadow: [
                           BoxShadow(
 
-                            color: Colors.grey.withValues(alpha:  0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
 
                             blurRadius: 8,
                             spreadRadius: 2,
@@ -152,7 +147,6 @@ class MyJobsScreen extends StatelessWidget {
                         ],
                       ),
 
-                      // Card Elements
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -163,62 +157,56 @@ class MyJobsScreen extends StatelessWidget {
                                 // Job Title
                                 Text(
                                   job.title,
-                                  style: TextStyle(
+                                  style: getTextStyle(
+                                    color: Color(0xff212121),
                                     fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 SizedBox(height: 4),
-
-                                // Company Name
                                 Text(
                                   job.company,
-                                  style: TextStyle(color: Colors.grey[600]),
+                                  style: getTextStyle(
+                                    color: Color(0xffAFAFAF),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                                 SizedBox(height: 10),
-                                // Row(
-                                //   children: [
-                                //     Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
-                                //     SizedBox(width: 4),
-                                //     Text(job.location),
-                                //     SizedBox(width: 16),
-                                //     Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
-                                //     SizedBox(width: 4),
-                                //     Text(job.date),
-                                //   ],
-                                // ),
-
-                                // Location and Date
                                 Row(
                                   children: [
                                     Row(
                                       children: [
-                                        // Icon(
-                                        //   Icons.location_on,
-                                        //   size: 16,
-                                        //   color: Colors.grey[600],
-                                        // ),
                                         Image.asset(
                                           "assets/icons/job_screen_icons/location.png",
                                         ),
                                         SizedBox(width: 4),
-                                        Text(job.location),
+                                        Text(
+                                          job.location,
+                                          style: getTextStyle(
+                                            color: Color(0xff676768),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     Spacer(),
                                     Row(
                                       children: [
-                                        // Icon(
-                                        //   Icons.calendar_today,
-                                        //   size: 16,
-                                        //   color: Colors.grey[600],
-                                        // ),
                                         Image.asset(
                                           "assets/icons/job_screen_icons/calendar.png",
                                         ),
                                         SizedBox(width: 2),
                                         SizedBox(width: 4),
-                                        Text(job.date),
+                                        Text(
+                                          job.date,
+                                          style: getTextStyle(
+                                            color: Color(0xff676768),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -226,7 +214,6 @@ class MyJobsScreen extends StatelessWidget {
 
                                 SizedBox(height: 10),
 
-                                // Applied Status
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 8,
@@ -241,7 +228,7 @@ class MyJobsScreen extends StatelessWidget {
                                   ),
                                   child: Text(
                                     job.applied ? 'Applied' : 'Not Applied',
-                                    style: TextStyle(
+                                    style: getTextStyle(
                                       color:
                                           job.applied
                                               ? Color(0xFF37B874)
@@ -254,7 +241,7 @@ class MyJobsScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          //  NAVIGATION -- Go to the Job Details screen
+
                           GestureDetector(
                             onTap: () {
                               Get.to(() => JobDetailsScreen());

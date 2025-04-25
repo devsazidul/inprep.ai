@@ -3,25 +3,22 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // Brand Colors
   static const Color primary = Color(0xFF1E3A5F);
   static const Color secondary = Color(0xFFFEC601);
   static const Color accent = Color(0xFF89A7FF);
 
-  // Gradient Colors
   static const Gradient linearGradient = LinearGradient(
     begin: Alignment(0.0, 0.0),
     end: Alignment(0.707, -0.707),
     colors: [Color(0xFFFF9A9E), Color(0xFFFAD0C4), Color(0xFFFAD0C4)],
   );
-  //splash screen color
+
   static const Gradient splashlinearGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [Color(0xFF1E7B1E), Color(0xFF000000)],
   );
 
-  // Text Colors
   static const Color textPrimary = Color(
     0xFF174D31,
   ); // Darker shade for better readability

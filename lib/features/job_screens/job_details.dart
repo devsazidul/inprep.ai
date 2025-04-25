@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/controllers/job_details_controller.dart';
 
 class JobDetailsScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class JobDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xffF6F6F7),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -26,9 +27,16 @@ class JobDetailsScreen extends StatelessWidget {
                     },
                   ),
                   SizedBox(width: 8),
-                  Text(
-                    'Software Developer',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Software Developer',
+                      style: getTextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
+                        color: Color(0xff212121),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -36,7 +44,7 @@ class JobDetailsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF8F8F8),
+                  color: Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -76,42 +84,51 @@ class JobDetailsScreen extends StatelessWidget {
               ),
               SizedBox(height: 24),
               Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF37B874),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Start Mock Interview',
-                        style: TextStyle(color: Colors.white),
+                child: Container(
+                  width: double.infinity, // Makes the button take full width
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF37B874),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      SizedBox(width: 8),
-                      Icon(Icons.play_arrow),
-                    ],
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment:
+                          MainAxisAlignment
+                              .center, // Center the text and icon inside the button
+                      children: [
+                        Text(
+                          'Start Mock Interview',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(Icons.play_arrow, color: Colors.white),
+                      ],
+                    ),
                   ),
                 ),
               ),
+
               SizedBox(height: 32),
               Text('Previous Interview Results', style: sectionTitleStyle()),
               SizedBox(height: 8),
               Text('Inprep Score', style: bodyStyle()),
+              SizedBox(height: 8),
               Obx(
                 () => Text(
                   '${controller.inprepScore}/100',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff37BB74),
                   ),
                 ),
               ),
@@ -120,7 +137,6 @@ class JobDetailsScreen extends StatelessWidget {
               SizedBox(height: 4),
               Text(controller.feedback, style: bodyStyle()),
               SizedBox(height: 24),
-             
             ],
           ),
         ),
@@ -134,18 +150,40 @@ class JobDetailsScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: Colors.grey[700])),
-          Text(value, style: TextStyle(color: valueColor)),
+          Text(
+            label,
+            style: getTextStyle(
+              color: Color(0xff676768),
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          Text(
+            value,
+            style: getTextStyle(
+              color: valueColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
   }
 
   TextStyle sectionTitleStyle() {
-    return TextStyle(fontWeight: FontWeight.bold, fontSize: 18);
+    return getTextStyle(
+      fontWeight: FontWeight.w500,
+      fontSize: 20,
+      color: Color(0xff212121),
+    );
   }
 
   TextStyle bodyStyle() {
-    return TextStyle(fontSize: 14, color: Colors.black87);
+    return getTextStyle(
+      fontSize: 16,
+      color: Color(0xff676768),
+      fontWeight: FontWeight.w400,
+    );
   }
 }

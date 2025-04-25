@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
@@ -76,20 +77,20 @@ class ProgressScreen extends StatelessWidget {
                   const SizedBox(height: 45),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.9,
-                          ),
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        return CardWidget(index: index);
-                      },
+                    child: StaggeredGrid.count(
+                      crossAxisCount: 2, // 2 items per row
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 16,
+                      children: List.generate(5, (index) {
+                        return StaggeredGridTile.count(
+                          crossAxisCellCount:
+                              index == 4
+                                  ? 2
+                                  : 1, // Make the last item take full width
+                          mainAxisCellCount: 1,
+                          child: CardWidget(index: index),
+                        );
+                      }),
                     ),
                   ),
                   SizedBox(height: 40),
@@ -128,7 +129,7 @@ class ProgressScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.width * 0.22),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.28),
                 ],
               ),
             ),

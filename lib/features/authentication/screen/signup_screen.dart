@@ -208,12 +208,12 @@ class SignupScreen extends StatelessWidget {
                   backgroundColor:
                       singupController.isFromValid.value
                           ? Color(0xFF37B874)
-                          // ignore: deprecated_member_use
+                          
                           : Color(0xFFEBF8F1),
                   borderColor:
                       singupController.isFromValid.value
                           ? Color(0xFF37B874)
-                          // ignore: deprecated_member_use
+                          
                           : Color(0xFFEBF8F1),
                 ),
               ),
