@@ -24,9 +24,11 @@ class MyJobsScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
+
                   //Icon(Icons.arrow_back_ios, color: Colors.black),
 
                   InkWell(onTap: (){Get.back();}, child: Image.asset('assets/icons/job_screen_icons/back_arrow.png')),
+
 
                   SizedBox(width: 80),
                   Text(
@@ -137,7 +139,7 @@ class MyJobsScreen extends StatelessWidget {
                         boxShadow: [
                           BoxShadow(
 
-                            color: Colors.grey.withValues(alpha:  0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
 
                             blurRadius: 8,
                             spreadRadius: 2,
