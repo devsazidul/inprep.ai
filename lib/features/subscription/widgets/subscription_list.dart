@@ -115,7 +115,7 @@ class SubscriptionList extends StatelessWidget {
                         final price = double.parse(
                           subscription['price'].toString(),
                         );
-                        print("Price being passed: $price"); // Debug print
+                        debugPrint("Price being passed: $price"); // Debug print
 
                         StripeService.makePayment(price, "usd");
                       },
