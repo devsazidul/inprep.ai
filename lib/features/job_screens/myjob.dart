@@ -180,9 +180,16 @@ class MyJobsScreen extends StatelessWidget {
                                         Image.asset(
                                           "assets/icons/job_screen_icons/location.png",
                                         ),
-                                        SizedBox(width: 4),
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              0.002,
+                                        ),
                                         Text(
                                           job.location,
+                                          overflow: TextOverflow.ellipsis,
                                           style: getTextStyle(
                                             color: Color(0xff676768),
                                             fontSize: 14,
@@ -197,8 +204,8 @@ class MyJobsScreen extends StatelessWidget {
                                         Image.asset(
                                           "assets/icons/job_screen_icons/calendar.png",
                                         ),
-                                        SizedBox(width: 2),
-                                        SizedBox(width: 4),
+
+                                        SizedBox(width: 2.5),
                                         Text(
                                           job.date,
                                           style: getTextStyle(

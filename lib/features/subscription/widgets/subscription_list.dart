@@ -12,6 +12,7 @@ class SubscriptionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size.width * 0.05;
     return Expanded(
       child: ListView.builder(
         padding: EdgeInsets.zero,
@@ -28,7 +29,12 @@ class SubscriptionList extends StatelessWidget {
                 border: Border.all(color: const Color(0xFFE0E0E1)),
               ),
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.only(
+                  top: 20,
+                  bottom: 20, 
+                  left: size, 
+                  right: size, 
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -93,10 +99,10 @@ class SubscriptionList extends StatelessWidget {
                               height: 24,
                             ),
                             SizedBox(width: 8),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.73,
+                            Expanded(
                               child: Text(
                                 "${subscription['included'][i]}",
+                                
                                 style: GoogleFonts.poppins(
                                   color: Color(0xFF3A4C67),
                                   fontSize: 16,
