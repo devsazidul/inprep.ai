@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
             border:
                 isBorder == true
                     ? Border.all(
-                      color: borderColor ?? Colors.transparent,
+                      color: borderColor ?? Colors.white,
                     ) // Apply border conditionally
                     : null,
             borderRadius: BorderRadius.circular(12),

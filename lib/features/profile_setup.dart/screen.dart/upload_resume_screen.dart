@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart' show getTextStyle;
 import 'package:inprep_ai/core/utils/constants/icon_path.dart' show IconPath;
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
+import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart' show ProfileSetupcontroller;
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider.dart' show ProfileSlider;
 import 'package:inprep_ai/features/splash_screen/widgets/custom_button.dart';
@@ -59,7 +60,9 @@ class UploadResumeScreen extends StatelessWidget {
                 height: 12,
               ),
               GestureDetector(
-                onTap: (){},
+                onTap: () async {
+                  await controller.pickFile();
+                },
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -105,8 +108,24 @@ class UploadResumeScreen extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
+               Obx(() {
+                // Display the selected file name or a placeholder message
+                return Text(
+                  "Selected File: ${controller.selectedFileName.value}",
+                  style: getTextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff212121),
+                  ),
+                );
+              }),
+              SizedBox(
+                height: 20,
+              ),
               CustomButton(
-                onTap: (){},
+                onTap: (){
+                  Get.offAll(BottomNavbarView());
+                },
                 buttonColor: Color(0xff37BB74),
                 textColor: Colors.white,
                 isBorder: false,
