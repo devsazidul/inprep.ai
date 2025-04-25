@@ -8,14 +8,17 @@ class SubscriptionScreen extends StatelessWidget {
    SubscriptionScreen({super.key});
 
   final SubscriptionController controller = Get.put(SubscriptionController()); 
-
+  
+  
+  
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size.width * 0.03;
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
-          left: 16, 
-          right: 16, 
+          left: size, 
+          right: size, 
           top: 65, 
           bottom: 15, 
         ),

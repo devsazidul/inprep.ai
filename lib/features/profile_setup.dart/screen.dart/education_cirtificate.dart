@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/education_controller.dart';
-import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart';
 
 class EducationCertificate extends StatelessWidget {
   EducationCertificate({super.key});
@@ -119,7 +118,7 @@ class EducationCertificate extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.89,
+                        width: MediaQuery.of(context).size.width * 0.88,
                         height: 50,
                         decoration: BoxDecoration(
                           color: const Color(0xffffffff),
@@ -236,7 +235,7 @@ class EducationCertificate extends StatelessWidget {
                                     ),
                                   ),
                                 )
-                                : SizedBox.shrink(); // Show nothing if no file selected
+                                : SizedBox.shrink();
                           }),
                         ],
                       );
@@ -252,7 +251,7 @@ class EducationCertificate extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.89,
+                        width: MediaQuery.of(context).size.width * 0.88,
                         height: 50,
                         decoration: BoxDecoration(
                           color: const Color(0xffffffff),
@@ -317,7 +316,7 @@ class EducationCertificate extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.89,
+                        width: MediaQuery.of(context).size.width * 0.88,
                         height: 50,
                         decoration: BoxDecoration(
                           color: const Color(0xffffffff),

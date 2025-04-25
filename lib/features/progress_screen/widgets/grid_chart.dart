@@ -41,54 +41,119 @@ class CardWidget extends StatelessWidget {
     }
 
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(11.0),
-        child: index == 4 // Apply custom layout for index 4
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Title and percentage in the center
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // Vertically center
-                      crossAxisAlignment: CrossAxisAlignment.center, // Horizontally center
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff212121),
+        child:
+            index ==
+                    4 // Apply custom layout for index 4
+                ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Title and percentage in the center
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xff212121),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '$percentage%',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff3A4c67),
+                          const SizedBox(height: 8),
+                          Text(
+                            '$percentage%',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff3A4c67),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                          const SizedBox(height: 8),
+                        ],
+                      ),
                     ),
-                  ),
-                  // Add the graph for Problem Solving here inside Flexible
-                  Flexible(
-                    child: SizedBox(
-                      height: 100, // Fixed height for the graph
+                    // Add the graph for Problem Solving here inside Flexible
+                    Flexible(
+                      child: SizedBox(
+                        height:
+                            MediaQuery.of(context).size.height *
+                            0.1, // Fixed height for the graph
+                        child: SfCartesianChart(
+                          primaryXAxis: CategoryAxis(isVisible: false),
+                          primaryYAxis: NumericAxis(isVisible: false),
+                          plotAreaBorderWidth: 0,
+                          series: <CartesianSeries<ChartData, String>>[
+                            LineSeries<ChartData, String>(
+                              dataSource: getData(),
+                              xValueMapper: (ChartData data, _) => data.x,
+                              yValueMapper: (ChartData data, _) => data.y,
+                              color: Colors.green,
+                              width: 2,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ), // Space between graph and change text
+                    // Change text positioned at the bottom-left
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          change,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: changeColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+                : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title Text with responsive font size
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize:
+                            MediaQuery.of(context).size.width *
+                            0.038, // Adjust font size based on screen width
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xff212121),
+                      ),
+                    ),
+                    // Percentage Text with responsive font size
+                    Text(
+                      '$percentage%',
+                      style: TextStyle(
+                        fontSize:
+                            MediaQuery.of(context).size.width *
+                            0.030, // Adjust font size based on screen width
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xff3A4c67),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    // Responsive chart height
+                    SizedBox(
+                      height:
+                          MediaQuery.of(context).size.height *
+                          0.0998, // Adjust chart height based on screen height
                       child: SfCartesianChart(
-                        primaryXAxis: CategoryAxis(
-                          isVisible: false,
-                        ),
-                        primaryYAxis: NumericAxis(
-                          isVisible: false,
-                        ),
+                        primaryXAxis: CategoryAxis(isVisible: false),
+                        primaryYAxis: NumericAxis(isVisible: false),
                         plotAreaBorderWidth: 0,
                         series: <CartesianSeries<ChartData, String>>[
                           LineSeries<ChartData, String>(
@@ -101,77 +166,20 @@ class CardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20), // Space between graph and change text
-                  // Change text positioned at the bottom-left
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        change,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: changeColor,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    const SizedBox(height: 8),
+                    // Change Text with responsive font size and color change
+                    Text(
+                      change,
+                      style: TextStyle(
+                        fontSize:
+                            MediaQuery.of(context).size.width *
+                            0.030, // Adjust font size based on screen width
+                        color: changeColor,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                ],
-              )
-            : Column( // Regular layout for other cards
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff212121),
-                    ),
-                  ),
-                  Text(
-                    '$percentage%',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff3A4c67),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.096,
-                    child: SfCartesianChart(
-                      primaryXAxis: CategoryAxis(
-                        isVisible: false, 
-                      ),
-                      primaryYAxis: NumericAxis(
-                        isVisible: false, 
-                      ),
-                      plotAreaBorderWidth: 0, 
-                      series: <CartesianSeries<ChartData, String>>[
-                        LineSeries<ChartData, String>(
-                          dataSource: getData(),
-                          xValueMapper: (ChartData data, _) => data.x,
-                          yValueMapper: (ChartData data, _) => data.y,
-                          color: Colors.green,
-                          width: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    change,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: changeColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
       ),
     );
   }
