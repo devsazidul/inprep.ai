@@ -8,7 +8,6 @@ import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
 import 'package:inprep_ai/features/job_screens/myjob.dart' show MyJobsScreen;
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
-import 'package:inprep_ai/features/view_jobs/screen/view_job_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
