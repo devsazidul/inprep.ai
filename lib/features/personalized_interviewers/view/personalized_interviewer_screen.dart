@@ -22,6 +22,17 @@ class PersonalizedInterviewerScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
+            Text("Based on your profile, these are the interviews we recommend", 
+             textAlign: TextAlign.center,
+             style: getTextStyle(
+              color: Color(0xFF212121), 
+              fontSize: 20, 
+              fontWeight: FontWeight.w600
+             ),
+            ),
+            SizedBox(
+              height: 20,
+            ), 
             Expanded(
         
           child: ListView.builder(
@@ -42,13 +53,13 @@ class PersonalizedInterviewerScreen extends StatelessWidget {
                      arguments: [
                       availablemockinterviews['title'], 
                       availablemockinterviews['image'], 
-                      availablemockinterviews['positions'], 
+                      availablemockinterviews['job_titles'], 
                       
                      ]           
                     ); 
                     debugPrint("The title is ${availablemockinterviews['title']}");
                     debugPrint("The title is ${availablemockinterviews['image']}");
-                    debugPrint("The title is ${availablemockinterviews['positions']}");
+                    debugPrint("The title is ${availablemockinterviews['job_titles']}");
                    } else{
                     Get.to(SubscriptionScreen()); 
                    }
@@ -96,7 +107,7 @@ class PersonalizedInterviewerScreen extends StatelessWidget {
                               SizedBox(
                                 height: 5,
                               ), 
-                              Text("${availablemockinterviews['positions'].toString()} Positions", 
+                              Text("${availablemockinterviews['job_titles'].toString()} Job Titles", 
                                style: getTextStyle(
                                 color: Color(0xFFAFAFAF), 
                                 fontSize: 14, 
