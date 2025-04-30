@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 class ProfileSetupcontroller extends GetxController {
   TextEditingController citycontroller = TextEditingController();
   TextEditingController describecontroller = TextEditingController();
+  TextEditingController summarycontroller = TextEditingController();
+  TextEditingController jobtitlecontroller = TextEditingController();
 
   Rx<File?> selectedFile = Rx<File?>(null);
   Rx<Uint8List?> pdfPreviewImage = Rx<Uint8List?>(null);

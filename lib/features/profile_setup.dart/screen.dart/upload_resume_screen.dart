@@ -49,7 +49,7 @@ class UploadResumeScreen extends StatelessWidget {
               SizedBox(
                 height: 20,
               ), 
-              Text("Upload Your CV",
+              Text("Upload Your Resume",
                 style: getTextStyle(
                   color: Color(0xff37BB74),
                   fontSize: 14,
@@ -146,7 +146,7 @@ class UploadResumeScreen extends StatelessWidget {
                 borderColor: Color(0xFF37B874),
                 isBorder: true,
                 fontSize: 16,
-                text: "Manual Upload", 
+                text: "Enter Manually", 
                 width: double.infinity, 
                 height: 48,
               ), 
