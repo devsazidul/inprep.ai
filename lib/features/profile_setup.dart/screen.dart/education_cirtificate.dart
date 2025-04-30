@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
-import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/education_controller.dart';
 
 class EducationCertificate extends StatelessWidget {
