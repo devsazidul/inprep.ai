@@ -44,7 +44,7 @@ class ProfileSetup extends StatelessWidget {
                 ),
                 SizedBox(height: 36),
                 Text(
-                  "Upload Your CV",
+                  "Upload Your Resume",
                   style: getTextStyle(
                     color: Color(0xff37BB74),
                     fontSize: 14,
@@ -104,7 +104,7 @@ class ProfileSetup extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 CustomButton1(
-                  title: "Manual Upload",
+                  title: "Enter Manually",
                   textcolor: Color(0xff37BB74),
                   borderColor: Color(0xff37BB74),
                   backgroundColor: Colors.white,

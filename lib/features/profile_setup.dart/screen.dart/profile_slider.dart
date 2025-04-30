@@ -92,7 +92,7 @@ class ProfileSlider extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 48),
+              SizedBox(height: 10),
               CustomButton1(
                 title: "Continure",
                 textcolor: Color(0xffffffff),
