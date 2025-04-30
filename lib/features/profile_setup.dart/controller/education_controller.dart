@@ -93,4 +93,16 @@ class EducationController extends GetxController {
       selectedFileNames[index] = file.name;
     }
   }
+
+
+  var selectDate = 'DD.MM.YYYY'.obs;
+  void updateDate2(String date) {
+    selectDate.value = date;
+  }
+
+  // End date
+  var selectDate1 = 'DD.MM.YYYY'.obs;
+  void updateDate3(String date) {
+    selectDate1.value = date;
+  }
 }

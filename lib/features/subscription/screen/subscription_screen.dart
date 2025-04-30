@@ -9,8 +9,6 @@ class SubscriptionScreen extends StatelessWidget {
 
   final SubscriptionController controller = Get.put(SubscriptionController()); 
   
-  
-  
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size.width * 0.03;

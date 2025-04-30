@@ -42,67 +42,209 @@ class EducationCertificate extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // First Column (Institute Name)
-                            Flexible(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Institute Name",
-                                    style: getTextStyle(
-                                      color: const Color(0xff333333),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                // First Column (Institute Name)
+                                Flexible(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "School Name",
+                                        style: getTextStyle(
+                                          color: const Color(0xff333333),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const TextField(
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  const TextField(
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                    ),
+                                ),
+                                const SizedBox(width: 10),
+                                // Second Column (Degree)
+                                Flexible(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Level of education",
+                                        style: getTextStyle(
+                                          color: const Color(0xff333333),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      DropdownButtonFormField<String>(
+                                        value: 'PhD',
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                        ),
+                                        isExpanded: true, // This line will help
+                                        items:
+                                            [
+                                                  'Associate Degree',
+                                                  'Bachelor Degree',
+                                                  'Master Degree',
+                                                  'PhD',
+                                                  "Professional Certificate",
+                                                ]
+                                                .map(
+                                                  (time) => DropdownMenuItem(
+                                                    value: time,
+                                                    child: Text(time),
+                                                  ),
+                                                )
+                                                .toList(),
+                                        onChanged: (_) {},
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "Major",
+                              style: getTextStyle(
+                                color: const Color(0xff333333),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            // Second Column (Degree)
-                            Flexible(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Degree",
-                                    style: getTextStyle(
-                                      color: const Color(0xff333333),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  DropdownButtonFormField<String>(
-                                    value: 'CSE',
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    items:
-                                        ['CSE', 'EEE', 'ETE']
-                                            .map(
-                                              (time) => DropdownMenuItem(
-                                                value: time,
-                                                child: Text(time),
-                                              ),
-                                            )
-                                            .toList(),
-                                    onChanged: (_) {},
-                                  ),
-                                ],
+                            SizedBox(height: 8),
+                            TextField(),
+                            SizedBox(height: 8),
+                            Text(
+                              "Start Date",
+                              style: getTextStyle(
+                                color: const Color(0xff333333),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
+                            const SizedBox(height: 8),
+                            Obx(
+                              () => Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: const Color(0xFF78828A),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        selectDate2(context);
+                                      },
+                                      child: const Icon(Icons.calendar_month),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Select a day',
+                                          style: getTextStyle(
+                                            color: const Color(0xFF565656),
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          educationController.selectDate.value,
+                                          style: getTextStyle(
+                                            color: const Color(0xFF00BA0B),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "End Date",
+                              style: getTextStyle(
+                                color: const Color(0xff333333),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Obx(
+                              () => Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: const Color(0xFF78828A),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        selectDate3(context);
+                                      },
+                                      child: const Icon(Icons.calendar_month),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Select a day',
+                                          style: getTextStyle(
+                                            color: const Color(0xFF565656),
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          educationController.selectDate.value,
+                                          style: getTextStyle(
+                                            color: const Color(0xFF00BA0B),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
                           ],
                         ),
                       );
@@ -152,208 +294,65 @@ class EducationCertificate extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(
-                  "Upload a Certificate",
-                  style: getTextStyle(
-                    color: Color(0xff37BB74),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Obx(
-                  () => ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: educationController.certificateCount.value,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: GestureDetector(
-                              onTap: () async {
-                                await educationController.pickFile(index);
-                              },
-                              child: Container(
-                                height: 119,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffEbf8f1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14),
-                                  child: Column(
-                                    children: [
-                                      Image.asset(
-                                        IconPath.backup,
-                                        height: 32,
-                                        width: 32,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        "Select File",
-                                        style: getTextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: const Color(0xff212121),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        "Supported Formats: JPEG, PNG, PDF, DOC",
-                                        style: getTextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                          color: const Color(0xff898989),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Only show if file is selected for this index
-                          Obx(() {
-                            final fileName =
-                                educationController.selectedFileNames.length >
-                                        index
-                                    ? educationController
-                                        .selectedFileNames[index]
-                                    : null;
-                            return fileName != null
-                                ? Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: Text(
-                                    "Selected File: $fileName",
-                                    style: getTextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff212121),
-                                    ),
-                                  ),
-                                )
-                                : SizedBox.shrink();
-                          }),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 18),
-                GestureDetector(
-                  onTap: () {
-                    educationController.addCertificate();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.88,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xffEBEDF0),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Add",
-                              style: getTextStyle(
-                                color: const Color(0xff3A4C67),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(
-                              Icons.add,
-                              color: Color(0xff3A4C67),
-                              size: 14,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40),
-                Text(
-                  "Awards",
-                  style: getTextStyle(
-                    color: Color(0xff333333),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Obx(
-                  () => ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: educationController.awardCount.value,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: TextField(),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    educationController.addAwards();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.88,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffffffff),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xffEBEDF0),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Add",
-                              style: getTextStyle(
-                                color: const Color(0xff3A4C67),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(
-                              Icons.add,
-                              color: Color(0xff3A4C67),
-                              size: 14,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> selectDate2(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFF00BA0B),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      String formattedDate =
+          "${pickedDate.day.toString().padLeft(2, '0')}.${pickedDate.month.toString().padLeft(2, '0')}.${pickedDate.year}";
+      educationController.updateDate2(formattedDate);
+    }
+  }
+
+  Future<void> selectDate3(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFF00BA0B),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      String formattedDate =
+          "${pickedDate.day.toString().padLeft(2, '0')}.${pickedDate.month.toString().padLeft(2, '0')}.${pickedDate.year}";
+      educationController.updateDate3(formattedDate);
+    }
   }
 }
