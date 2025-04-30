@@ -79,6 +79,7 @@ class Experience extends StatelessWidget {
                         onAddSkill: onAddSkill,
                         onRemoveSkill: onRemoveSkill,
                       );
+                    // ignore: unnecessary_to_list_in_spreads
                     }).toList(),
                     const SizedBox(height: 10),
                     GestureDetector(
