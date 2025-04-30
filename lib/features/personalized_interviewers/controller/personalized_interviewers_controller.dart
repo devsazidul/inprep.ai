@@ -7,23 +7,23 @@ class PersonalizedInterviewersController extends GetxController {
   List <Map<String, dynamic>> availableMockInterviews = [
     {
       "title": "Software Developer Interview",
-      "positions": 11,
+      "job_titles": 11,
       "image": ImagePath.image2,
     },
     {
       "title": "Product Manager Interview",
-      "positions": 7,
+      "job_titles": 7,
     
       "image": ImagePath.image3,
     },
     {
       "title": "Data Scientist Interview",
-      "positions": 5,
+      "job_titles": 5,
       "image": ImagePath.image4,
     },
     {
       "title": "UX Designer Interview",
-      "positions": 5,
+      "job_titles": 5,
       "image": ImagePath.image5,
     },
   

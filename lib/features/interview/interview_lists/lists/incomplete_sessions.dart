@@ -71,7 +71,7 @@ class IncompleteSessions extends StatelessWidget {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              '${session['positions'].toString()} Positions',
+                              '${session['positions'].toString()} Job Titles',
                               style: getTextStyle(
                                 color: Color(0xFF676768),
                                 fontSize: 14,

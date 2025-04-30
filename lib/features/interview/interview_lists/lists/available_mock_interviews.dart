@@ -82,7 +82,7 @@ class AvailableMockInterviews extends StatelessWidget {
                               SizedBox(
                                 height: 5,
                               ), 
-                              Text("${availablemockinterviews['positions'].toString()} Positions", 
+                              Text("${availablemockinterviews['positions'].toString()} Job Titles", 
                                style: getTextStyle(
                                 color: Color(0xFFAFAFAF), 
                                 fontSize: 14, 
