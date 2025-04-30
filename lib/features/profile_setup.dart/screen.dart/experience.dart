@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/common/widgets/auhe_custom_textfiled.dart';
+import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/features/profile_screen/model/country_model.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/country_controller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/experience_controller.dart';
@@ -27,6 +28,17 @@ class Experience extends StatelessWidget {
     final initialFormId = const Uuid().v4();
     experienceForms.add(initialFormId);
     formControllers[initialFormId] = ExperienceFormControllers();
+
+    // Create the necessary values for the arguments
+    final selectedSkillsNotifier = ValueNotifier<List<String>>([]);
+    void onAddSkill(String skill) {
+      selectedSkillsNotifier.value = [...selectedSkillsNotifier.value, skill];
+    }
+
+    void onRemoveSkill(String skill) {
+      selectedSkillsNotifier.value =
+          selectedSkillsNotifier.value.where((item) => item != skill).toList();
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -56,12 +68,16 @@ class Experience extends StatelessWidget {
                       return ExperienceForm(
                         key: ValueKey(formId),
                         controllers: controllers,
-                        onRemove: experienceForms.length > 1
-                            ? () {
-                                experienceForms.remove(formId);
-                                formControllers.remove(formId);
-                              }
-                            : null,
+                        onRemove:
+                            experienceForms.length > 1
+                                ? () {
+                                  experienceForms.remove(formId);
+                                  formControllers.remove(formId);
+                                }
+                                : null,
+                        selectedSkillsNotifier: selectedSkillsNotifier,
+                        onAddSkill: onAddSkill,
+                        onRemoveSkill: onRemoveSkill,
                       );
                     }).toList(),
                     const SizedBox(height: 10),
@@ -70,7 +86,8 @@ class Experience extends StatelessWidget {
                         // Add a new form
                         final newFormId = const Uuid().v4();
                         experienceForms.add(newFormId);
-                        formControllers[newFormId] = ExperienceFormControllers();
+                        formControllers[newFormId] =
+                            ExperienceFormControllers();
                       },
                       child: Container(
                         height: 48,
@@ -108,13 +125,14 @@ class ExperienceFormControllers {
   final TextEditingController jobTitleController = TextEditingController();
   final TextEditingController employerNameController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
-  final TextEditingController responsibilitiesController = TextEditingController();
+  final TextEditingController responsibilitiesController =
+      TextEditingController();
   final ExperienceController experienceController = ExperienceController();
   final ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
-  
-final CountryModel countryModel = CountryModel(
-  initialCountry: CountryPickerUtils.getCountryByIsoCode('GB'),
-);
+
+  final CountryModel countryModel = CountryModel(
+    initialCountry: CountryPickerUtils.getCountryByIsoCode('GB'),
+  );
   late final CountryController countryController;
 
   ExperienceFormControllers() {
@@ -136,11 +154,17 @@ final CountryModel countryModel = CountryModel(
 class ExperienceForm extends StatelessWidget {
   final ExperienceFormControllers controllers;
   final VoidCallback? onRemove;
+  final ValueNotifier<List<String>> selectedSkillsNotifier;
+  final Function(String) onAddSkill;
+  final Function(String) onRemoveSkill;
 
   const ExperienceForm({
     super.key,
     required this.controllers,
     this.onRemove,
+    required this.selectedSkillsNotifier,
+    required this.onAddSkill,
+    required this.onRemoveSkill,
   });
 
   @override
@@ -192,10 +216,7 @@ class ExperienceForm extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        AuthCustomTextField(
-          controller: controllers.cityController,
-          text: "",
-        ),
+        AuthCustomTextField(controller: controllers.cityController, text: ""),
         const SizedBox(height: 8),
         CountryPickerView(
           model: controllers.countryModel,
@@ -218,7 +239,7 @@ class ExperienceForm extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          "Experience",
+          "Skills Used",
           style: getTextStyle(
             color: const Color(0xff333333),
             fontSize: 16,
@@ -227,18 +248,64 @@ class ExperienceForm extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: '2 Years',
           decoration: const InputDecoration(border: OutlineInputBorder()),
-          items: ['1 Year', '2 Years', '3+ Years']
-              .map(
-                (time) => DropdownMenuItem(
-                  value: time,
-                  child: Text(time),
-                ),
-              )
-              .toList(),
-          onChanged: (_) {},
+          items:
+              ['UI/UX Design', 'Frontend Development', 'Backend Development']
+                  .map(
+                    (skill) =>
+                        DropdownMenuItem(value: skill, child: Text(skill)),
+                  )
+                  .toList(),
+          onChanged: (value) {
+            if (value != null) {
+              onAddSkill(value); // Remove widget. prefix
+            }
+          },
+          hint: Text(
+            'Select a skill',
+            style: getTextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: AppColors.textSecondary,
+            ),
+          ),
         ),
+        const SizedBox(height: 10),
+        ValueListenableBuilder<List<String>>(
+          valueListenable: selectedSkillsNotifier,
+          builder: (context, selectedSkills, child) {
+            return Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children:
+                  selectedSkills.map((skill) {
+                    return Chip(
+                      label: Text(
+                        skill,
+                        style: getTextStyle(
+                          color: const Color(0xFF37BB74),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      deleteIcon: const Icon(
+                        Icons.cancel,
+                        size: 20,
+                        color: Color(0xFF37BB74),
+                      ),
+                      onDeleted:
+                          () => onRemoveSkill(skill), // Remove widget. prefix
+                      backgroundColor: const Color(0xffEBF8F1),
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    );
+                  }).toList(),
+            );
+          },
+        ),
+
         const SizedBox(height: 8),
         Text(
           "Start Date",
@@ -365,8 +432,9 @@ class ExperienceForm extends StatelessWidget {
                       final DateTime now = DateTime.now();
                       String formattedDate =
                           "${now.day.toString().padLeft(2, '0')}.${now.month.toString().padLeft(2, '0')}.${now.year}";
-                      controllers.experienceController
-                          .updateEndDate(formattedDate);
+                      controllers.experienceController.updateEndDate(
+                        formattedDate,
+                      );
                     }
                   },
                 );
@@ -380,7 +448,9 @@ class ExperienceForm extends StatelessWidget {
   }
 
   Future<void> startDate(
-      BuildContext context, ExperienceController controller) async {
+    BuildContext context,
+    ExperienceController controller,
+  ) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -408,7 +478,9 @@ class ExperienceForm extends StatelessWidget {
   }
 
   Future<void> endDate(
-      BuildContext context, ExperienceController controller) async {
+    BuildContext context,
+    ExperienceController controller,
+  ) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
