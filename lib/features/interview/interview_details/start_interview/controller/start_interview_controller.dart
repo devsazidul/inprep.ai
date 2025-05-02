@@ -162,11 +162,12 @@ class StartInterviewController extends GetxController {
 
 
   void onNextQuestion() {
-    if (questionNumber.value < questions.length) {
-      Get.to(() => QuestionWiseFeedback());
-    } else {
-      Get.off(() => OverAllFeedback());
-    }
+    // if (questionNumber.value < questions.length) {
+    //   Get.to(() => QuestionWiseFeedback());
+    // } else {
+    //   Get.off(() => OverAllFeedback());
+    // }
+    Get.to(() => QuestionWiseFeedback());
   }
 
   void onFeedbackNext() {
