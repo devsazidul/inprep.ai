@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/routes/app_routes.dart';
@@ -18,6 +19,7 @@ class Inprepai extends StatelessWidget {
       // Use builder only if you need to use library outside ScreenUtilInit context
       builder: (_, child) {
         return GetMaterialApp(
+          builder: EasyLoading.init(),
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoute.getsplashscreen(),
           getPages: AppRoute.routes,

@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/urls/endpint.dart';
+import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreenController extends GetxController {
   TextEditingController passwordControler = TextEditingController();
@@ -21,37 +28,37 @@ class LoginScreenController extends GetxController {
         emailController.text.isNotEmpty && passwordControler.text.isNotEmpty;
   }
 
-  // Future<void> login() async {
-  //   EasyLoading.show(status: 'Logging in...');
-  //   try {
-  //     Map<String, dynamic> requestBody = {
-  //       'email': emailController.text.trim(),
-  //       'password': passwordControler.text.trim(),
-  //     };
-  //     final response = await http.post(
-  //       Uri.parse(Urls.login),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode(requestBody),
-  //     );
-  //     debugPrint("================1${response.body}");
-  //     debugPrint("===============${response.statusCode}");
-  //     final responseData = jsonDecode(response.body);
-  //     if (response.statusCode == 200 && responseData["accessToken"] != null) {
-  //       SharedPreferences prefs = await SharedPreferences.getInstance();
-  //       await prefs.setString('accessToken', responseData["accessToken"]);
-  //       EasyLoading.showSuccess("Login Successful");
-  //       String planName = prefs.getString('planName') ?? "Basic";
-  //       Get.offAll(() => BottomNavbar(), arguments: planName);
-  //     } else {
-  //       EasyLoading.showError(responseData["message"] ?? "Login Failed");
-  //     }
-  //   } catch (e) {
-  //     EasyLoading.showError("An error occurred");
-  //     debugPrint("Login Error: $e");
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
+  Future<void> login() async {
+    EasyLoading.show(status: 'Logging in...');
+    try {
+      Map<String, dynamic> requestBody = {
+        'email': emailController.text.trim(),
+        'password': passwordControler.text.trim(),
+      };
+      final response = await http.post(
+        Uri.parse(Urls.login),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(requestBody),
+      );
+      debugPrint("================1${response.body}");
+      debugPrint("===============${response.statusCode}");
+      final responseData = jsonDecode(response.body);
+      if (response.statusCode == 200 && responseData["approvalToken"] != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('approvalToken', responseData["approvalToken"]);
+        EasyLoading.showSuccess("Login Successful");
+
+        Get.offAll(() => BottomNavbarView());
+      } else {
+        EasyLoading.showError(responseData["message"] ?? "Login Failed");
+      }
+    } catch (e) {
+      EasyLoading.showError("An error occurred");
+      debugPrint("Login Error: $e");
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
 
   void clearFields() {
     emailController.clear();
