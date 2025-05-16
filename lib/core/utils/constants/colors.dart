@@ -26,9 +26,11 @@ class AppColors {
     0xFF878788,
   ); // Neutral grey for secondary text
   static const Color textWhite = Colors.white;
+  static const Color textThird = Color(0xff333333);
 
   //button color
   static const Color buttonColor = Color(0xff37B874);
+  static const Color otpbg = Color(0xffE5E6EB);
 
   // Background Colors
   static const Color backgroundLight = Color(
