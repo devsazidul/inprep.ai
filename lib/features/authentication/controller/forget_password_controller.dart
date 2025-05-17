@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:inprep_ai/core/urls/endpint.dart';
-import 'package:inprep_ai/features/authentication/screen/login_otp_send_screen.dart';
 
 class ForgetPasswordController extends GetxController {
   TextEditingController emailController = TextEditingController();

@@ -19,6 +19,7 @@ class LoginOtpSendScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     final String email = args['email'] ?? '';
+    // ignore: unused_local_variable
     final String approvalToken = args['approvalToken'] ?? '';
 
     return Scaffold(
