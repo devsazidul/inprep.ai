@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
+import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:inprep_ai/features/profile_screen/screen/chooseplan_screen.dart';
 import 'package:inprep_ai/features/profile_screen/widgets/custom_profile_textfield.dart';
 
@@ -13,6 +14,9 @@ import '../controller/profile_controller.dart';
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
   final ProfileController profileController = Get.put(ProfileController());
+  final HomeScreenController homeScreenController = Get.put(
+    HomeScreenController(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +39,10 @@ class ProfileScreen extends StatelessWidget {
                           radius: 60,
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
-                            radius:
-                                58, // Slightly smaller radius for the inner CircleAvatar
+                            radius: 58,
                             backgroundColor: Colors.white,
                             child: CircleAvatar(
-                              radius:
-                                  80, // Even smaller for the innermost CircleAvatar
+                              radius: 80,
                               backgroundImage:
                                   profileController
                                           .selectedImagePath
@@ -91,17 +93,21 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16),
-                Text(
-                  "Jakob Vaccaro",
-                  style: getTextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff212121),
+                Obx(
+                  () => Text(
+                    homeScreenController.userInfo.value?.data?.name ??
+                        "Jakob Vaccaro",
+                    style: getTextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff212121),
+                    ),
                   ),
                 ),
                 SizedBox(height: 4),
                 Text(
-                  "jakob@123",
+                  homeScreenController.userInfo.value?.data?.email ??
+                      "jakob@123",
                   style: getTextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
@@ -159,28 +165,90 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        CustomProfileTextField(
-                          label: "Full Name",
-                          controller: profileController.fullNameController,
-                          hintText: "Jakob Vaccaro",
-                          enabled: profileController.isEditing.isFalse,
+                        Obx(
+                          () => CustomProfileTextField(
+                            label: "Full Name",
+                            controller: profileController.fullNameController,
+                            hintText:
+                                homeScreenController.isLoadingUser.value
+                                    ? "Loading..."
+                                    : (homeScreenController
+                                            .userInfo
+                                            .value
+                                            ?.data
+                                            ?.name
+                                            ?.isNotEmpty ??
+                                        false)
+                                    ? homeScreenController
+                                        .userInfo
+                                        .value!
+                                        .data!
+                                        .name!
+                                    : "Jakob",
+                            enabled: !profileController.isEditing.value,
+                          ),
                         ),
                         CustomProfileTextField(
                           label: "Email",
                           controller: profileController.emailController,
-                          hintText: "Jakob@gmail.com",
+                          hintText:
+                              homeScreenController.isLoadingUser.value
+                                  ? "Loading..."
+                                  : (homeScreenController
+                                          .userInfo
+                                          .value
+                                          ?.data
+                                          ?.email
+                                          ?.isNotEmpty ??
+                                      false)
+                                  ? homeScreenController
+                                      .userInfo
+                                      .value!
+                                      .data!
+                                      .name!
+                                  : "Jakob@gmail.com",
                           enabled: false,
                         ),
                         CustomProfileTextField(
                           label: "Experience Level",
                           controller: profileController.experiecnceController,
-                          hintText: "Intermideate",
+                          hintText:
+                              homeScreenController.isLoadingUser.value
+                                  ? "Loading..."
+                                  : (homeScreenController
+                                          .userInfo
+                                          .value
+                                          ?.data
+                                          ?.experienceLevel
+                                          ?.isNotEmpty ??
+                                      false)
+                                  ? homeScreenController
+                                      .userInfo
+                                      .value!
+                                      .data!
+                                      .experienceLevel!
+                                  : "Intermidiate",
                           enabled: profileController.isEditing.isFalse,
                         ),
                         CustomProfileTextField(
                           label: "Preferred interview Focus",
                           controller: profileController.preferredController,
-                          hintText: "Technical",
+                          hintText:
+                              homeScreenController.isLoadingUser.value
+                                  ? "Loading..."
+                                  : (homeScreenController
+                                          .userInfo
+                                          .value
+                                          ?.data
+                                          ?.preferredInterviewFocus
+                                          ?.isNotEmpty ??
+                                      false)
+                                  ? homeScreenController
+                                      .userInfo
+                                      .value!
+                                      .data!
+                                      .preferredInterviewFocus!
+                                  : "Technical",
                           enabled: profileController.isEditing.isFalse,
                         ),
                       ],
@@ -266,7 +334,21 @@ class ProfileScreen extends StatelessWidget {
                         CustomProfileTextField(
                           label: "Current Plan",
                           controller: profileController.currentplanController,
-                          hintText: "Free",
+                          hintText: homeScreenController.isLoadingUser.value
+                                  ? "Loading..."
+                                  : (homeScreenController
+                                          .userInfo
+                                          .value
+                                          ?.data
+                                          ?.currentPlan
+                                          ?.isNotEmpty ??
+                                      false)
+                                  ? homeScreenController
+                                      .userInfo
+                                      .value!
+                                      .data!
+                                      .currentPlan!
+                                  : "",
                           enabled: false,
                         ),
                         SizedBox(height: 10),

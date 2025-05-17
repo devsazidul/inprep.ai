@@ -3,17 +3,23 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
+import 'package:inprep_ai/features/authentication/controller/login_screen_controller.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../controller/otp_controller.dart';
 
-class OTPScreen extends StatelessWidget {
+class LoginOtpSendScreen extends StatelessWidget {
   final OTPController otpController = Get.put(OTPController());
+  final LoginScreenController loginScreenController = Get.put(
+    LoginScreenController(),
+  );
 
-  OTPScreen({super.key});
+  LoginOtpSendScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String email = Get.arguments ?? '';
+    final args = Get.arguments as Map<String, dynamic>? ?? {};
+    final String email = args['email'] ?? '';
+    final String approvalToken = args['approvalToken'] ?? '';
 
     return Scaffold(
       backgroundColor: Color(0xffF9FAFB),
@@ -60,12 +66,15 @@ class OTPScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 20),
+
+                // You can also use approvalToken here if needed for debug or display
+                // Text('Token: $approvalToken'),
                 Obx(
                   () => GestureDetector(
                     onTap:
                         otpController.resendEnabled.value
                             ? () {
-                              otpController.resendCode();
+                              loginScreenController.sendCode();
                             }
                             : null,
                     child: Text(
@@ -87,11 +96,10 @@ class OTPScreen extends StatelessWidget {
                     backgroundColor: Color(0xff37B874),
                     textcolor: Color(0xffffffff),
                     borderColor: Colors.transparent,
-
                     onPress:
                         otpController.isFormValid.value
                             ? () {
-                              otpController.validatePin(email);
+                              otpController.loginValidatepin(email);
                             }
                             : null,
                   ),

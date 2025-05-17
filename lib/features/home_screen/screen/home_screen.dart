@@ -6,11 +6,14 @@ import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
+import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:inprep_ai/features/job_screens/myjob.dart' show MyJobsScreen;
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  HomeScreenController homeScreenController = Get.put(HomeScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,17 @@ class HomeScreen extends StatelessWidget {
             Align(
               alignment: Alignment.bottomLeft,
               child: Text(
-                "Nolan Saris",
+                homeScreenController.isLoadingUser.value
+                    ? "Loading..."
+                    : (homeScreenController
+                            .userInfo
+                            .value
+                            ?.data
+                            ?.name
+                            ?.isNotEmpty ??
+                        false)
+                    ? homeScreenController.userInfo.value!.data!.name!
+                    : "Nolan Saris",
                 style: getTextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
