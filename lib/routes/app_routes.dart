@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:inprep_ai/features/authentication/screen/login_otp_send_screen.dart';
 import 'package:inprep_ai/features/authentication/screen/login_screen.dart';
 import 'package:inprep_ai/features/authentication/screen/otp_sent_screen.dart';
 import 'package:inprep_ai/features/authentication/screen/signup_screen.dart';
@@ -22,6 +23,7 @@ class AppRoute {
   static String profileslider = "/profileslider";
   static String viewJobScreen = "/viewJobScreen";
   static String bottomnavbarview = "/bottomnavbarview";
+  static String loginOtpSendScreen = "/loginOtpSendScreen";
 
   static String getLoginScreen() => loginScreen;
   static String getSignupScreen() => signupScreen;
@@ -34,6 +36,7 @@ class AppRoute {
   static String getviewJobScreen() => viewJobScreen;
   static String getprofileslider() => profileslider;
   static String getbottomnavbarview() => bottomnavbarview;
+  static String getloginOtpSendScreen() => loginOtpSendScreen;
 
   static List<GetPage> routes = [
     GetPage(name: loginScreen, page: () => LoginScreen()),
@@ -45,5 +48,6 @@ class AppRoute {
     GetPage(name: profileslider, page: () => ProfileSlider()),
     GetPage(name: otpSentScreen, page: () => OTPScreen()),
     GetPage(name: bottomnavbarview, page: () => BottomNavbarView()),
+    GetPage(name: loginOtpSendScreen, page: () => LoginOtpSendScreen()),
   ];
 }
