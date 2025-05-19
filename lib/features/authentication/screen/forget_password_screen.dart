@@ -5,15 +5,18 @@ import 'package:inprep_ai/core/common/styles/global_text_style.dart'
 import 'package:inprep_ai/core/common/widgets/auhe_custom_textfiled.dart';
 import 'package:inprep_ai/features/authentication/controller/forget_password_controller.dart'
     show ForgetPasswordController;
-import 'package:inprep_ai/features/authentication/screen/otp_sent_screen.dart';
+
 import 'package:inprep_ai/features/authentication/widget/custom_send_button.dart';
 
+// ignore: must_be_immutable
 class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({super.key});
 
   final ForgetPasswordController controller = Get.put(
     ForgetPasswordController(),
   );
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +151,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                 SizedBox(height: 60),
                 CustomSendButton(
                   onPressed: () {
-                    Get.to(() => OTPScreen());
+                    controller.forgetPassword();
                   },
                   text: "Send",
                 ),
