@@ -8,4 +8,5 @@ class Urls {
   static const String sendOtp = '$baseUrl/auth/send_OTP';
   static const String login = '$baseUrl/auth/login';
   static const String forgetPassword = '$baseUrl/auth/forgetPassword';
+  static const String resumeupload = '$baseUrl/resume/upload-resume';
 }

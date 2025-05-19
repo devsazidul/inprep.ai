@@ -28,10 +28,7 @@ class OTPController extends GetxController {
 
   var errorColor = false.obs;
 
-
-
-
-//====================================================================================
+  //====================================================================================
   void validatePin(String? email) async {
     debugPrint("Parsing email: $email");
 
@@ -88,70 +85,71 @@ class OTPController extends GetxController {
     }
   }
 
-//====================================================================================
+  //====================================================================================
   void loginValidatepin(String? email) async {
-  debugPrint("Parsing email: $email");
+    debugPrint("Parsing email: $email");
 
-  try {
-    EasyLoading.show(status: 'Verifying OTP...');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? accessToken = prefs.getString('approvalToken');
+    try {
+      EasyLoading.show(status: 'Verifying OTP...');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('token');
 
-    if (accessToken == null || accessToken.isEmpty) {
-      EasyLoading.showError("Session expired. Please login again.");
-      return;
-    }
-
-    String otp = pinController.text.trim();
-    debugPrint("User input OTP: $otp");
-
-    if (otp.isEmpty) {
-      EasyLoading.showError("Please enter a valid OTP.");
-      return;
-    }
-
-    debugPrint('Sending OTP verification request with token: $accessToken and OTP: $otp');
-
-    final response = await http.post(
-      Uri.parse(Urls.verifyOtp),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':  accessToken,  // Pass token here
-      },
-      body: jsonEncode({
-        "token": accessToken,
-        "recivedOTP": otp,  // Only send OTP in body
-      }),
-    );
-
-    debugPrint('Response Body: ${response.body}');
-    debugPrint("Status Code: ${response.statusCode}");
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      debugPrint('OTP Verified Successfully, navigating...');
-      EasyLoading.showSuccess('OTP Verified Successfully');
-      pinController.clear(); // Clear OTP input field here
-      Get.to(() => BottomNavbarView());
-    } else {
-      debugPrint("Failed with status code: ${response.statusCode}");
-      var responseData = jsonDecode(response.body);
-      var errorMessage = responseData['message'] ?? 'An error occurred';
-      if (errorMessage.contains('Invalid or expired OTP')) {
-        errorColor.value = true;
-        EasyLoading.showError("Invalid or expired OTP. Please try again.");
-      } else if (errorMessage.contains('Invalid token data')) {
-        EasyLoading.showError("Invalid session token. Please login again.");
-      } else {
-        EasyLoading.showError(errorMessage);
+      if (accessToken == null || accessToken.isEmpty) {
+        EasyLoading.showError("Session expired. Please login again.");
+        return;
       }
-    }
-  } catch (e) {
-    EasyLoading.showError("Something went wrong: $e");
-  } finally {
-    EasyLoading.dismiss();
-  }
-}
 
+      String otp = pinController.text.trim();
+      debugPrint("User input OTP: $otp");
+
+      if (otp.isEmpty) {
+        EasyLoading.showError("Please enter a valid OTP.");
+        return;
+      }
+
+      debugPrint(
+        'Sending OTP verification request with token: $accessToken and OTP: $otp',
+      );
+
+      final response = await http.post(
+        Uri.parse(Urls.verifyOtp),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': accessToken, // Pass token here
+        },
+        body: jsonEncode({
+          "token": accessToken,
+          "recivedOTP": otp, // Only send OTP in body
+        }),
+      );
+
+      debugPrint('Response Body: ${response.body}');
+      debugPrint("Status Code: ${response.statusCode}");
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        debugPrint('OTP Verified Successfully, navigating...');
+        EasyLoading.showSuccess('OTP Verified Successfully');
+        pinController.clear(); // Clear OTP input field here
+        Get.to(() => BottomNavbarView());
+      } else {
+        debugPrint("Failed with status code: ${response.statusCode}");
+        var responseData = jsonDecode(response.body);
+        var errorMessage = responseData['message'] ?? 'An error occurred';
+        if (errorMessage.contains('Invalid or expired OTP')) {
+          errorColor.value = true;
+          EasyLoading.showError("Invalid or expired OTP. Please try again.");
+        } else if (errorMessage.contains('Invalid token data')) {
+          EasyLoading.showError("Invalid session token. Please login again.");
+        } else {
+          EasyLoading.showError(errorMessage);
+        }
+      }
+    } catch (e) {
+      EasyLoading.showError("Something went wrong: $e");
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
 
   void resendCode() async {
     debugPrint("Entered resendCode function.");

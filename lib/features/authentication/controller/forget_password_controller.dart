@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/urls/endpint.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgetPasswordController extends GetxController {
   TextEditingController emailController = TextEditingController();
@@ -10,64 +16,44 @@ class ForgetPasswordController extends GetxController {
     toggleValue.value = toggleValue.value == 0 ? 1 : 0;
   }
 
-  // var isLoading = false.obs;
-  // Future<void> sendPasswordResetCode() async {
-  //   try {
-  //     debugPrint(
-  //       '[ForgetPasswordController] Starting password reset process...',
-  //     );
-  //     await EasyLoading.show(
-  //       status: 'Processing...',
-  //       maskType: EasyLoadingMaskType.black,
-  //     );
-  //     isLoading(true);
+  void forgetPassword() async {
+  try {
+    EasyLoading.show(status: 'Sending OTP...');
 
-  //     // Currently only email is enabled (as per your UI)
-  //     final email = emailController.text.trim();
-  //     debugPrint('[ForgetPasswordController] Email entered: $email');
+    String? email = emailController.text.trim();
+    if (email.isEmpty) {
+      EasyLoading.showError("Email field cannot be empty.");
+      return;
+    }
 
-  //     if (email.isEmpty) {
-  //       debugPrint(
-  //         '[ForgetPasswordController] Email validation failed: Empty email',
-  //       );
-  //       await EasyLoading.showError('Please enter your email');
-  //       return;
-  //     }
+    final response = await http.post(
+      Uri.parse(Urls.forgetPassword),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': email, // Sending email to the backend
+      }),
+    );
 
-  //     debugPrint(
-  //       '[ForgetPasswordController] Making API call to send password reset code',
-  //     );
-  //     final response = await http.post(
-  //       Uri.parse(Urls.forgetPassword),
-  //       body: {'email': email},
-  //     );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var responseData = jsonDecode(response.body);
+     
+      var resetLink = responseData['body']['resetLink']; // Extract resetLink
 
-  //     debugPrint(
-  //       '[ForgetPasswordController] API Response: ${response.statusCode}',
-  //     );
-  //     debugPrint('[ForgetPasswordController] Response Body: ${response.body}');
+      if (resetLink != null && resetLink.isNotEmpty) {
+        // Save resetLink to SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('resetLink', resetLink); // Save the resetLink
 
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       debugPrint(
-  //         '[ForgetPasswordController] Password reset code sent successfully',
-  //       );
-  //       await EasyLoading.showSuccess('Code sent successfully');
-  //       emailController.clear();
-  //       Get.to(() => FpOtpSendScreen(), arguments: email);
-  //     } else {
-  //       debugPrint(
-  //         '[ForgetPasswordController] Failed to send reset code: ${response.statusCode}',
-  //       );
-  //       await EasyLoading.showError('Failed to send reset code');
-  //     }
-  //   } catch (e, stackTrace) {
-  //     debugPrint('[ForgetPasswordController] Exception occurred: $e');
-  //     debugPrint(stackTrace.toString());
-  //     await EasyLoading.showError('An error occurred. Please try again');
-  //   } finally {
-  //     debugPrint('[ForgetPasswordController] Process completed');
-  //     await EasyLoading.dismiss();
-  //     isLoading(false);
-  //   }
-  // }
+        EasyLoading.showSuccess('OTP Sent Successfully');
+      }
+    } else {
+      var errorData = jsonDecode(response.body);
+      EasyLoading.showError(errorData['message'] ?? "Failed to send OTP");
+    }
+  } catch (e) {
+    EasyLoading.showError("Something went wrong: $e");
+  } finally {
+    EasyLoading.dismiss();
+  }
+}
 }

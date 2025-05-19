@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:inprep_ai/core/common/styles/global_text_style.dart';
-import 'package:inprep_ai/core/common/widgets/custom_button.dart';
+import 'package:get/get.dart';
+import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
-import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider.dart';
-import 'package:inprep_ai/features/splash_screen/widgets/custom_button.dart';
 
 // ignore: must_be_immutable
 class ProfileSetup extends StatelessWidget {
   ProfileSetup({super.key});
-  ProfileSetupcontroller profileSetupcontroller = Get.put(
-    ProfileSetupcontroller(),
-  );
+  ProfileSetupcontroller profileSetupcontroller = Get.put(ProfileSetupcontroller());
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +20,10 @@ class ProfileSetup extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Heading
                 Text(
-                  "Hellow Russell! \nWelcome",
-                  style: getTextStyle(
+                  "Hello Russell! \nWelcome",
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                     color: Color(0xff212121),
@@ -43,18 +38,23 @@ class ProfileSetup extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 36),
+
+                // "Upload Your Resume" Text
                 Text(
                   "Upload Your Resume",
-                  style: getTextStyle(
+                  style: TextStyle(
                     color: Color(0xff37BB74),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: 12),
+
+                // File Picker Section
                 GestureDetector(
                   onTap: () async {
-                    
+                    // Call the pickFile method from the controller
+                    await profileSetupcontroller.pickFile();
                   },
                   child: Container(
                     width: double.infinity,
@@ -71,7 +71,7 @@ class ProfileSetup extends StatelessWidget {
                             SizedBox(height: 8),
                             Text(
                               "Select File",
-                              style: getTextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff212121),
@@ -80,40 +80,71 @@ class ProfileSetup extends StatelessWidget {
                             SizedBox(height: 8),
                             Text(
                               "Supported Formats: PDF, DOC, DOCX",
-                              style: getTextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff898989),
                               ),
                             ),
+                            // Display selected file name if available
+                            Obx(() {
+                              return Text(
+                                profileSetupcontroller.selectedFileName.value.isEmpty
+                                    ? "No file selected"
+                                    : profileSetupcontroller.selectedFileName.value,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff212121),
+                                ),
+                              );
+                            }),
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-
+                
                 SizedBox(height: 48),
-                CustomButton(
-                  text: "Continue",
-                  width: double.infinity,
-                  height: 48,
-                  textColor: Colors.white,
-                  buttonColor: Color(0xff37BB74),
-                  onTap: () {},
+
+                // Continue Button
+                ElevatedButton(
+                  onPressed: () {
+                    // Continue action
+                    profileSetupcontroller.uploadFile();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff37BB74),
+                    minimumSize: Size(double.infinity, 48),
+                  ),
+                  child: Text(
+                    "Continue",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 SizedBox(height: 16),
-                CustomButton1(
-                  title: "Enter Manually",
-                  textcolor: Color(0xff37BB74),
-                  borderColor: Color(0xff37BB74),
-                  backgroundColor: Colors.white,
-                  onPress: () {
+
+                // Enter Manually Button
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to ProfileSlider screen
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ProfileSlider()),
                     );
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: BorderSide(color: Color(0xff37BB74)),
+                    minimumSize: Size(double.infinity, 48),
+                  ),
+                  child: Text(
+                    "Enter Manually",
+                    style: TextStyle(
+                      color: Color(0xff37BB74),
+                    ),
+                  ),
                 ),
               ],
             ),
