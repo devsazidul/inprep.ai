@@ -1,94 +1,124 @@
-import 'package:flutter/widgets.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/urls/endpint.dart';
+import 'package:inprep_ai/routes/app_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SpChangePasswordController extends GetxController {
+class ChangePasswordController extends GetxController {
   final newPasswordEditingController = TextEditingController();
   final confirmPasswordEditingController = TextEditingController();
 
   var newPasswordError = ''.obs;
   var confirmPasswordError = ''.obs;
 
-  // Clear error messages
+  @override
+  void onClose() {
+    newPasswordEditingController.dispose();
+    confirmPasswordEditingController.dispose();
+    super.onClose();
+  }
+
   void clearErrors() {
     newPasswordError.value = '';
     confirmPasswordError.value = '';
   }
 
-  // Validate passwords
   bool validatePasswords() {
     clearErrors();
+    bool isValid = true;
 
     if (newPasswordEditingController.text.isEmpty) {
       newPasswordError.value = 'Password cannot be empty';
-      return false;
+      isValid = false;
+    } else if (newPasswordEditingController.text.length < 8) {
+      newPasswordError.value = 'Password must be at least 8 characters';
+      isValid = false;
     }
 
     if (confirmPasswordEditingController.text.isEmpty) {
-      confirmPasswordError.value = 'Confirm Password cannot be empty';
-      return false;
-    }
-
-    if (newPasswordEditingController.text !=
+      confirmPasswordError.value = 'Please confirm your password';
+      isValid = false;
+    } else if (newPasswordEditingController.text !=
         confirmPasswordEditingController.text) {
       confirmPasswordError.value = 'Passwords do not match';
-      return false;
+      isValid = false;
     }
 
-    if (newPasswordEditingController.text.length < 8) {
-      newPasswordError.value = 'Password should be at least 8 characters';
-      return false;
-    }
-
-    return true;
+    return isValid;
   }
 
-  // Validate OTP and change password
-  // void changePassword(String? email) async {
-  //   debugPrint("Parsing email: $email");
-  //   debugPrint("New password: ${newPasswordEditingController.text}");
-  //   debugPrint("Confirm password: ${confirmPasswordEditingController.text}");
+  Future<void> changePassword([String? email]) async {
+  if (!validatePasswords()) {
+    debugPrint('Password validation failed.');
+    return;
+  }
 
-  //   if (!validatePasswords()) {
-  //     return; // Don't proceed if validation fails
-  //   }
+  try {
+    EasyLoading.show(status: 'Changing Password...');
+    debugPrint('Fetching SharedPreferences...');
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('token');
 
-  //   try {
-  //     EasyLoading.show(status: 'Verifying OTP...');
+    if (accessToken == null || accessToken.isEmpty) {
+      debugPrint('Access token not found or empty.');
+      EasyLoading.showError('Session expired. Please try again.');
+      return;
+    }
 
-  //     Map<String, String> requestBody = {
-  //       "password": newPasswordEditingController.text,
-  //       "confirmPassword": confirmPasswordEditingController.text,
-  //     };
+    final newPassword = confirmPasswordEditingController.text;
+    debugPrint('Access token found: $accessToken');
+    debugPrint('New password: $newPassword');
 
-  //     final response = await http.put(
-  //       Uri.parse(Urls.updatePassword(email)),
-  //       body: requestBody,
-  //     );
+    final Map<String, dynamic> requestBody = {
+      "token": accessToken,
+      "newPassword": newPassword,
+    };
 
-  //     debugPrint('Response Body: ${response.body}');
-  //     debugPrint("Status Code: ${response.statusCode}");
+    if (email != null && email.isNotEmpty) {
+      requestBody["email"] = email;
+      debugPrint('Email provided: $email');
+    } else {
+      debugPrint('No email provided.');
+    }
 
-  //     if (response.statusCode == 200) {
-  //       EasyLoading.showSuccess('Password Changed Successfully');
-  //       // print('Password changed successfully: ${response.body}');
-  //       // Optionally, reset fields after success
-  //       Get.toNamed(AppRoute.loginScreen);
-  //       newPasswordEditingController.clear();
-  //       confirmPasswordEditingController.clear();
-  //     } else {
-  //       var responseData = jsonDecode(response.body);
-  //       var errorMessage = responseData['message'] ?? 'An error occurred';
+    final requestJson = jsonEncode(requestBody);
+    debugPrint('Request body JSON: $requestJson');
 
-  //       if (errorMessage.contains('Invalid or expired OTP')) {
-  //         EasyLoading.showError("Invalid or expired OTP. Please try again.");
-  //       } else {
-  //         EasyLoading.showError(errorMessage);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     EasyLoading.showError("Something went wrong: $e");
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
+    final response = await http.post(
+      Uri.parse(Urls.changepassword),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken,
+      },
+      body: requestJson,
+    );
+
+    debugPrint('Status Code: ${response.statusCode}');
+    debugPrint('Response Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      debugPrint('Password change successful.');
+      EasyLoading.showSuccess('Password changed successfully!');
+      await prefs.remove('token');
+      debugPrint('Token removed from SharedPreferences.');
+      Get.offAllNamed(AppRoute.loginScreen);
+    } else {
+      debugPrint('Password change failed with status ${response.statusCode}');
+      final errorData = jsonDecode(response.body);
+      final errorMessage = errorData['message'] ?? 'Failed to change password';
+      debugPrint('Error Message: $errorMessage');
+      EasyLoading.showError(errorMessage);
+    }
+  } catch (e) {
+    debugPrint('Exception occurred: $e');
+    EasyLoading.showError('Error changing password: $e');
+  } finally {
+    debugPrint('Dismissing EasyLoading...');
+    EasyLoading.dismiss();
+  }
+}
+
 }

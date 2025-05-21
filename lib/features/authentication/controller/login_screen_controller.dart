@@ -9,7 +9,6 @@ import 'package:inprep_ai/features/authentication/screen/login_otp_send_screen.d
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_setup.dart';
-import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreenController extends GetxController {
@@ -37,82 +36,7 @@ class LoginScreenController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  //===============================================================================================
-  // Future<void> login() async {
-  //   EasyLoading.show(status: 'Logging in...');
-  //   try {
-  //     Map<String, dynamic> requestBody = {
-  //       'email': emailController.text.trim(),
-  //       'password': passwordControler.text.trim(),
-  //     };
 
-  //     final response = await http.post(
-  //       Uri.parse(Urls.login),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode(requestBody),
-  //     );
-
-  //     debugPrint("Response body: ${response.body}");
-  //     debugPrint("Status code: ${response.statusCode}");
-
-  //     if (response.statusCode == 200) {
-  //       final loginInfo = LoginInfo.fromJson(jsonDecode(response.body));
-
-  //       if (loginInfo.approvalToken != null) {
-  //         SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //         // Save tokens and user info as before
-  //         await prefs.setString('approvalToken', loginInfo.approvalToken ?? '');
-  //         await prefs.setString('refreshToken', loginInfo.refreshToken ?? '');
-  //         if (loginInfo.user != null) {
-  //           await prefs.setString('userId', loginInfo.user?.sId ?? '');
-  //           await prefs.setString('userName', loginInfo.user?.name ?? '');
-  //           await prefs.setString('userEmail', loginInfo.user?.email ?? '');
-  //           await prefs.setString('userPhone', loginInfo.user?.phone ?? '');
-  //           await prefs.setString('userRole', loginInfo.user?.role ?? '');
-  //           await prefs.setBool('isLoggedIn', true);
-  //           await prefs.setBool(
-  //             'otpVerified',
-  //             loginInfo.user?.otpVerified ?? false,
-  //           );
-  //         }
-
-  //         EasyLoading.showSuccess(loginInfo.message ?? "Login Successful");
-
-  //         if (loginInfo.user?.otpVerified == false) {
-  //           Get.to(
-  //             () => LoginOtpSendScreen(),
-  //             arguments: {
-  //               'approvalToken': loginInfo.approvalToken ?? '',
-  //               'email': emailController.text.trim(),
-  //             },
-  //           );
-  //           sendCode();
-  //         } else {
-  //           Get.offAll(() => BottomNavbarView());
-  //         }
-  //       } else {
-  //         EasyLoading.showError(
-  //           loginInfo.message ?? "Login Failed - No approval token",
-  //         );
-  //       }
-  //     } else {
-  //       try {
-  //         final errorResponse = jsonDecode(response.body);
-  //         EasyLoading.showError(errorResponse['message'] ?? "Login Failed");
-  //       } catch (e) {
-  //         EasyLoading.showError(
-  //           "Login Failed with status code: ${response.statusCode}",
-  //         );
-  //       }
-  //     }
-  //   } catch (e) {
-  //     EasyLoading.showError("An error occurred during login");
-  //     debugPrint("Login Error: $e");
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
 
   Future<void> login() async {
   EasyLoading.show(status: 'Logging in...');

@@ -17,7 +17,7 @@ class OTPController extends GetxController {
   var isFormValid = false.obs;
 
   // Countdown timer related variables
-  var resendEnabled = true.obs; // To control if the button is enabled
+  var resendEnabled = true.obs;
   var countdown = 120.obs; // Time in seconds for the countdown
   Timer? timer; // Timer instance
 
