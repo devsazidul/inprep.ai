@@ -6,7 +6,7 @@ import '../../../core/common/widgets/auhe_custom_textfiled.dart'
     show AuthCustomTextField;
 
 import '../controller/change_password_controller.dart'
-    show SpChangePasswordController;
+    show ChangePasswordController;
 
 class ChangePassword extends StatelessWidget {
   final String? email;
@@ -14,9 +14,12 @@ class ChangePassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SpChangePasswordController controller = Get.put(
-      SpChangePasswordController(),
+    final ChangePasswordController controller = Get.put(
+      ChangePasswordController(),
     );
+    
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -24,7 +27,7 @@ class ChangePassword extends StatelessWidget {
         centerTitle: true,
         forceMaterialTransparency: true,
         title: Text(
-          'Changed Password',
+          'Change Password',
           style: getTextStyle(
             color: Color(0xFF333333),
             fontSize: 24,
@@ -36,19 +39,10 @@ class ChangePassword extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
           child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 18.0),
-                Text(
-                  'Enter Verification Code:',
-                  style: getTextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                SizedBox(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,13 +61,19 @@ class ChangePassword extends StatelessWidget {
                 AuthCustomTextField(
                   controller: controller.newPasswordEditingController,
                   text: 'Enter your Password',
+                  obscureText: true,
                   onChanged: (value) {
-                    controller.newPasswordError.value =
-                        ''; // Reset error on change
+                    controller.newPasswordError.value = '';
                   },
                   validator: (value) {
                     if (controller.newPasswordError.value.isNotEmpty) {
                       return controller.newPasswordError.value;
+                    }
+                    if (value == null || value.isEmpty) {
+                      return 'Password cannot be empty';
+                    }
+                    if (value.length < 8) {
+                      return 'Password must be at least 8 characters';
                     }
                     return null;
                   },
@@ -96,13 +96,20 @@ class ChangePassword extends StatelessWidget {
                 SizedBox(height: 8),
                 AuthCustomTextField(
                   controller: controller.confirmPasswordEditingController,
-                  text: 'Enter your Password',
+                  text: 'Confirm your Password',
+                  obscureText: true,
                   onChanged: (value) {
                     controller.confirmPasswordError.value = '';
                   },
                   validator: (value) {
                     if (controller.confirmPasswordError.value.isNotEmpty) {
                       return controller.confirmPasswordError.value;
+                    }
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != controller.newPasswordEditingController.text) {
+                      return 'Passwords do not match';
                     }
                     return null;
                   },
@@ -113,7 +120,14 @@ class ChangePassword extends StatelessWidget {
                   textcolor: Colors.white,
                   backgroundColor: Color(0xFF37B874),
                   onPress: () {
-                    //
+                    if (_formKey.currentState!.validate()) {
+                      // Only pass email if it's not null
+                      if (email != null) {
+                        controller.changePassword(email!);
+                      } else {
+                        controller.changePassword();
+                      }
+                    }
                   },
                 ),
               ],

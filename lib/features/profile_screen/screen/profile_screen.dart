@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
@@ -25,78 +24,83 @@ class ProfileScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 58,
+                    Obx(
+                      () => Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
                             backgroundColor: Colors.white,
                             child: CircleAvatar(
-                              radius: 80,
-                              backgroundImage:
-                                  profileController
-                                          .selectedImagePath
-                                          .value
-                                          .isEmpty
-                                      ? (profileController
-                                              .logoUrl
-                                              .value
-                                              .isNotEmpty
-                                          ? NetworkImage(
-                                            profileController.logoUrl.value,
-                                          )
-                                          : AssetImage(IconPath.profileicon)
-                                              as ImageProvider)
-                                      : FileImage(
-                                        File(
-                                          profileController
-                                              .selectedImagePath
-                                              .value,
+                              radius: 58,
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                radius: 80,
+                                backgroundImage:
+                                    profileController
+                                            .selectedImagePath
+                                            .value
+                                            .isEmpty
+                                        ? (profileController
+                                                .logoUrl
+                                                .value
+                                                .isNotEmpty
+                                            ? NetworkImage(
+                                              profileController.logoUrl.value,
+                                            )
+                                            : const AssetImage(
+                                                  IconPath.profileicon,
+                                                )
+                                                as ImageProvider)
+                                        : FileImage(
+                                          File(
+                                            profileController
+                                                .selectedImagePath
+                                                .value,
+                                          ),
                                         ),
-                                      ),
-                            ),
-                          ),
-                        ),
-                        Transform.translate(
-                          offset: Offset(15, 95),
-                          child: GestureDetector(
-                            onTap: () {
-                              profileController.showImagePicker(context);
-                            },
-                            child: Container(
-                              height: 24,
-                              width: 24,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Icon(
-                                Icons.edit,
-                                size: 12,
-                                color: Color(0xff37BB74),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                          Transform.translate(
+                            offset: const Offset(15, 95),
+                            child: GestureDetector(
+                              onTap: () {
+                                profileController.showImagePicker(context);
+                              },
+                              child: Container(
+                                height: 24,
+                                width: 24,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: const Icon(
+                                  Icons.edit,
+                                  size: 12,
+                                  color: Color(0xff37BB74),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Obx(
                   () => Text(
-                    homeScreenController.userInfo.value?.data?.name ??
-                        "Jakob Vaccaro",
+                    profileController.fullNameController.text.isNotEmpty
+                        ? profileController.fullNameController.text
+                        : homeScreenController.userInfo.value?.data?.name ??
+                            "Jakob Vaccaro",
                     style: getTextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -104,7 +108,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   homeScreenController.userInfo.value?.data?.email ??
                       "jakob@123",
@@ -114,28 +118,37 @@ class ProfileScreen extends StatelessWidget {
                     color: Color(0xff212121),
                   ),
                 ),
-                SizedBox(height: 12),
-                GestureDetector(
-                  onTap: () {
-                    profileController.toggleEdit();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Edit",
-                        style: getTextStyle(
-                          color: Color(0xff37B874),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                const SizedBox(height: 12),
+                Obx(() {
+                  final showSave =
+                      profileController.isEditing.value ||
+                      profileController.hasImageChanged.value;
+                  return GestureDetector(
+                    onTap: () {
+                      profileController.toggleEdit();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          showSave ? "Save" : "Edit",
+                          style: getTextStyle(
+                            color: Color(0xff37BB74),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 8),
-                      Icon(Icons.edit, size: 15, color: Color(0xff37B874)),
-                    ],
-                  ),
-                ),
-
+                        const SizedBox(width: 8),
+                        Icon(
+                          showSave ? Icons.save : Icons.edit,
+                          size: 15,
+                          color: Color(0xff37B874),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -149,13 +162,12 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 12,
@@ -185,7 +197,7 @@ class ProfileScreen extends StatelessWidget {
                                         .data!
                                         .name!
                                     : "Jakob",
-                            enabled: !profileController.isEditing.value,
+                            enabled: profileController.isEditing.value,
                           ),
                         ),
                         CustomProfileTextField(
@@ -205,57 +217,61 @@ class ProfileScreen extends StatelessWidget {
                                       .userInfo
                                       .value!
                                       .data!
-                                      .name!
+                                      .email!
                                   : "Jakob@gmail.com",
                           enabled: false,
                         ),
-                        CustomProfileTextField(
-                          label: "Experience Level",
-                          controller: profileController.experiecnceController,
-                          hintText:
-                              homeScreenController.isLoadingUser.value
-                                  ? "Loading..."
-                                  : (homeScreenController
-                                          .userInfo
-                                          .value
-                                          ?.data
-                                          ?.experienceLevel
-                                          ?.isNotEmpty ??
-                                      false)
-                                  ? homeScreenController
-                                      .userInfo
-                                      .value!
-                                      .data!
-                                      .experienceLevel!
-                                  : "Intermidiate",
-                          enabled: profileController.isEditing.isFalse,
+                        Obx(
+                          () => CustomProfileTextField(
+                            label: "Experience Level",
+                            controller: profileController.experiecnceController,
+                            hintText:
+                                homeScreenController.isLoadingUser.value
+                                    ? "Loading..."
+                                    : (homeScreenController
+                                            .userInfo
+                                            .value
+                                            ?.data
+                                            ?.experienceLevel
+                                            ?.isNotEmpty ??
+                                        false)
+                                    ? homeScreenController
+                                        .userInfo
+                                        .value!
+                                        .data!
+                                        .experienceLevel!
+                                    : "Intermediate",
+                            enabled: profileController.isEditing.value,
+                          ),
                         ),
-                        CustomProfileTextField(
-                          label: "Preferred interview Focus",
-                          controller: profileController.preferredController,
-                          hintText:
-                              homeScreenController.isLoadingUser.value
-                                  ? "Loading..."
-                                  : (homeScreenController
-                                          .userInfo
-                                          .value
-                                          ?.data
-                                          ?.preferredInterviewFocus
-                                          ?.isNotEmpty ??
-                                      false)
-                                  ? homeScreenController
-                                      .userInfo
-                                      .value!
-                                      .data!
-                                      .preferredInterviewFocus!
-                                  : "Technical",
-                          enabled: profileController.isEditing.isFalse,
+                        Obx(
+                          () => CustomProfileTextField(
+                            label: "Preferred Interview Focus",
+                            controller: profileController.preferredController,
+                            hintText:
+                                homeScreenController.isLoadingUser.value
+                                    ? "Loading..."
+                                    : (homeScreenController
+                                            .userInfo
+                                            .value
+                                            ?.data
+                                            ?.preferredInterviewFocus
+                                            ?.isNotEmpty ??
+                                        false)
+                                    ? homeScreenController
+                                        .userInfo
+                                        .value!
+                                        .data!
+                                        .preferredInterviewFocus!
+                                    : "Technical",
+                            enabled: profileController.isEditing.value,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -269,13 +285,12 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 12,
@@ -301,7 +316,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -315,13 +330,12 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 12,
@@ -334,7 +348,8 @@ class ProfileScreen extends StatelessWidget {
                         CustomProfileTextField(
                           label: "Current Plan",
                           controller: profileController.currentplanController,
-                          hintText: homeScreenController.isLoadingUser.value
+                          hintText:
+                              homeScreenController.isLoadingUser.value
                                   ? "Loading..."
                                   : (homeScreenController
                                           .userInfo
@@ -348,10 +363,10 @@ class ProfileScreen extends StatelessWidget {
                                       .value!
                                       .data!
                                       .currentPlan!
-                                  : "",
+                                  : "Free Plan",
                           enabled: false,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: GestureDetector(
