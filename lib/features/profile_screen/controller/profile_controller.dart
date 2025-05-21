@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:path/path.dart' as path;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,25 +20,71 @@ class ProfileController extends GetxController {
   final TextEditingController confidenceController = TextEditingController();
   final TextEditingController currentplanController = TextEditingController();
 
+  final HomeScreenController homeScreenController = Get.find();
+
   var isEditing = false.obs;
-  final logoUrl = ''.obs;
+  var logoUrl = ''.obs;
   var selectedImagePath = ''.obs;
   var hasImageChanged = false.obs;
+  var isLoading = false.obs;
 
-  var originalFullName = '';
-  var originalExperience = '';
-  var originalPreferred = '';
+  String originalFullName = '';
+  String originalExperience = '';
+  String originalPreferred = '';
+
+  @override
+  void onInit() {
+    super.onInit();
+    initializeData();
+  }
+
+  @override
+  void onClose() {
+    fullNameController.dispose();
+    emailController.dispose();
+    experiecnceController.dispose();
+    preferredController.dispose();
+    interviewController.dispose();
+    confidenceController.dispose();
+    currentplanController.dispose();
+    super.onClose();
+  }
+
+  Future<void> initializeData() async {
+    try {
+      isLoading(true);
+      await homeScreenController.getUser();
+
+      final user = homeScreenController.userInfo.value?.data;
+      if (user != null) {
+        fullNameController.text = user.name ?? '';
+        emailController.text = user.email ?? '';
+        experiecnceController.text = user.experienceLevel ?? '';
+        preferredController.text = user.preferedInterviewFocus ?? '';
+        currentplanController.text = user.currentPlan ?? 'Free Plan';
+        interviewController.text = user.interviewTaken?.toString() ?? '18';
+        confidenceController.text = user.confidence?.toString() ?? '80%';
+
+        if (user.img != null && user.img!.isNotEmpty) {
+          logoUrl.value = user.img!;
+        }
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load profile data');
+    } finally {
+      isLoading(false);
+    }
+  }
 
   void toggleEdit() {
-    if (isEditing.value || hasImageChanged.value) {
+    if (isEditing.value) {
       saveChanges();
-      hasImageChanged.value = false;
     } else {
       originalFullName = fullNameController.text;
       originalExperience = experiecnceController.text;
       originalPreferred = preferredController.text;
+      isEditing.value = true;
     }
-    isEditing.toggle();
   }
 
   Future<void> saveChanges() async {
@@ -53,14 +100,8 @@ class ProfileController extends GetxController {
     required String experienceLevel,
     required String preferredInterviewFocus,
   }) async {
-    debugPrint('Starting updateProfile...');
-    debugPrint(
-      'Name: $name, ExperienceLevel: $experienceLevel, PreferredInterviewFocus: $preferredInterviewFocus',
-    );
-
-    EasyLoading.show(status: "Updating profile...");
-
     try {
+      EasyLoading.show(status: "Updating profile...");
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
       final accessToken = prefs.getString('approvalToken');
@@ -73,11 +114,13 @@ class ProfileController extends GetxController {
       final request = http.MultipartRequest('PATCH', url);
       request.headers['Authorization'] = accessToken;
 
-      request.fields['data'] = jsonEncode({
+      final requestData = {
         'name': name,
         'experienceLevel': experienceLevel,
         'preferredInterviewFocus': preferredInterviewFocus,
-      });
+      };
+
+      request.fields['data'] = jsonEncode(requestData);
 
       if (selectedImagePath.value.isNotEmpty) {
         final file = File(selectedImagePath.value);
@@ -105,22 +148,22 @@ class ProfileController extends GetxController {
             preferredInterviewFocus,
           );
           EasyLoading.showSuccess("Profile updated successfully!");
+          isEditing.value = false;
+          await homeScreenController.getUser(); // Refresh user data
         } else {
-          final errorMessage =
-              responseData['message'] ?? "Profile update failed";
-          EasyLoading.showError(errorMessage);
-          throw Exception(errorMessage);
+          throw Exception(responseData['message'] ?? "Profile update failed");
         }
       } else {
-        final errorMessage = _parseError(responseData, response.statusCode);
-        EasyLoading.showError(errorMessage);
-        throw Exception(errorMessage);
+        throw Exception(_parseError(responseData, response.statusCode));
       }
     } catch (e) {
-      debugPrint('Update profile error: $e');
       EasyLoading.showError(
         'Update failed: ${e.toString().replaceAll('Exception: ', '')}',
       );
+      // Revert to original values on failure
+      fullNameController.text = originalFullName;
+      experiecnceController.text = originalExperience;
+      preferredController.text = originalPreferred;
     }
   }
 
@@ -130,8 +173,6 @@ class ProfileController extends GetxController {
     String experienceLevel,
     String preferredInterviewFocus,
   ) async {
-    debugPrint('Profile update success');
-
     if (data['data'] != null && data['data']['img'] != null) {
       logoUrl.value = data['data']['img'];
       selectedImagePath.value = '';
@@ -170,15 +211,6 @@ class ProfileController extends GetxController {
     }
   }
 
-  void cancelEditing() {
-    fullNameController.text = originalFullName;
-    experiecnceController.text = originalExperience;
-    preferredController.text = originalPreferred;
-    selectedImagePath.value = '';
-    isEditing.value = false;
-    hasImageChanged.value = false;
-  }
-
   final ImagePicker _imagePicker = ImagePicker();
 
   Future<void> pickImage(ImageSource source) async {
@@ -187,16 +219,10 @@ class ProfileController extends GetxController {
       if (pickedFile != null) {
         selectedImagePath.value = pickedFile.path;
         hasImageChanged.value = true;
-      } else {
-        EasyLoading.showInfo("No image selected");
       }
     } catch (e) {
       EasyLoading.showError("Failed to pick an image: $e");
     }
-  }
-
-  File getSelectedImage() {
-    return File(selectedImagePath.value);
   }
 
   void showImagePicker(BuildContext context) {
