@@ -5,7 +5,6 @@ import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/common/widgets/auhe_custom_textfiled.dart';
 import 'package:inprep_ai/features/authentication/controller/forget_password_controller.dart';
 import 'package:inprep_ai/features/authentication/widget/custom_send_button.dart';
-import 'forget_password_otp_screen.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({super.key});

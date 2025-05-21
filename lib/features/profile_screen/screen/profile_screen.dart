@@ -7,32 +7,53 @@ import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:inprep_ai/features/profile_screen/screen/chooseplan_screen.dart';
 import 'package:inprep_ai/features/profile_screen/widgets/custom_profile_textfield.dart';
-
 import '../controller/profile_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
+
   final ProfileController profileController = Get.put(ProfileController());
-  final HomeScreenController homeScreenController = Get.put(
-    HomeScreenController(),
-  );
+  final HomeScreenController homeScreenController = Get.find();
+
+  Widget _buildProfileImage() {
+    if (profileController.selectedImagePath.value.isNotEmpty) {
+      return CircleAvatar(
+        radius: 80,
+        backgroundImage: FileImage(
+          File(profileController.selectedImagePath.value),
+        ),
+      );
+    } else if (profileController.logoUrl.value.isNotEmpty) {
+      return CircleAvatar(
+        radius: 80,
+        backgroundImage: NetworkImage(profileController.logoUrl.value),
+      );
+    }
+    return CircleAvatar(
+      radius: 80,
+      backgroundImage: const AssetImage(IconPath.profileicon),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryBackground,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Obx(
-                      () => Stack(
+        child: Obx(() {
+          if (profileController.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
                         children: [
                           CircleAvatar(
                             radius: 60,
@@ -40,32 +61,7 @@ class ProfileScreen extends StatelessWidget {
                             child: CircleAvatar(
                               radius: 58,
                               backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                radius: 80,
-                                backgroundImage:
-                                    profileController
-                                            .selectedImagePath
-                                            .value
-                                            .isEmpty
-                                        ? (profileController
-                                                .logoUrl
-                                                .value
-                                                .isNotEmpty
-                                            ? NetworkImage(
-                                              profileController.logoUrl.value,
-                                            )
-                                            : const AssetImage(
-                                                  IconPath.profileicon,
-                                                )
-                                                as ImageProvider)
-                                        : FileImage(
-                                          File(
-                                            profileController
-                                                .selectedImagePath
-                                                .value,
-                                          ),
-                                        ),
-                              ),
+                              child: _buildProfileImage(),
                             ),
                           ),
                           Transform.translate(
@@ -91,12 +87,10 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Obx(
-                  () => Text(
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
                     profileController.fullNameController.text.isNotEmpty
                         ? profileController.fullNameController.text
                         : homeScreenController.userInfo.value?.data?.name ??
@@ -107,31 +101,24 @@ class ProfileScreen extends StatelessWidget {
                       color: Color(0xff212121),
                     ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  homeScreenController.userInfo.value?.data?.email ??
-                      "jakob@123",
-                  style: getTextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xff212121),
+                  const SizedBox(height: 4),
+                  Text(
+                    homeScreenController.userInfo.value?.data?.email ??
+                        "jakob@123",
+                    style: getTextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff212121),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                Obx(() {
-                  final showSave =
-                      profileController.isEditing.value ||
-                      profileController.hasImageChanged.value;
-                  return GestureDetector(
-                    onTap: () {
-                      profileController.toggleEdit();
-                    },
+                  const SizedBox(height: 12),
+                  GestureDetector(
+                    onTap: profileController.toggleEdit,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          showSave ? "Save" : "Edit",
+                          profileController.isEditing.value ? "Save" : "Edit",
                           style: getTextStyle(
                             color: Color(0xff37BB74),
                             fontSize: 16,
@@ -140,258 +127,177 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Icon(
-                          showSave ? Icons.save : Icons.edit,
+                          profileController.isEditing.value ? Icons.save : Icons.edit,
                           size: 15,
                           color: Color(0xff37B874),
                         ),
                       ],
                     ),
-                  );
-                }),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Personal Information",
-                      style: getTextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff212121),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 12,
-                      right: 12,
-                      top: 5,
-                      bottom: 5,
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Personal Information",
+                        style: getTextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff212121),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Column(
-                      children: [
-                        Obx(
-                          () => CustomProfileTextField(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12,
+                        right: 12,
+                        top: 5,
+                        bottom: 5,
+                      ),
+                      child: Column(
+                        children: [
+                          CustomProfileTextField(
                             label: "Full Name",
                             controller: profileController.fullNameController,
-                            hintText:
-                                homeScreenController.isLoadingUser.value
-                                    ? "Loading..."
-                                    : (homeScreenController
-                                            .userInfo
-                                            .value
-                                            ?.data
-                                            ?.name
-                                            ?.isNotEmpty ??
-                                        false)
-                                    ? homeScreenController
-                                        .userInfo
-                                        .value!
-                                        .data!
-                                        .name!
-                                    : "Jakob",
+                            hintText: "Enter your full name",
                             enabled: profileController.isEditing.value,
                           ),
-                        ),
-                        CustomProfileTextField(
-                          label: "Email",
-                          controller: profileController.emailController,
-                          hintText:
-                              homeScreenController.isLoadingUser.value
-                                  ? "Loading..."
-                                  : (homeScreenController
-                                          .userInfo
-                                          .value
-                                          ?.data
-                                          ?.email
-                                          ?.isNotEmpty ??
-                                      false)
-                                  ? homeScreenController
-                                      .userInfo
-                                      .value!
-                                      .data!
-                                      .email!
-                                  : "Jakob@gmail.com",
-                          enabled: false,
-                        ),
-                        Obx(
-                          () => CustomProfileTextField(
+                          CustomProfileTextField(
+                            label: "Email",
+                            controller: profileController.emailController,
+                            hintText: "Enter your email",
+                            enabled: false,
+                          ),
+                          CustomProfileTextField(
                             label: "Experience Level",
                             controller: profileController.experiecnceController,
-                            hintText:
-                                homeScreenController.isLoadingUser.value
-                                    ? "Loading..."
-                                    : (homeScreenController
-                                            .userInfo
-                                            .value
-                                            ?.data
-                                            ?.experienceLevel
-                                            ?.isNotEmpty ??
-                                        false)
-                                    ? homeScreenController
-                                        .userInfo
-                                        .value!
-                                        .data!
-                                        .experienceLevel!
-                                    : "Intermediate",
+                            hintText: "Enter your experience level",
                             enabled: profileController.isEditing.value,
                           ),
-                        ),
-                        Obx(
-                          () => CustomProfileTextField(
+                          CustomProfileTextField(
                             label: "Preferred Interview Focus",
                             controller: profileController.preferredController,
-                            hintText:
-                                homeScreenController.isLoadingUser.value
-                                    ? "Loading..."
-                                    : (homeScreenController
-                                            .userInfo
-                                            .value
-                                            ?.data
-                                            ?.preferredInterviewFocus
-                                            ?.isNotEmpty ??
-                                        false)
-                                    ? homeScreenController
-                                        .userInfo
-                                        .value!
-                                        .data!
-                                        .preferredInterviewFocus!
-                                    : "Technical",
+                            hintText: "Enter your preferred focus",
                             enabled: profileController.isEditing.value,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Performance",
-                      style: getTextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff212121),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 12,
-                      right: 12,
-                      top: 5,
-                      bottom: 5,
-                    ),
-                    child: Column(
-                      children: [
-                        CustomProfileTextField(
-                          label: "Interview Taken",
-                          controller: profileController.interviewController,
-                          hintText: "18",
-                          enabled: false,
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Performance",
+                        style: getTextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff212121),
                         ),
-                        CustomProfileTextField(
-                          label: "Confidence",
-                          controller: profileController.confidenceController,
-                          hintText: "80%",
-                          enabled: false,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Subscription",
-                      style: getTextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff212121),
+                  const SizedBox(height: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12,
+                        right: 12,
+                        top: 5,
+                        bottom: 5,
+                      ),
+                      child: Column(
+                        children: [
+                          CustomProfileTextField(
+                            label: "Interview Taken",
+                            controller: profileController.interviewController,
+                            hintText: "18",
+                            enabled: false,
+                          ),
+                          CustomProfileTextField(
+                            label: "Confidence",
+                            controller: profileController.confidenceController,
+                            hintText: "80%",
+                            enabled: false,
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 12,
-                      right: 12,
-                      top: 5,
-                      bottom: 5,
-                    ),
-                    child: Column(
-                      children: [
-                        CustomProfileTextField(
-                          label: "Current Plan",
-                          controller: profileController.currentplanController,
-                          hintText:
-                              homeScreenController.isLoadingUser.value
-                                  ? "Loading..."
-                                  : (homeScreenController
-                                          .userInfo
-                                          .value
-                                          ?.data
-                                          ?.currentPlan
-                                          ?.isNotEmpty ??
-                                      false)
-                                  ? homeScreenController
-                                      .userInfo
-                                      .value!
-                                      .data!
-                                      .currentPlan!
-                                  : "Free Plan",
-                          enabled: false,
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Subscription",
+                        style: getTextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff212121),
                         ),
-                        const SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.to(ChooseplanScreen());
-                            },
-                            child: Text(
-                              "Upgrade",
-                              style: getTextStyle(
-                                color: Color(0xff37BB74),
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12,
+                        right: 12,
+                        top: 5,
+                        bottom: 5,
+                      ),
+                      child: Column(
+                        children: [
+                          CustomProfileTextField(
+                            label: "Current Plan",
+                            controller: profileController.currentplanController,
+                            hintText: "Free Plan",
+                            enabled: false,
+                          ),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => ChooseplanScreen());
+                              },
+                              child: Text(
+                                "Upgrade",
+                                style: getTextStyle(
+                                  color: Color(0xff37BB74),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.width * 0.28),
-              ],
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.28),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }

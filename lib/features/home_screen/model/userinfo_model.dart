@@ -1,3 +1,392 @@
+// class UserInfo {
+//   bool? success;
+//   String? message;
+//   Data? data;
+
+//   UserInfo({this.success, this.message, this.data});
+
+//   factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
+//         success: json['success'] as bool?,
+//         message: json['message'] as String?,
+//         data: json['data'] != null ? Data.fromJson(json['data']) : null,
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         'success': success,
+//         'message': message,
+//         if (data != null) 'data': data!.toJson(),
+//       };
+// }
+
+// class Data {
+//   String? sId;
+//   String? name;
+//   String? phone;
+//   String? email;
+//   String? experienceLevel;
+//   String? preferredInterviewFocus;
+//   bool? emailNotification;
+//   int? interviewTaken;
+//   int? confidence;
+//   bool? isResumeUploaded;
+//   bool? isAboutMeGenerated;
+//   String? generatedAboutMe;
+//   bool? isAboutMeVideoChecked;
+//   List<dynamic>? appliedJobs; // Changed from List<Null>? to List<dynamic>?
+//   UserId? userId;
+//   String? currentPlan;
+//   String? lastJobNotificationDate;
+//   bool? isDeleted;
+//   List<dynamic>? progress; // Changed from List<Null>? to List<dynamic>?
+//   String? createdAt;
+//   String? updatedAt;
+//   int? iV;
+
+//   Data({
+//     this.sId,
+//     this.name,
+//     this.phone,
+//     this.email,
+//     this.experienceLevel,
+//     this.preferredInterviewFocus,
+//     this.emailNotification,
+//     this.interviewTaken,
+//     this.confidence,
+//     this.isResumeUploaded,
+//     this.isAboutMeGenerated,
+//     this.generatedAboutMe,
+//     this.isAboutMeVideoChecked,
+//     this.appliedJobs,
+//     this.userId,
+//     this.currentPlan,
+//     this.lastJobNotificationDate,
+//     this.isDeleted,
+//     this.progress,
+//     this.createdAt,
+//     this.updatedAt,
+//     this.iV,
+//   });
+
+//   factory Data.fromJson(Map<String, dynamic> json) => Data(
+//         sId: json['_id'] as String?,
+//         name: json['name'] as String?,
+//         phone: json['phone'] as String?,
+//         email: json['email'] as String?,
+//         experienceLevel: json['experienceLevel'] as String?,
+//         preferredInterviewFocus: json['preferedInterviewFocus'] as String?, // note: original spelling kept
+//         emailNotification: json['emailNotification'] as bool?,
+//         interviewTaken: json['interviewTaken'] as int?,
+//         confidence: json['confidence'] as int?,
+//         isResumeUploaded: json['isResumeUploaded'] as bool?,
+//         isAboutMeGenerated: json['isAboutMeGenerated'] as bool?,
+//         generatedAboutMe: json['generatedAboutMe'] as String?,
+//         isAboutMeVideoChecked: json['isAboutMeVideoChecked'] as bool?,
+//         appliedJobs: json['appliedJobs'] as List<dynamic>?,
+//         userId: json['user_id'] != null ? UserId.fromJson(json['user_id']) : null,
+//         currentPlan: json['currentPlan'] as String?,
+//         lastJobNotificationDate: json['lastJobNotificationDate'] as String?,
+//         isDeleted: json['isDeleted'] as bool?,
+//         progress: json['progress'] as List<dynamic>?,
+//         createdAt: json['createdAt'] as String?,
+//         updatedAt: json['updatedAt'] as String?,
+//         iV: json['__v'] as int?,
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         '_id': sId,
+//         'name': name,
+//         'phone': phone,
+//         'email': email,
+//         'experienceLevel': experienceLevel,
+//         'preferedInterviewFocus': preferredInterviewFocus,
+//         'emailNotification': emailNotification,
+//         'interviewTaken': interviewTaken,
+//         'confidence': confidence,
+//         'isResumeUploaded': isResumeUploaded,
+//         'isAboutMeGenerated': isAboutMeGenerated,
+//         'generatedAboutMe': generatedAboutMe,
+//         'isAboutMeVideoChecked': isAboutMeVideoChecked,
+//         if (appliedJobs != null) 'appliedJobs': appliedJobs,
+//         if (userId != null) 'user_id': userId!.toJson(),
+//         'currentPlan': currentPlan,
+//         'lastJobNotificationDate': lastJobNotificationDate,
+//         'isDeleted': isDeleted,
+//         if (progress != null) 'progress': progress,
+//         'createdAt': createdAt,
+//         'updatedAt': updatedAt,
+//         '__v': iV,
+//       };
+// }
+
+// class UserId {
+//   String? sId;
+//   String? name;
+//   String? phone;
+//   String? email;
+//   String? password;
+//   String? role;
+//   bool? agreedToTerms;
+//   String? sentOTP;
+//   bool? otpVerified;
+//   bool? isDeleted;
+//   bool? isBlocked;
+//   bool? isLoggedIn;
+//   String? createdAt;
+//   String? updatedAt;
+//   int? iV;
+
+//   UserId({
+//     this.sId,
+//     this.name,
+//     this.phone,
+//     this.email,
+//     this.password,
+//     this.role,
+//     this.agreedToTerms,
+//     this.sentOTP,
+//     this.otpVerified,
+//     this.isDeleted,
+//     this.isBlocked,
+//     this.isLoggedIn,
+//     this.createdAt,
+//     this.updatedAt,
+//     this.iV,
+//   });
+
+//   factory UserId.fromJson(Map<String, dynamic> json) => UserId(
+//         sId: json['_id'] as String?,
+//         name: json['name'] as String?,
+//         phone: json['phone'] as String?,
+//         email: json['email'] as String?,
+//         password: json['password'] as String?,
+//         role: json['role'] as String?,
+//         agreedToTerms: json['agreedToTerms'] as bool? ?? json['aggriedToTerms'] as bool?, // fallback for typo in source JSON
+//         sentOTP: json['sentOTP'] as String?,
+//         otpVerified: json['OTPverified'] as bool?,
+//         isDeleted: json['isDeleted'] as bool?,
+//         isBlocked: json['isBlocked'] as bool?,
+//         isLoggedIn: json['isLoggedIn'] as bool?,
+//         createdAt: json['createdAt'] as String?,
+//         updatedAt: json['updatedAt'] as String?,
+//         iV: json['__v'] as int?,
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         '_id': sId,
+//         'name': name,
+//         'phone': phone,
+//         'email': email,
+//         'password': password,
+//         'role': role,
+//         'agreedToTerms': agreedToTerms,
+//         'sentOTP': sentOTP,
+//         'OTPverified': otpVerified,
+//         'isDeleted': isDeleted,
+//         'isBlocked': isBlocked,
+//         'isLoggedIn': isLoggedIn,
+//         'createdAt': createdAt,
+//         'updatedAt': updatedAt,
+//         '__v': iV,
+//       };
+// }
+//======================================================================================
+// class UserInfo {
+//   bool? success;
+//   String? message;
+//   Data? data;
+
+//   UserInfo({this.success, this.message, this.data});
+
+//   factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
+//         success: json['success'] as bool?,
+//         message: json['message'] as String?,
+//         data: json['data'] != null ? Data.fromJson(json['data']) : null,
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         'success': success,
+//         'message': message,
+//         if (data != null) 'data': data!.toJson(),
+//       };
+// }
+
+// class Data {
+//   String? sId;
+//   String? name;
+//   String? phone;
+//   String? email;
+//   String? img; // Added img field
+//   String? experienceLevel;
+//   String? preferredInterviewFocus;
+//   bool? emailNotification;
+//   int? interviewTaken;
+//   int? confidence;
+//   bool? isResumeUploaded;
+//   bool? isAboutMeGenerated;
+//   String? generatedAboutMe;
+//   bool? isAboutMeVideoChecked;
+//   List<dynamic>? appliedJobs;
+//   UserId? userId;
+//   String? currentPlan;
+//   String? lastJobNotificationDate;
+//   bool? isDeleted;
+//   List<dynamic>? progress;
+//   String? createdAt;
+//   String? updatedAt;
+//   int? iV;
+
+//   Data({
+//     this.sId,
+//     this.name,
+//     this.phone,
+//     this.email,
+//     this.img, // Added img field
+//     this.experienceLevel,
+//     this.preferredInterviewFocus,
+//     this.emailNotification,
+//     this.interviewTaken,
+//     this.confidence,
+//     this.isResumeUploaded,
+//     this.isAboutMeGenerated,
+//     this.generatedAboutMe,
+//     this.isAboutMeVideoChecked,
+//     this.appliedJobs,
+//     this.userId,
+//     this.currentPlan,
+//     this.lastJobNotificationDate,
+//     this.isDeleted,
+//     this.progress,
+//     this.createdAt,
+//     this.updatedAt,
+//     this.iV,
+//   });
+
+//   factory Data.fromJson(Map<String, dynamic> json) => Data(
+//         sId: json['_id'] as String?,
+//         name: json['name'] as String?,
+//         phone: json['phone'] as String?,
+//         email: json['email'] as String?,
+//         img: json['img'] as String?, // Added img field
+//         experienceLevel: json['experienceLevel'] as String?,
+//         preferredInterviewFocus: json['preferedInterviewFocus'] as String?,
+//         emailNotification: json['emailNotification'] as bool?,
+//         interviewTaken: json['interviewTaken'] as int?,
+//         confidence: json['confidence'] as int?,
+//         isResumeUploaded: json['isResumeUploaded'] as bool?,
+//         isAboutMeGenerated: json['isAboutMeGenerated'] as bool?,
+//         generatedAboutMe: json['generatedAboutMe'] as String?,
+//         isAboutMeVideoChecked: json['isAboutMeVideoChecked'] as bool?,
+//         appliedJobs: json['appliedJobs'] as List<dynamic>?,
+//         userId: json['user_id'] != null ? UserId.fromJson(json['user_id']) : null,
+//         currentPlan: json['currentPlan'] as String?,
+//         lastJobNotificationDate: json['lastJobNotificationDate'] as String?,
+//         isDeleted: json['isDeleted'] as bool?,
+//         progress: json['progress'] as List<dynamic>?,
+//         createdAt: json['createdAt'] as String?,
+//         updatedAt: json['updatedAt'] as String?,
+//         iV: json['__v'] as int?,
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         '_id': sId,
+//         'name': name,
+//         'phone': phone,
+//         'email': email,
+//         'img': img, // Added img field
+//         'experienceLevel': experienceLevel,
+//         'preferedInterviewFocus': preferredInterviewFocus,
+//         'emailNotification': emailNotification,
+//         'interviewTaken': interviewTaken,
+//         'confidence': confidence,
+//         'isResumeUploaded': isResumeUploaded,
+//         'isAboutMeGenerated': isAboutMeGenerated,
+//         'generatedAboutMe': generatedAboutMe,
+//         'isAboutMeVideoChecked': isAboutMeVideoChecked,
+//         if (appliedJobs != null) 'appliedJobs': appliedJobs,
+//         if (userId != null) 'user_id': userId!.toJson(),
+//         'currentPlan': currentPlan,
+//         'lastJobNotificationDate': lastJobNotificationDate,
+//         'isDeleted': isDeleted,
+//         if (progress != null) 'progress': progress,
+//         'createdAt': createdAt,
+//         'updatedAt': updatedAt,
+//         '__v': iV,
+//       };
+// }
+
+// class UserId {
+//   String? sId;
+//   String? name;
+//   String? phone;
+//   String? email;
+//   String? password;
+//   String? role;
+//   bool? agreedToTerms;
+//   String? sentOTP;
+//   bool? otpVerified;
+//   bool? isDeleted;
+//   bool? isBlocked;
+//   bool? isLoggedIn;
+//   String? createdAt;
+//   String? updatedAt;
+//   int? iV;
+
+//   UserId({
+//     this.sId,
+//     this.name,
+//     this.phone,
+//     this.email,
+//     this.password,
+//     this.role,
+//     this.agreedToTerms,
+//     this.sentOTP,
+//     this.otpVerified,
+//     this.isDeleted,
+//     this.isBlocked,
+//     this.isLoggedIn,
+//     this.createdAt,
+//     this.updatedAt,
+//     this.iV,
+//   });
+
+//   factory UserId.fromJson(Map<String, dynamic> json) => UserId(
+//         sId: json['_id'] as String?,
+//         name: json['name'] as String?,
+//         phone: json['phone'] as String?,
+//         email: json['email'] as String?,
+//         password: json['password'] as String?,
+//         role: json['role'] as String?,
+//         agreedToTerms: json['agreedToTerms'] as bool? ?? json['aggriedToTerms'] as bool?,
+//         sentOTP: json['sentOTP'] as String?,
+//         otpVerified: json['OTPverified'] as bool?,
+//         isDeleted: json['isDeleted'] as bool?,
+//         isBlocked: json['isBlocked'] as bool?,
+//         isLoggedIn: json['isLoggedIn'] as bool?,
+//         createdAt: json['createdAt'] as String?,
+//         updatedAt: json['updatedAt'] as String?,
+//         iV: json['__v'] as int?,
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         '_id': sId,
+//         'name': name,
+//         'phone': phone,
+//         'email': email,
+//         'password': password,
+//         'role': role,
+//         'agreedToTerms': agreedToTerms,
+//         'sentOTP': sentOTP,
+//         'OTPverified': otpVerified,
+//         'isDeleted': isDeleted,
+//         'isBlocked': isBlocked,
+//         'isLoggedIn': isLoggedIn,
+//         'createdAt': createdAt,
+//         'updatedAt': updatedAt,
+//         '__v': iV,
+//       };
+// }
+
+//========================================================================================
 class UserInfo {
   bool? success;
   String? message;
@@ -5,17 +394,21 @@ class UserInfo {
 
   UserInfo({this.success, this.message, this.data});
 
-  factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
-        success: json['success'] as bool?,
-        message: json['message'] as String?,
-        data: json['data'] != null ? Data.fromJson(json['data']) : null,
-      );
+  UserInfo.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    message = json['message'];
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  }
 
-  Map<String, dynamic> toJson() => {
-        'success': success,
-        'message': message,
-        if (data != null) 'data': data!.toJson(),
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = {};
+    json['success'] = success;
+    json['message'] = message;
+    if (data != null) {
+      json['data'] = data!.toJson();
+    }
+    return json;
+  }
 }
 
 class Data {
@@ -23,8 +416,9 @@ class Data {
   String? name;
   String? phone;
   String? email;
+  String? img;
   String? experienceLevel;
-  String? preferredInterviewFocus;
+  String? preferedInterviewFocus;
   bool? emailNotification;
   int? interviewTaken;
   int? confidence;
@@ -32,23 +426,28 @@ class Data {
   bool? isAboutMeGenerated;
   String? generatedAboutMe;
   bool? isAboutMeVideoChecked;
-  List<dynamic>? appliedJobs; // Changed from List<Null>? to List<dynamic>?
+  List<dynamic>? appliedJobs;
   UserId? userId;
   String? currentPlan;
+  int? interviewsAvailable;
+  String? stripeCustomerId;
+  String? stripeSubscriptionId;
   String? lastJobNotificationDate;
   bool? isDeleted;
-  List<dynamic>? progress; // Changed from List<Null>? to List<dynamic>?
+  List<dynamic>? progress;
   String? createdAt;
   String? updatedAt;
   int? iV;
+  String? resumeId;
 
   Data({
     this.sId,
     this.name,
     this.phone,
     this.email,
+    this.img,
     this.experienceLevel,
-    this.preferredInterviewFocus,
+    this.preferedInterviewFocus,
     this.emailNotification,
     this.interviewTaken,
     this.confidence,
@@ -59,63 +458,81 @@ class Data {
     this.appliedJobs,
     this.userId,
     this.currentPlan,
+    this.interviewsAvailable,
+    this.stripeCustomerId,
+    this.stripeSubscriptionId,
     this.lastJobNotificationDate,
     this.isDeleted,
     this.progress,
     this.createdAt,
     this.updatedAt,
     this.iV,
+    this.resumeId,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        sId: json['_id'] as String?,
-        name: json['name'] as String?,
-        phone: json['phone'] as String?,
-        email: json['email'] as String?,
-        experienceLevel: json['experienceLevel'] as String?,
-        preferredInterviewFocus: json['preferedInterviewFocus'] as String?, // note: original spelling kept
-        emailNotification: json['emailNotification'] as bool?,
-        interviewTaken: json['interviewTaken'] as int?,
-        confidence: json['confidence'] as int?,
-        isResumeUploaded: json['isResumeUploaded'] as bool?,
-        isAboutMeGenerated: json['isAboutMeGenerated'] as bool?,
-        generatedAboutMe: json['generatedAboutMe'] as String?,
-        isAboutMeVideoChecked: json['isAboutMeVideoChecked'] as bool?,
-        appliedJobs: json['appliedJobs'] as List<dynamic>?,
-        userId: json['user_id'] != null ? UserId.fromJson(json['user_id']) : null,
-        currentPlan: json['currentPlan'] as String?,
-        lastJobNotificationDate: json['lastJobNotificationDate'] as String?,
-        isDeleted: json['isDeleted'] as bool?,
-        progress: json['progress'] as List<dynamic>?,
-        createdAt: json['createdAt'] as String?,
-        updatedAt: json['updatedAt'] as String?,
-        iV: json['__v'] as int?,
-      );
+  Data.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+    phone = json['phone'];
+    email = json['email'];
+    img = json['img'];
+    experienceLevel = json['experienceLevel'];
+    preferedInterviewFocus = json['preferedInterviewFocus'];
+    emailNotification = json['emailNotification'];
+    interviewTaken = json['interviewTaken'];
+    confidence = json['confidence'];
+    isResumeUploaded = json['isResumeUploaded'];
+    isAboutMeGenerated = json['isAboutMeGenerated'];
+    generatedAboutMe = json['generatedAboutMe'];
+    isAboutMeVideoChecked = json['isAboutMeVideoChecked'];
+    appliedJobs = json['appliedJobs'];
+    userId = json['user_id'] != null ? UserId.fromJson(json['user_id']) : null;
+    currentPlan = json['currentPlan'];
+    interviewsAvailable = json['interviewsAvailable'];
+    stripeCustomerId = json['stripeCustomerId'];
+    stripeSubscriptionId = json['stripeSubscriptionId'];
+    lastJobNotificationDate = json['lastJobNotificationDate'];
+    isDeleted = json['isDeleted'];
+    progress = json['progress'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    iV = json['__v'];
+    resumeId = json['resume_id'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        '_id': sId,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'experienceLevel': experienceLevel,
-        'preferedInterviewFocus': preferredInterviewFocus,
-        'emailNotification': emailNotification,
-        'interviewTaken': interviewTaken,
-        'confidence': confidence,
-        'isResumeUploaded': isResumeUploaded,
-        'isAboutMeGenerated': isAboutMeGenerated,
-        'generatedAboutMe': generatedAboutMe,
-        'isAboutMeVideoChecked': isAboutMeVideoChecked,
-        if (appliedJobs != null) 'appliedJobs': appliedJobs,
-        if (userId != null) 'user_id': userId!.toJson(),
-        'currentPlan': currentPlan,
-        'lastJobNotificationDate': lastJobNotificationDate,
-        'isDeleted': isDeleted,
-        if (progress != null) 'progress': progress,
-        'createdAt': createdAt,
-        'updatedAt': updatedAt,
-        '__v': iV,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = {};
+    json['_id'] = sId;
+    json['name'] = name;
+    json['phone'] = phone;
+    json['email'] = email;
+    json['img'] = img;
+    json['experienceLevel'] = experienceLevel;
+    json['preferedInterviewFocus'] = preferedInterviewFocus;
+    json['emailNotification'] = emailNotification;
+    json['interviewTaken'] = interviewTaken;
+    json['confidence'] = confidence;
+    json['isResumeUploaded'] = isResumeUploaded;
+    json['isAboutMeGenerated'] = isAboutMeGenerated;
+    json['generatedAboutMe'] = generatedAboutMe;
+    json['isAboutMeVideoChecked'] = isAboutMeVideoChecked;
+    json['appliedJobs'] = appliedJobs;
+    if (userId != null) {
+      json['user_id'] = userId!.toJson();
+    }
+    json['currentPlan'] = currentPlan;
+    json['interviewsAvailable'] = interviewsAvailable;
+    json['stripeCustomerId'] = stripeCustomerId;
+    json['stripeSubscriptionId'] = stripeSubscriptionId;
+    json['lastJobNotificationDate'] = lastJobNotificationDate;
+    json['isDeleted'] = isDeleted;
+    json['progress'] = progress;
+    json['createdAt'] = createdAt;
+    json['updatedAt'] = updatedAt;
+    json['__v'] = iV;
+    json['resume_id'] = resumeId;
+    return json;
+  }
 }
 
 class UserId {
@@ -125,9 +542,10 @@ class UserId {
   String? email;
   String? password;
   String? role;
-  bool? agreedToTerms;
+  bool? aggriedToTerms;
+  bool? allowPasswordChange;
   String? sentOTP;
-  bool? otpVerified;
+  bool? oTPverified;
   bool? isDeleted;
   bool? isBlocked;
   bool? isLoggedIn;
@@ -142,9 +560,10 @@ class UserId {
     this.email,
     this.password,
     this.role,
-    this.agreedToTerms,
+    this.aggriedToTerms,
+    this.allowPasswordChange,
     this.sentOTP,
-    this.otpVerified,
+    this.oTPverified,
     this.isDeleted,
     this.isBlocked,
     this.isLoggedIn,
@@ -153,39 +572,43 @@ class UserId {
     this.iV,
   });
 
-  factory UserId.fromJson(Map<String, dynamic> json) => UserId(
-        sId: json['_id'] as String?,
-        name: json['name'] as String?,
-        phone: json['phone'] as String?,
-        email: json['email'] as String?,
-        password: json['password'] as String?,
-        role: json['role'] as String?,
-        agreedToTerms: json['agreedToTerms'] as bool? ?? json['aggriedToTerms'] as bool?, // fallback for typo in source JSON
-        sentOTP: json['sentOTP'] as String?,
-        otpVerified: json['OTPverified'] as bool?,
-        isDeleted: json['isDeleted'] as bool?,
-        isBlocked: json['isBlocked'] as bool?,
-        isLoggedIn: json['isLoggedIn'] as bool?,
-        createdAt: json['createdAt'] as String?,
-        updatedAt: json['updatedAt'] as String?,
-        iV: json['__v'] as int?,
-      );
+  UserId.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+    phone = json['phone'];
+    email = json['email'];
+    password = json['password'];
+    role = json['role'];
+    aggriedToTerms = json['aggriedToTerms'];
+    allowPasswordChange = json['allowPasswordChange'];
+    sentOTP = json['sentOTP'];
+    oTPverified = json['OTPverified'];
+    isDeleted = json['isDeleted'];
+    isBlocked = json['isBlocked'];
+    isLoggedIn = json['isLoggedIn'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    iV = json['__v'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        '_id': sId,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'password': password,
-        'role': role,
-        'agreedToTerms': agreedToTerms,
-        'sentOTP': sentOTP,
-        'OTPverified': otpVerified,
-        'isDeleted': isDeleted,
-        'isBlocked': isBlocked,
-        'isLoggedIn': isLoggedIn,
-        'createdAt': createdAt,
-        'updatedAt': updatedAt,
-        '__v': iV,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = {};
+    json['_id'] = sId;
+    json['name'] = name;
+    json['phone'] = phone;
+    json['email'] = email;
+    json['password'] = password;
+    json['role'] = role;
+    json['aggriedToTerms'] = aggriedToTerms;
+    json['allowPasswordChange'] = allowPasswordChange;
+    json['sentOTP'] = sentOTP;
+    json['OTPverified'] = oTPverified;
+    json['isDeleted'] = isDeleted;
+    json['isBlocked'] = isBlocked;
+    json['isLoggedIn'] = isLoggedIn;
+    json['createdAt'] = createdAt;
+    json['updatedAt'] = updatedAt;
+    json['__v'] = iV;
+    return json;
+  }
 }
