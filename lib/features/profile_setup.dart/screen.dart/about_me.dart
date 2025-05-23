@@ -1,10 +1,13 @@
 import 'package:country_pickers/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/common/widgets/auhe_custom_textfiled.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/features/profile_screen/model/country_model.dart';
+import 'package:inprep_ai/features/profile_setup.dart/controller/about_me_contrller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/country_controller.dart';
+import 'package:inprep_ai/features/profile_setup.dart/models/skills_model.dart';
 import 'package:inprep_ai/features/profile_setup.dart/widgets/country_ui.dart';
 
 class AboutMe extends StatefulWidget {
@@ -18,7 +21,6 @@ class AboutMe extends StatefulWidget {
     required this.onAddSkill,
     required this.onRemoveSkill,
   });
-
   @override
   // ignore: library_private_types_in_public_api
   _AboutMeState createState() => _AboutMeState();
@@ -26,7 +28,6 @@ class AboutMe extends StatefulWidget {
 
 class _AboutMeState extends State<AboutMe> {
   late final AboutMeControllers controllers;
-
   @override
   void initState() {
     super.initState();
@@ -39,6 +40,7 @@ class _AboutMeState extends State<AboutMe> {
     super.dispose();
   }
 
+  AboutMeContrller aboutMeContrller = Get.put(AboutMeContrller());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,32 +114,33 @@ class _AboutMeState extends State<AboutMe> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(border: OutlineInputBorder()),
-                  items: [
-                    'UI/UX Design',
-                    'Frontend Development',
-                    'Backend Development',
-                  ].map(
-                    (skill) => DropdownMenuItem(
-                      value: skill,
-                      child: Text(skill),
+                Obx(() {
+                  return DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
                     ),
-                  ).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      widget.onAddSkill(value);
-                    }
-                  },
-                  hint: Text(
-                    'Select a skill',
-                    style: getTextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.textSecondary,
+                    items:
+                        aboutMeContrller.skills.map((Data skill) {
+                          return DropdownMenuItem<String>(
+                            value: skill.name,
+                            child: Text(skill.name ?? ''),
+                          );
+                        }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        widget.onAddSkill(value);
+                      }
+                    },
+                    hint: Text(
+                      'Select a skill',
+                      style: getTextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
                 const SizedBox(height: 10),
                 ValueListenableBuilder<List<String>>(
                   valueListenable: widget.selectedSkillsNotifier,
@@ -145,29 +148,32 @@ class _AboutMeState extends State<AboutMe> {
                     return Wrap(
                       spacing: 8.0,
                       runSpacing: 8.0,
-                      children: selectedSkills.map((skill) {
-                        return Chip(
-                          label: Text(
-                            skill,
-                            style: getTextStyle(
-                              color: const Color(0xFF37BB74),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          deleteIcon: const Icon(
-                            Icons.cancel,
-                            size: 20,
-                            color: Color(0xFF37BB74),
-                          ),
-                          onDeleted: () => widget.onRemoveSkill(skill),
-                          backgroundColor: const Color(0xffEBF8F1),
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        );
-                      }).toList(),
+                      children:
+                          selectedSkills.map((skill) {
+                            return Chip(
+                              label: Text(
+                                skill,
+                                style: getTextStyle(
+                                  color: const Color(0xFF37BB74),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              deleteIcon: const Icon(
+                                Icons.cancel,
+                                size: 20,
+                                color: Color(0xFF37BB74),
+                              ),
+                              onDeleted: () => widget.onRemoveSkill(skill),
+                              backgroundColor: const Color(0xffEBF8F1),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            );
+                          }).toList(),
                     );
                   },
                 ),
