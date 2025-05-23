@@ -21,35 +21,31 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.primaryBackground,
       appBar: AppBar(
         backgroundColor: AppColors.primaryBackground,
-
-        // leading: Padding(
-        //   padding: const EdgeInsets.only(left: 8),
-        //   child: Image.asset(IconPath.homeprofile, height: 48, width: 48),
-        // ),
         leading: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child:
-              homeScreenController.userInfo.value?.data?.img != null &&
-                      homeScreenController.userInfo.value!.data!.img!.isNotEmpty
-                  ? ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      10,
-                    ), // Optional: round avatar style
-                    child: Image.network(
-                      homeScreenController.userInfo.value!.data!.img!,
-                      height: 48,
+          padding: const EdgeInsets.only(left: 8, top: 5),
+          child: Obx(() {
+            final imgUrl = homeScreenController.userInfo.value?.data?.img ?? '';
+            if (imgUrl.isNotEmpty) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Image.network(
+                  imgUrl,
+                  height: 30,
+                  width: 48,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      IconPath.homeprofile,
+                      height: 30,
                       width: 48,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          IconPath.homeprofile,
-                          height: 48,
-                          width: 48,
-                        );
-                      },
-                    ),
-                  )
-                  : Image.asset(IconPath.homeprofile, height: 48, width: 48),
+                    );
+                  },
+                ),
+              );
+            } else {
+              return Image.asset(IconPath.homeprofile, height: 48, width: 48);
+            }
+          }),
         ),
 
         title: Column(
@@ -65,27 +61,36 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                homeScreenController.isLoadingUser.value
-                    ? "Loading..."
-                    : (homeScreenController
-                            .userInfo
-                            .value
-                            ?.data
-                            ?.name
-                            ?.isNotEmpty ??
-                        false)
-                    ? homeScreenController.userInfo.value!.data!.name!
-                    : "Nolan Saris",
-                style: getTextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff212121),
-                ),
-              ),
-            ),
+            Obx(() {
+              if (homeScreenController.isLoadingUser.value) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Loading...",
+                    style: getTextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff212121),
+                    ),
+                  ),
+                );
+              } else {
+                final name =
+                    homeScreenController.userInfo.value?.data?.name ??
+                    "Nolan Saris";
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    name,
+                    style: getTextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff212121),
+                    ),
+                  ),
+                );
+              }
+            }),
           ],
         ),
         actions: [
@@ -315,7 +320,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-      
+
               SizedBox(height: MediaQuery.of(context).size.width * 0.28),
             ],
           ),
