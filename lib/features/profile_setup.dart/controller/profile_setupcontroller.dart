@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,6 +41,9 @@ class ProfileSetupcontroller extends GetxController {
     }
   }
 
+
+
+//=======================================================================
   // Function to upload the file to the server
   Future<void> uploadFile() async {
     if (selectedFile.value == null) {
@@ -61,7 +65,7 @@ class ProfileSetupcontroller extends GetxController {
 
       // Prepare the file for uploading
       var uri = Uri.parse(
-        'https://ai-interview-server-3cg1.onrender.com/api/v1/resume/upload-resume',
+        Urls.resumeupload,
       );
       debugPrint('Debug: Request URL: $uri'); // Debug print the URL being used
 
@@ -131,4 +135,7 @@ class ProfileSetupcontroller extends GetxController {
       ); // Error message using EasyLoading
     }
   }
+
+
+//==========================================================================
 }

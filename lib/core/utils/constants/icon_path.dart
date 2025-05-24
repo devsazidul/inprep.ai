@@ -31,4 +31,10 @@ class IconPath{
   static const String dropdown = "assets/icons/dropdown.png";
   static const String checkbox = "assets/icons/checkbox.png";
   static const String filter = "assets/icons/filter.png";
+  static const String backarrow = "assets/icons/job_screen_icons/back_arrow.png";
+  static const String search = "assets/icons/job_screen_icons/search.png";
+  static const String filter1 = "assets/icons/job_screen_icons/filter.png";
+  static const String location = "assets/icons/job_screen_icons/location.png";
+  static const String calendar = "assets/icons/job_screen_icons/calendar.png";
+  
 }

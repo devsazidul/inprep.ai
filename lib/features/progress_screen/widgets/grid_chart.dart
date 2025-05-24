@@ -129,7 +129,7 @@ class CardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize:
                             MediaQuery.of(context).size.width *
-                            0.038, // Adjust font size based on screen width
+                            0.037, // Adjust font size based on screen width
                         fontWeight: FontWeight.w600,
                         color: const Color(0xff212121),
                       ),

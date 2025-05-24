@@ -78,7 +78,7 @@ class ProgressScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: StaggeredGrid.count(
-                      crossAxisCount: 2, // 2 items per row
+                      crossAxisCount: 2, 
                       mainAxisSpacing: 5,
                       crossAxisSpacing: 16,
                       children: List.generate(5, (index) {
