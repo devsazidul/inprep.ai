@@ -477,7 +477,7 @@ class SignupScreen extends StatelessWidget {
                 if (Platform.isAndroid || Platform.isIOS) ...[],
                 const SizedBox(height: 16),
                 if (Platform.isIOS) ...[],
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

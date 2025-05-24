@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/controllers/job_controller.dart';
+import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/job_screens/job_details.dart';
 import 'package:inprep_ai/features/job_screens/new_filter_screen.dart';
 
@@ -27,7 +28,7 @@ class MyJobsScreen extends StatelessWidget {
 
                   //Icon(Icons.arrow_back_ios, color: Colors.black),
 
-                  InkWell(onTap: (){Get.back();}, child: Image.asset('assets/icons/job_screen_icons/back_arrow.png')),
+                  InkWell(onTap: (){Get.back();}, child: Image.asset(IconPath.backarrow)),
 
 
                   SizedBox(width: 80),
@@ -77,7 +78,7 @@ class MyJobsScreen extends StatelessWidget {
                         suffixIcon: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Image.asset(
-                            "assets/icons/job_screen_icons/search.png",
+                            IconPath.search,
                             width: 20,
                             height: 20,
                           ),
@@ -115,7 +116,7 @@ class MyJobsScreen extends StatelessWidget {
                         );
                       },
                       child: Image.asset(
-                        "assets/icons/job_screen_icons/filter.png",
+                        IconPath.filter1,
                       ),
                     ),
                   ),
@@ -178,7 +179,7 @@ class MyJobsScreen extends StatelessWidget {
                                     Row(
                                       children: [
                                         Image.asset(
-                                          "assets/icons/job_screen_icons/location.png",
+                                          IconPath.location,
                                         ),
                                         SizedBox(
                                           width:
@@ -202,7 +203,7 @@ class MyJobsScreen extends StatelessWidget {
                                     Row(
                                       children: [
                                         Image.asset(
-                                          "assets/icons/job_screen_icons/calendar.png",
+                                          IconPath.calendar,
                                         ),
 
                                         SizedBox(width: 2.5),

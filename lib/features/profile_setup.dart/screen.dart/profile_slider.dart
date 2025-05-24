@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
-import 'package:inprep_ai/features/personalized_interviewers/view/personalized_interviewer_screen.dart' show PersonalizedInterviewerScreen;
+import 'package:inprep_ai/features/personalized_interviewers/view/personalized_interviewer_screen.dart'
+    show PersonalizedInterviewerScreen;
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/education_cirtificate.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/experience.dart';
@@ -23,11 +24,6 @@ class ProfileSlider extends StatelessWidget {
         curve: Curves.easeInOut,
       );
     } else {
-      // Navigate to a new screen when on the last slide
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => HomeScreen()),
-      // );
       Get.to(PersonalizedInterviewerScreen());
     }
   }
