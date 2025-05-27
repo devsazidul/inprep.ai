@@ -1,12 +1,16 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
-import 'package:inprep_ai/features/personalized_interviewers/view/personalized_interviewer_screen.dart'
-    show PersonalizedInterviewerScreen;
+import 'package:inprep_ai/features/personalized_interviewers/view/personalized_interviewer_screen.dart' show PersonalizedInterviewerScreen;
+import 'package:inprep_ai/features/profile_setup.dart/controller/manual_resume_controller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/education_cirtificate.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/experience.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/about_me_contrller.dart';
+import 'package:inprep_ai/features/profile_setup.dart/controller/education_controller.dart';
+import 'package:inprep_ai/features/profile_setup.dart/controller/experience_controller.dart';
 
 class ProfileSlider extends StatelessWidget {
   final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(0);
@@ -15,24 +19,52 @@ class ProfileSlider extends StatelessWidget {
   final ValueNotifier<List<String>> selectedSkillsNotifier = ValueNotifier<List<String>>([]);
 
   final AboutMeController aboutMeController = Get.put(AboutMeController());
+  final ExperienceController experienceController = Get.put(ExperienceController());
+  final EducationController educationController = Get.put(EducationController());
 
-  void nextPage(BuildContext context) {
+  Future<void> nextPage(BuildContext context) async {
     if (currentPageNotifier.value == 0) {
       final country = aboutMeController.countryModel.initialCountry;
-      print("City: ${aboutMeController.cityController.text}");
-      print("Country: ${country != null ? (country.name ?? country.isoCode) : 'No country selected'}");
-      print("Summary: ${aboutMeController.summaryController.text}");
-      print("Selected Skills: ${selectedSkillsNotifier.value.join(', ')}");
+      debugPrint("City: ${aboutMeController.cityController.text}");
+      debugPrint("Country: ${country != null ? (country.name ?? country.isoCode) : 'No country selected'}");
+      debugPrint("Summary: ${aboutMeController.summaryController.text}");
+      debugPrint("Selected Skills: ${selectedSkillsNotifier.value.join(', ')}");
+    }
+
+    if (currentPageNotifier.value == 1) {
+      for (String formId in experienceController.experienceForms) {
+        final formControllers = experienceController.formControllers[formId];
+        if (formControllers != null) {
+          debugPrint("Experience Form ID: $formId");
+          debugPrint("Job Title: ${formControllers.jobTitleController.text}");
+          debugPrint("Employer Name: ${formControllers.employerNameController.text}");
+          debugPrint("City: ${formControllers.cityController.text}");
+          debugPrint("Responsibilities: ${formControllers.responsibilitiesController.text}");
+          debugPrint("Selected Skills: ${experienceController.selectedSkills.join(', ')}");
+        }
+      }
+    }
+
+    if (currentPageNotifier.value == 2) {
+      for (int i = 0; i < educationController.rowCount.value; i++) {
+        debugPrint('Education Entry #${i + 1}:');
+        debugPrint('School Name: ${educationController.schoolNameControllers[i].text}');
+        debugPrint('Level of Education: ${educationController.educationLevels[i]}');
+        debugPrint('Major: ${educationController.majorControllers[i].text}');
+        debugPrint('Start Date: ${educationController.startDates[i]}');
+        debugPrint('End Date: ${educationController.endDates[i]}');
+      }
     }
 
     if (currentPageNotifier.value < totalPages - 1) {
       currentPageNotifier.value++;
       pageController.nextPage(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
-      Get.to(PersonalizedInterviewerScreen());
+      await saveResume();
+      
     }
   }
 
@@ -43,8 +75,7 @@ class ProfileSlider extends StatelessWidget {
   }
 
   void removeSkill(String skill) {
-    selectedSkillsNotifier.value =
-        selectedSkillsNotifier.value.where((s) => s != skill).toList();
+    selectedSkillsNotifier.value = selectedSkillsNotifier.value.where((s) => s != skill).toList();
   }
 
   @override
@@ -52,7 +83,7 @@ class ProfileSlider extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             children: [
               ValueListenableBuilder<int>(
@@ -62,13 +93,10 @@ class ProfileSlider extends StatelessWidget {
                     children: List.generate(totalPages, (index) {
                       return Expanded(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4.0),
+                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
                           height: 2.0,
                           decoration: BoxDecoration(
-                            color:
-                                index <= currentPage
-                                    ? Colors.green
-                                    : Colors.grey[300],
+                            color: index <= currentPage ? Colors.green : Colors.grey[300],
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -77,11 +105,11 @@ class ProfileSlider extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: PageView(
                   controller: pageController,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (index) {
                     currentPageNotifier.value = index;
                   },
@@ -97,11 +125,11 @@ class ProfileSlider extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               CustomButton1(
                 title: "Continue",
-                textcolor: Color(0xffffffff),
-                backgroundColor: Color(0xff37BB74),
+                textcolor: const Color(0xffffffff),
+                backgroundColor: const Color(0xff37BB74),
                 onPress: () => nextPage(context),
               ),
             ],

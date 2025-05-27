@@ -89,7 +89,7 @@ class LoginScreenController extends GetxController {
             },
           );
           sendCode();
-        } else if (loginInfo.meta?.isResumeUploaded == false) {
+        } else if (loginInfo.meta?.isAboutMeGenerated == false) {
           Get.put(ProfileSetupcontroller());
           Get.to(() => ProfileSetup());
         } else {
