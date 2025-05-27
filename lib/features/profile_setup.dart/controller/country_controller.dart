@@ -17,11 +17,11 @@ class CountryController {
         data: Theme.of(context).copyWith(primaryColor: Colors.blue),
         child: CountryPickerDialog(
           titlePadding: EdgeInsets.all(8.0),
-          isSearchable: false, // Search option disabled
+          isSearchable: false,
           title: Text('Select Country'),
           onValuePicked: (Country country) {
             model.updateCountry(country);
-            onCountryUpdated(); // Notify the view to rebuild
+            onCountryUpdated();
           },
           itemBuilder: (Country country) {
             return Row(

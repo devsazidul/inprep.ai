@@ -6,18 +6,26 @@ import 'package:inprep_ai/features/personalized_interviewers/view/personalized_i
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/education_cirtificate.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/experience.dart';
+import 'package:inprep_ai/features/profile_setup.dart/controller/about_me_contrller.dart';
 
-// ignore: use_key_in_widget_constructors
 class ProfileSlider extends StatelessWidget {
   final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(0);
   final PageController pageController = PageController();
   final int totalPages = 3;
-  final ValueNotifier<List<String>> selectedSkillsNotifier =
-      ValueNotifier<List<String>>([]);
+  final ValueNotifier<List<String>> selectedSkillsNotifier = ValueNotifier<List<String>>([]);
+
+  final AboutMeController aboutMeController = Get.put(AboutMeController());
 
   void nextPage(BuildContext context) {
+    if (currentPageNotifier.value == 0) {
+      final country = aboutMeController.countryModel.initialCountry;
+      print("City: ${aboutMeController.cityController.text}");
+      print("Country: ${country != null ? (country.name ?? country.isoCode) : 'No country selected'}");
+      print("Summary: ${aboutMeController.summaryController.text}");
+      print("Selected Skills: ${selectedSkillsNotifier.value.join(', ')}");
+    }
+
     if (currentPageNotifier.value < totalPages - 1) {
-      // Move to the next slide
       currentPageNotifier.value++;
       pageController.nextPage(
         duration: Duration(milliseconds: 300),
@@ -82,6 +90,7 @@ class ProfileSlider extends StatelessWidget {
                       selectedSkillsNotifier: selectedSkillsNotifier,
                       onAddSkill: addSkill,
                       onRemoveSkill: removeSkill,
+                      controller: aboutMeController,
                     ),
                     Experience(),
                     EducationCertificate(),
@@ -90,7 +99,7 @@ class ProfileSlider extends StatelessWidget {
               ),
               SizedBox(height: 10),
               CustomButton1(
-                title: "Continure",
+                title: "Continue",
                 textcolor: Color(0xffffffff),
                 backgroundColor: Color(0xff37BB74),
                 onPress: () => nextPage(context),

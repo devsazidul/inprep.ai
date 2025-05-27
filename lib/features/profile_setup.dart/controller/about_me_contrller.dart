@@ -1,15 +1,36 @@
 import 'dart:convert';
-
-
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/profile_setup.dart/models/skills_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
+import 'package:inprep_ai/features/profile_screen/model/country_model.dart';
+import 'package:inprep_ai/features/profile_setup.dart/controller/country_controller.dart';
+import 'package:country_pickers/utils/utils.dart';
 
-class AboutMeContrller extends GetxController {
+class AboutMeController extends GetxController {
   var skills = <Data>[].obs;
+
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController summaryController = TextEditingController();
+  final CountryModel countryModel = CountryModel(
+    initialCountry: CountryPickerUtils.getCountryByIsoCode('GB'), // Default UK
+  );
+  late final CountryController countryController;
+
+  @override
+  void onInit() {
+    super.onInit();
+    countryController = CountryController(
+      model: countryModel,
+      onCountryUpdated: () {
+        print("Country updated to: ${countryModel.initialCountry?.name ?? 'null'}");
+      },
+    );
+    getAllSkills();
+  }
 
   Future<void> getAllSkills() async {
     try {
@@ -52,9 +73,11 @@ class AboutMeContrller extends GetxController {
       EasyLoading.dismiss();
     }
   }
+
   @override
-  void onInit() {
-    super.onInit();
-    getAllSkills();
+  void onClose() {
+    cityController.dispose();
+    summaryController.dispose();
+    super.onClose();
   }
 }

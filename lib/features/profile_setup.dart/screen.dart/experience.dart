@@ -10,8 +10,8 @@ class Experience extends StatelessWidget {
   Experience({super.key});
 
   final ExperienceController controller = Get.put(ExperienceController());
-  final AboutMeContrller aboutMeController = Get.put(
-    AboutMeContrller(),
+  final AboutMeController aboutMeController = Get.put(
+    AboutMeController(),
   ); // Inject AboutMeContrller
 
   @override
