@@ -10,6 +10,7 @@ class Urls {
   static const String login = '$baseUrl/auth/login';
   static const String forgetPassword = '$baseUrl/auth/forgetPassword';
   static const String resumeupload = '$baseUrl/resume/upload-resume';
+  static const String updateresume = '$baseUrl/resume/update-resume';
   static const String changepassword = '$baseUrl/auth/resetPassword';
   static const String getAllSkills = '$baseUrl/skill/all-skills';
 }
