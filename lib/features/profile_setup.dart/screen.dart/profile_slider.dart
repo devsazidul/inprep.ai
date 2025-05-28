@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
-import 'package:inprep_ai/features/personalized_interviewers/view/personalized_interviewer_screen.dart' show PersonalizedInterviewerScreen;
 import 'package:inprep_ai/features/profile_setup.dart/controller/manual_resume_controller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/education_cirtificate.dart';
