@@ -4,7 +4,7 @@ import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/education_controller.dart';
 
 class EducationCertificate extends StatelessWidget {
-  EducationCertificate({Key? key}) : super(key: key);
+  EducationCertificate({super.key});
 
   final EducationController educationController = Get.find<EducationController>();
 

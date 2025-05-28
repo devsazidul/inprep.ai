@@ -1,6 +1,6 @@
 class Urls {
   static const String baseUrl =
-      'https://ai-interview-server-3cg1.onrender.com/api/v1';
+      'https://ai-interview-server-s2a5.onrender.com/api/v1';
   static const String register = '$baseUrl/users/createUser';
   static const String getuser = '$baseUrl/users/getProfile';
   static const String updateProfile = '$baseUrl/users/updateProfile';
@@ -13,4 +13,5 @@ class Urls {
   static const String updateresume = '$baseUrl/resume/update-resume';
   static const String changepassword = '$baseUrl/auth/resetPassword';
   static const String getAllSkills = '$baseUrl/skill/all-skills';
+  static const String graph = '$baseUrl/graph/average-data';
 }

@@ -12,7 +12,7 @@ class AboutMe extends StatelessWidget {
   final Function(String) onRemoveSkill;
   final AboutMeController controller;
 
-  AboutMe({
+  const AboutMe({
     super.key,
     required this.selectedSkillsNotifier,
     required this.onAddSkill,

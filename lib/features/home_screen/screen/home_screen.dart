@@ -8,12 +8,16 @@ import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:inprep_ai/features/job_screens/myjob.dart' show MyJobsScreen;
+import 'package:inprep_ai/features/progress_screen/controller/Progress_screen_controller.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 
 // ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   HomeScreenController homeScreenController = Get.put(HomeScreenController());
+  ProgressScreenController progressScreenController = Get.put(
+    ProgressScreenController(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -186,11 +190,26 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                height: 152,
-                width: double.infinity,
-                child: CustomPaint(painter: LineChartPainter()),
-              ),
+              // SizedBox(
+              //   height: 152,
+              //   width: double.infinity,
+              //   child: CustomPaint(painter: LineChartPainter()),
+              // ),
+              Obx(() {
+  final progress = progressScreenController.progress.value;
+  if (progress == null || progress.weeklyOverallAverages.isEmpty) {
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  return SizedBox(
+    height: 152,
+    width: double.infinity,
+    child: CustomPaint(
+      painter: LineChartPainter(data: progress.weeklyOverallAverages),
+    ),
+  );
+}),
+
               SizedBox(height: 48),
               Align(
                 alignment: Alignment.centerLeft,

@@ -1,43 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:inprep_ai/features/progress_screen/model/progress_model.dart';
 
 class CardWidget extends StatelessWidget {
   final int index;
+  final Progress progress;
 
-  const CardWidget({required this.index, super.key});
+  const CardWidget({
+    required this.index,
+    required this.progress,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     String title = '';
     double percentage = 0;
     String change = '';
-    Color changeColor = Color(0xff1E6540);
+    Color changeColor = const Color(0xff1E6540); // Default color
 
+    // Set values dynamically based on index
     if (index == 0) {
       title = 'Content Accuracy';
-      percentage = 75;
-      change = '+5%';
-      changeColor = Color(0xff34C759);
+      percentage = progress.totalAverage.contentScore;
+      change = getChange(progress.differenceBetweenTotalAndWithoutLast.contentScore);
+      changeColor = getColor(progress.differenceBetweenTotalAndWithoutLast.contentScore);
     } else if (index == 1) {
       title = 'Behavioural Cue';
-      percentage = 60;
-      change = '-10%';
-      changeColor = Colors.red;
+      percentage = progress.totalAverage.behaviouralCue;
+      change = getChange(progress.differenceBetweenTotalAndWithoutLast.behaviouralCue);
+      changeColor = getColor(progress.differenceBetweenTotalAndWithoutLast.behaviouralCue);
     } else if (index == 2) {
       title = 'Articulation Clarity';
-      percentage = 85;
-      change = '+15%';
-      changeColor = Color(0xff34C759);
+      percentage = progress.totalAverage.articulation;
+      change = getChange(progress.differenceBetweenTotalAndWithoutLast.articulation);
+      changeColor = getColor(progress.differenceBetweenTotalAndWithoutLast.articulation);
     } else if (index == 3) {
       title = 'Inprep Score';
-      percentage = 80;
-      change = 'Stable';
-      changeColor = Colors.black;
+      percentage = progress.totalAverage.inprepScore;
+      change = getChange(progress.differenceBetweenTotalAndWithoutLast.inprepScore);
+      changeColor = getColor(progress.differenceBetweenTotalAndWithoutLast.inprepScore);
     } else if (index == 4) {
       title = 'Problem Solving';
-      percentage = 85;
-      change = '+15%';
-      changeColor = Color(0xff34C759);
+      percentage = progress.totalAverage.problemSolving.toDouble(); // Convert int to double
+      change = getChange(progress.differenceBetweenTotalAndWithoutLast.problemSolving.toDouble());
+      changeColor = getColor(progress.differenceBetweenTotalAndWithoutLast.problemSolving.toDouble());
     }
 
     return Card(
@@ -45,114 +52,37 @@ class CardWidget extends StatelessWidget {
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(11.0),
-        child:
-            index ==
-                    4 // Apply custom layout for index 4
-                ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Title and percentage in the center
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xff212121),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '$percentage%',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff3A4c67),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                      ),
-                    ),
-                    // Add the graph for Problem Solving here inside Flexible
-                    Flexible(
-                      child: SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height *
-                            0.1, // Fixed height for the graph
-                        child: SfCartesianChart(
-                          primaryXAxis: CategoryAxis(isVisible: false),
-                          primaryYAxis: NumericAxis(isVisible: false),
-                          plotAreaBorderWidth: 0,
-                          series: <CartesianSeries<ChartData, String>>[
-                            LineSeries<ChartData, String>(
-                              dataSource: getData(),
-                              xValueMapper: (ChartData data, _) => data.x,
-                              yValueMapper: (ChartData data, _) => data.y,
-                              color: Colors.green,
-                              width: 2,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ), // Space between graph and change text
-                    // Change text positioned at the bottom-left
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(
-                          change,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: changeColor,
-                            fontWeight: FontWeight.w500,
+        child: index == 4
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff212121),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${percentage.toStringAsFixed(1)}%',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff3A4c67),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
                     ),
-                  ],
-                )
-                : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title Text with responsive font size
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize:
-                            MediaQuery.of(context).size.width *
-                            0.037, // Adjust font size based on screen width
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xff212121),
-                      ),
-                    ),
-                    // Percentage Text with responsive font size
-                    Text(
-                      '$percentage%',
-                      style: TextStyle(
-                        fontSize:
-                            MediaQuery.of(context).size.width *
-                            0.030, // Adjust font size based on screen width
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xff3A4c67),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    // Responsive chart height
-                    SizedBox(
-                      height:
-                          MediaQuery.of(context).size.height *
-
-                          0.097, // Adjust chart height based on screen height
-
+                  ),
+                  Flexible(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.1,
                       child: SfCartesianChart(
                         primaryXAxis: CategoryAxis(isVisible: false),
                         primaryYAxis: NumericAxis(isVisible: false),
@@ -168,24 +98,77 @@ class CardWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    // Change Text with responsive font size and color change
-                    Text(
-                      change,
-                      style: TextStyle(
-                        fontSize:
-                            MediaQuery.of(context).size.width *
-                            0.030, // Adjust font size based on screen width
-                        color: changeColor,
-                        fontWeight: FontWeight.w500,
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        change,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: changeColor,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.037,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xff212121),
+                    ),
+                  ),
+                  Text(
+                    '${percentage.toStringAsFixed(1)}%',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.030,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xff3A4c67),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.097,
+                    child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(isVisible: false),
+                      primaryYAxis: NumericAxis(isVisible: false),
+                      plotAreaBorderWidth: 0,
+                      series: <CartesianSeries<ChartData, String>>[
+                        LineSeries<ChartData, String>(
+                          dataSource: getData(),
+                          xValueMapper: (ChartData data, _) => data.x,
+                          yValueMapper: (ChartData data, _) => data.y,
+                          color: Colors.green,
+                          width: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    change,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.030,
+                      color: changeColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
 
+  // Sample static chart data
   List<ChartData> getData() {
     return [
       ChartData('Week 1', 60),
@@ -193,6 +176,28 @@ class CardWidget extends StatelessWidget {
       ChartData('Week 3', 75),
       ChartData('Week 4', 80),
     ];
+  }
+
+  // Helper to format change
+  String getChange(double changeValue) {
+    if (changeValue > 0) {
+      return '+${changeValue.toStringAsFixed(1)}%';
+    } else if (changeValue < 0) {
+      return '${changeValue.toStringAsFixed(1)}%';
+    } else {
+      return 'Stable';
+    }
+  }
+
+  // Helper to get change color
+  Color getColor(double changeValue) {
+    if (changeValue > 0) {
+      return const Color(0xff34C759); // Green
+    } else if (changeValue < 0) {
+      return Colors.red;
+    } else {
+      return Colors.black;
+    }
   }
 }
 

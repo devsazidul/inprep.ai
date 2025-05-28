@@ -26,7 +26,7 @@ class AboutMeController extends GetxController {
     countryController = CountryController(
       model: countryModel,
       onCountryUpdated: () {
-        print("Country updated to: ${countryModel.initialCountry?.name ?? 'null'}");
+        debugPrint("Country updated to: ${countryModel.initialCountry?.name ?? 'null'}");
       },
     );
     getAllSkills();
