@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/controllers/job_details_controller.dart';
+import 'package:inprep_ai/features/job_screens/models/all_jobs_model.dart';
+import 'package:intl/intl.dart'; // Import your model
 
 class JobDetailsScreen extends StatelessWidget {
   final JobDetailsController controller = Get.put(JobDetailsController());
@@ -10,6 +12,9 @@ class JobDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the job data passed from MyJobsScreen
+    final AllJobsModel job = Get.arguments;
+
     return Scaffold(
       backgroundColor: Color(0xffF6F6F7),
       body: SafeArea(
@@ -27,14 +32,36 @@ class JobDetailsScreen extends StatelessWidget {
                     },
                   ),
                   SizedBox(width: 8),
+                  // Align(
+                  //   alignment: Alignment.center,
+                  //   child: Text(
+                  //     job.title ?? 'No Title',  // Display job title
+                  //     style: getTextStyle(
+                  //       fontWeight: FontWeight.w600,
+                  //       fontSize: 24,
+                  //       color: Color(0xff212121),
+                  //     ),
+                  //   ),
+                  // ),
                   Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      'Software Developer',
-                      style: getTextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24,
-                        color: Color(0xff212121),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 300,
+                      ), // You can adjust this value as per your design
+                      child: Text(
+                        job.title ?? 'No Title', // Display job title
+                        style: getTextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 24,
+                          color: Color(0xff212121),
+                        ),
+                        overflow:
+                            TextOverflow
+                                .ellipsis, // Ensures text truncates with ellipsis if it overflows
+                        maxLines: 3, // Allows the text to span up to 3 lines
+                        softWrap:
+                            true, // Ensures that the text wraps onto new lines when necessary
                       ),
                     ),
                   ),
@@ -52,17 +79,18 @@ class JobDetailsScreen extends StatelessWidget {
                   children: [
                     buildInfoRow(
                       'Company',
-                      'Tech Innovators Inc.',
+                      job.company ?? 'No Company', // Display company
                       Color(0xFF37B874),
                     ),
                     buildInfoRow(
                       'Location',
-                      'San Francisco, CA',
+                      job.location ?? 'No Location', // Display location
                       Color(0xFF37B874),
                     ),
                     buildInfoRow(
-                      'Apply Date',
-                      'April 10, 2025',
+                      // 'Apply Date',
+                      'Job Posted',
+                      formatDate(job.posted ?? ''), // Display posted date
                       Color(0xFF37B874),
                     ),
                   ],
@@ -72,14 +100,15 @@ class JobDetailsScreen extends StatelessWidget {
               Text('Job Description', style: sectionTitleStyle()),
               SizedBox(height: 8),
               Text(
-                'Develop scalable applications in JavaScript & Python. Work with cloud technologies like AWS, GCP, Azure. Collaborate with cross-functional teams.',
+                job.description ??
+                    'No Description Available', // Display description
                 style: bodyStyle(),
               ),
               SizedBox(height: 24),
               Text('Job Requirements', style: sectionTitleStyle()),
               SizedBox(height: 8),
               Text(
-                'Strong coding skills in JavaScript, Python. Knowledge of cloud technologies.',
+                'Strong coding skills in JavaScript, Python. Knowledge of cloud technologies.', // Example requirements
                 style: bodyStyle(),
               ),
               SizedBox(height: 24),
@@ -101,9 +130,7 @@ class JobDetailsScreen extends StatelessWidget {
                     onPressed: () {},
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment:
-                          MainAxisAlignment
-                              .center, // Center the text and icon inside the button
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Start Mock Interview',
@@ -116,7 +143,6 @@ class JobDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               SizedBox(height: 32),
               Text('Previous Interview Results', style: sectionTitleStyle()),
               SizedBox(height: 8),
@@ -185,5 +211,19 @@ class JobDetailsScreen extends StatelessWidget {
       color: Color(0xff676768),
       fontWeight: FontWeight.w400,
     );
+  }
+
+  // Function to format the date in "yyyy-MM-dd"
+  String formatDate(String dateString) {
+    try {
+      DateTime dateTime = DateTime.parse(
+        dateString,
+      ); // Parse the string to DateTime
+      return DateFormat(
+        'yyyy-MM-dd',
+      ).format(dateTime); // Format it to "yyyy-MM-dd"
+    } catch (e) {
+      return ''; // Return an empty string if date parsing fails
+    }
   }
 }

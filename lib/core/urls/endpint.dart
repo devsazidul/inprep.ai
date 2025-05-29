@@ -14,4 +14,6 @@ class Urls {
   static const String changepassword = '$baseUrl/auth/resetPassword';
   static const String getAllSkills = '$baseUrl/skill/all-skills';
   static const String graph = '$baseUrl/graph/average-data';
+  static const String allplan = '$baseUrl/plan/all-plans';
+  static const String alljob = '$baseUrl/job/applied-job';
 }

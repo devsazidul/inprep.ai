@@ -7,7 +7,7 @@ import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
-import 'package:inprep_ai/features/job_screens/myjob.dart' show MyJobsScreen;
+import 'package:inprep_ai/features/job_screens/screens/myjob.dart' show MyJobsScreen;
 import 'package:inprep_ai/features/progress_screen/controller/Progress_screen_controller.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/placeholder_chart.dart';

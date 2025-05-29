@@ -1,4 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/urls/endpint.dart';
+import 'package:inprep_ai/features/subscription/model/allplan_model.dart';
 
 class SubscriptionController extends GetxController {
   final List<Map<String, dynamic>> subscriptionList = [
@@ -46,4 +52,35 @@ class SubscriptionController extends GetxController {
       ],
     },
   ];
+
+
+Future<void> fetchPlans() async {
+  final url = Urls.allplan;
+
+  try {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      // Parse the response body to the Allplan model
+      final data = json.decode(response.body);
+      final allplan = Allplan.fromJson(data);
+      // Handle your allplan data here as needed, for example:
+      debugPrint('Plans data fetched successfully');
+      debugPrint('Message: ${allplan.message}');
+      debugPrint('Number of plans: ${allplan.data.length}');
+    } else {
+      debugPrint('Failed to load data: ${response.statusCode}');
+      throw Exception('Failed to load data');
+    }
+  } catch (error) {
+    debugPrint('Error: $error');
+    throw Exception('Error: $error');
+  }
+}
+
+@override
+  void onInit() {
+    fetchPlans();
+    super.onInit();
+  }
 }
