@@ -80,7 +80,7 @@ class Progress {
 class DifferenceBetweenTotalAndWithoutLast {
   double articulation;
   double behaviouralCue;
-  int problemSolving;
+  double problemSolving;  // Change from int to double
   double inprepScore;
   double contentScore;
   double? average;
@@ -94,12 +94,13 @@ class DifferenceBetweenTotalAndWithoutLast {
     this.average,
   });
 
-  factory DifferenceBetweenTotalAndWithoutLast.fromJson(
-          Map<String, dynamic> json) =>
+  factory DifferenceBetweenTotalAndWithoutLast.fromJson(Map<String, dynamic> json) =>
       DifferenceBetweenTotalAndWithoutLast(
         articulation: json["Articulation"]?.toDouble() ?? 0.0,
         behaviouralCue: json["Behavioural_Cue"]?.toDouble() ?? 0.0,
-        problemSolving: json["Problem_Solving"] ?? 0,
+        problemSolving: (json["Problem_Solving"] is int)
+            ? (json["Problem_Solving"] as int).toDouble()
+            : json["Problem_Solving"]?.toDouble() ?? 0.0,  // Convert problemSolving to double
         inprepScore: json["Inprep_Score"]?.toDouble() ?? 0.0,
         contentScore: json["Content_Score"]?.toDouble() ?? 0.0,
         average: json["average"]?.toDouble() ?? 0.0,
@@ -114,6 +115,7 @@ class DifferenceBetweenTotalAndWithoutLast {
         "average": average,
       };
 }
+
 
 class LyOverallAverage {
   String date;

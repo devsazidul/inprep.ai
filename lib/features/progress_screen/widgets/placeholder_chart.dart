@@ -7,7 +7,6 @@ class PlaceholderChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Static chart with all values as 0
     List<ChartData> sampleData = [
       ChartData('Week 1', 0),
       ChartData('Week 2', 0),

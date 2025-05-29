@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:inprep_ai/features/subscription/components/get_started_button.dart' show GetStartedButton;
-import 'package:inprep_ai/features/subscription/controller/subscription_controller.dart' show SubscriptionController;
-import 'package:inprep_ai/features/subscription/service/stripe_service.dart' show StripeService;
+import 'package:inprep_ai/features/subscription/components/get_started_button.dart'
+    show GetStartedButton;
+import 'package:inprep_ai/features/subscription/controller/subscription_controller.dart'
+    show SubscriptionController;
+import 'package:inprep_ai/features/subscription/service/stripe_service.dart'
+    show StripeService;
 
 class SubscriptionList extends StatelessWidget {
   SubscriptionList({super.key});
-
   final SubscriptionController controller = Get.find<SubscriptionController>();
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size.width * 0.05;
@@ -31,9 +32,9 @@ class SubscriptionList extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(
                   top: 20,
-                  bottom: 20, 
-                  left: size, 
-                  right: size, 
+                  bottom: 20,
+                  left: size,
+                  right: size,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +103,7 @@ class SubscriptionList extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 "${subscription['included'][i]}",
-                                
+
                                 style: GoogleFonts.poppins(
                                   color: Color(0xFF3A4C67),
                                   fontSize: 16,
@@ -121,7 +122,7 @@ class SubscriptionList extends StatelessWidget {
                         final price = double.parse(
                           subscription['price'].toString(),
                         );
-                        debugPrint("Price being passed: $price"); // Debug print
+                        debugPrint("Price being passed: $price");
 
                         StripeService.makePayment(price, "usd");
                       },

@@ -8,21 +8,17 @@ class StripeService {
     Stripe.publishableKey = 'pk_test_51QxRa94Jkoj1g0MMEOAvSXFKAu0fO1xzlm8MkS3TMxgnusylmb2PZ1eKO9TYJ6IrrrC3h2KAJ3nXkF9USyrnIQ3c00wOsgmdi3';
     await Stripe.instance.applySettings();
   }
-
   static Future<void> makePayment(double amount, String currency) async {
     try {
       final int amountInCents = (amount * 100).toInt();
       final paymentIntent = await _createPaymentIntent(amountInCents, currency);
-
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent['client_secret'],
           merchantDisplayName: 'Your App Name',
         ),
       );
-
       await Stripe.instance.presentPaymentSheet();
-
       if (kDebugMode) {
         print('\$$amount payment successful');
       }
@@ -32,7 +28,6 @@ class StripeService {
       }
     }
   }
-
   static Future<Map<String, dynamic>> _createPaymentIntent(int amount, String currency) async {
     try {
       final response = await http.post(
@@ -46,7 +41,6 @@ class StripeService {
           'currency': currency,
         },
       );
-
       return jsonDecode(response.body);
     } catch (err) {
       throw Exception('Failed to create payment intent: $err');
