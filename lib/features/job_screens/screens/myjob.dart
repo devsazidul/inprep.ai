@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
-import 'package:inprep_ai/core/controllers/job_controller.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
-import 'package:inprep_ai/features/job_screens/job_details.dart';
-import 'package:inprep_ai/features/job_screens/new_filter_screen.dart';
+import 'package:inprep_ai/features/job_screens/controller/jobs_controller.dart';
+import 'package:inprep_ai/features/job_screens/screens/job_details.dart';
+import 'package:inprep_ai/features/job_screens/screens/new_filter_screen.dart';
+import 'package:intl/intl.dart'; // Import the intl package
 
 class MyJobsScreen extends StatelessWidget {
-  final JobController controller = Get.put(JobController());
+  final JobsController jobsController = Get.put(JobsController());
 
   MyJobsScreen({super.key});
+
+  String formatDate(String dateString) {
+    try {
+      DateTime dateTime = DateTime.parse(dateString);
+      return DateFormat('yyyy-MM-dd').format(dateTime);
+    } catch (e) {
+      return '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +35,12 @@ class MyJobsScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-
-                  //Icon(Icons.arrow_back_ios, color: Colors.black),
-
-                  InkWell(onTap: (){Get.back();}, child: Image.asset(IconPath.backarrow)),
-
-
+                  InkWell(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Image.asset(IconPath.backarrow),
+                  ),
                   SizedBox(width: 80),
                   Text(
                     'My Jobs',
@@ -88,9 +98,7 @@ class MyJobsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   SizedBox(width: 10),
-
                   Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -101,6 +109,7 @@ class MyJobsScreen extends StatelessWidget {
                       onTap: () {
                         Get.dialog(
                           AlertDialog(
+                            backgroundColor: Colors.white,
                             content: SingleChildScrollView(
                               child: FilterScreen(),
                             ),
@@ -115,22 +124,24 @@ class MyJobsScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Image.asset(
-                        IconPath.filter1,
-                      ),
+                      child: Image.asset(IconPath.filter1),
                     ),
                   ),
                 ],
               ),
             ),
-
             Expanded(
               child: Obx(
                 () => ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  itemCount: controller.jobs.length,
+                  itemCount:
+                      jobsController
+                          .jobsmodel
+                          .length, // Correctly use jobsmodel
                   itemBuilder: (context, index) {
-                    final job = controller.jobs[index];
+                    final job =
+                        jobsController
+                            .jobsmodel[index]; // Correctly reference jobsmodel
                     return Container(
                       margin: EdgeInsets.only(bottom: 12),
                       padding: EdgeInsets.all(16),
@@ -139,15 +150,12 @@ class MyJobsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-
                             color: Colors.grey.withValues(alpha: 0.1),
-
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
                         ],
                       ),
-
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -157,7 +165,8 @@ class MyJobsScreen extends StatelessWidget {
                               children: [
                                 // Job Title
                                 Text(
-                                  job.title,
+                                  job.title ??
+                                      'No Title', // Added fallback text
                                   style: getTextStyle(
                                     color: Color(0xff212121),
                                     fontSize: 16,
@@ -166,7 +175,8 @@ class MyJobsScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  job.company,
+                                  job.company ??
+                                      'No Company', // Added fallback text
                                   style: getTextStyle(
                                     color: Color(0xffAFAFAF),
                                     fontSize: 14,
@@ -178,23 +188,19 @@ class MyJobsScreen extends StatelessWidget {
                                   children: [
                                     Row(
                                       children: [
-                                        Image.asset(
-                                          IconPath.location,
-                                        ),
+                                        Image.asset(IconPath.location),
+                                        SizedBox(width: 8),
                                         SizedBox(
-                                          width:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.width *
-                                              0.002,
-                                        ),
-                                        Text(
-                                          job.location,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: getTextStyle(
-                                            color: Color(0xff676768),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
+                                          width: 160,
+                                          child: Text(
+                                            job.location ??
+                                                'No Location', // Added fallback text
+                                            overflow: TextOverflow.ellipsis,
+                                            style: getTextStyle(
+                                              color: Color(0xff676768),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -202,13 +208,12 @@ class MyJobsScreen extends StatelessWidget {
                                     Spacer(),
                                     Row(
                                       children: [
-                                        Image.asset(
-                                          IconPath.calendar,
-                                        ),
-
+                                        Image.asset(IconPath.calendar),
                                         SizedBox(width: 2.5),
                                         Text(
-                                          job.date,
+                                          formatDate(
+                                            job.posted ?? '',
+                                          ), // Formatting the date
                                           style: getTextStyle(
                                             color: Color(0xff676768),
                                             fontSize: 14,
@@ -219,9 +224,7 @@ class MyJobsScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-
                                 SizedBox(height: 10),
-
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 8,
@@ -229,16 +232,16 @@ class MyJobsScreen extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color:
-                                        job.applied
+                                        job.isApplied!
                                             ? Colors.green[50]
                                             : Colors.orange[50],
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
-                                    job.applied ? 'Applied' : 'Not Applied',
+                                    job.isApplied! ? 'Applied' : 'Not Applied',
                                     style: getTextStyle(
                                       color:
-                                          job.applied
+                                          job.isApplied!
                                               ? Color(0xFF37B874)
                                               : Color(0xFFEF9614),
                                       fontWeight: FontWeight.w500,
@@ -249,10 +252,10 @@ class MyJobsScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-
                           GestureDetector(
                             onTap: () {
-                              Get.to(() => JobDetailsScreen());
+                              // Pass the selected job data to the JobDetailsScreen using Get.to()
+                              Get.to(() => JobDetailsScreen(), arguments: job);
                             },
                             child: CircleAvatar(
                               radius: 16,
