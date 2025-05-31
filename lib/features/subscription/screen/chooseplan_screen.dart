@@ -1,10 +1,8 @@
-// ignore_for_file: unnecessary_string_interpolations, unnecessary_to_list_in_spreads
-
+// ignore_for_file: unnecessary_to_list_in_spreads
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/features/subscription/controller/subscription_controller.dart';
-import 'package:inprep_ai/features/subscription/service/stripe_service.dart';
 import 'package:inprep_ai/features/subscription/widgets/plan_card_widget.dart';
 
 class ChooseplanScreen extends StatelessWidget {
@@ -25,10 +23,7 @@ class ChooseplanScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (controller.plans.isEmpty) {
-            // Removed CircularProgressIndicator — you can show a message or just an empty box:
-            return const SizedBox.shrink();
-            // Or, if you want, show a message instead:
-            // return Center(child: Text('No plans available.'));
+            return SizedBox.shrink();
           }
 
           return SingleChildScrollView(
@@ -55,13 +50,13 @@ class ChooseplanScreen extends StatelessWidget {
                       planTitle: plan.name,
                       description: plan.description,
                       price: '\$${plan.priceMonthly.toStringAsFixed(2)}',
-                      priceSuffix: '${plan.priceLabel}',
+                      priceSuffix: plan.priceLabel,
                       features: plan.features,
-                      priceColor: const Color(0xff37BB74),
-                      buttonColor: const Color(0xff37BB74),
-                      onPress: () {
-                        StripeService.makePayment(plan.priceMonthly, "usd");
-                      },
+                      priceColor: Color(0xff37BB74),
+                      buttonColor: Color(0xff37BB74),
+                      priceId: plan.priceId,
+                      onPress:
+                          () => controller.createCheckoutSession(plan.priceId),
                     ),
                   );
                 }).toList(),
@@ -73,4 +68,3 @@ class ChooseplanScreen extends StatelessWidget {
     );
   }
 }
-

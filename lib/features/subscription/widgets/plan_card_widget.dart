@@ -12,6 +12,7 @@ class PlanCard extends StatelessWidget {
   final Color priceColor;
   final Color buttonColor;
   final VoidCallback onPress;
+  final String priceId;
 
   const PlanCard({
     super.key,
@@ -23,17 +24,14 @@ class PlanCard extends StatelessWidget {
     required this.priceColor,
     required this.buttonColor,
     required this.onPress,
+    required this.priceId,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width for responsive scaling
     final screenWidth = MediaQuery.of(context).size.width;
-
-    // Dynamic padding based on screen width
-    final padding = screenWidth * 0.04; // 4% of screen width
-    // Dynamic font sizes
-    final titleFontSize = screenWidth * 0.05; // 5% of screen width
+    final padding = screenWidth * 0.04;
+    final titleFontSize = screenWidth * 0.05;
     final descriptionFontSize = screenWidth * 0.035;
     final priceFontSize = screenWidth * 0.09;
     final priceSuffixFontSize = screenWidth * 0.04;
@@ -105,7 +103,7 @@ class PlanCard extends StatelessWidget {
                     children: [
                       Image.asset(
                         IconPath.checkbox,
-                        width: featureFontSize * 1.2, // Scale checkbox size
+                        width: featureFontSize * 1.2,
                         height: featureFontSize * 1.2,
                       ),
                       SizedBox(width: padding / 2),
@@ -128,7 +126,7 @@ class PlanCard extends StatelessWidget {
               onPress: onPress,
               backgroundColor: buttonColor,
               borderColor: Colors.transparent,
-              textcolor: const Color(0xffffffff),
+              textcolor:  Color(0xffffffff),
             ),
           ],
         ),
