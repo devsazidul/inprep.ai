@@ -3,25 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/job_screens/models/all_jobs_model.dart';
+import 'filter_controller.dart';
 
 class JobsController extends GetxController {
-  // Job related observables
   var jobsmodel = <AllJobsModel>[].obs;
   var filteredJobs = <AllJobsModel>[].obs;
   var isLoading = true.obs;
-  
-  // Search controller
+
   final searchController = TextEditingController();
-  
+
+  final FilterController filterController = Get.put(FilterController());
+
   @override
   void onInit() {
     super.onInit();
     alljobs();
-    
-    // Add listener to search controller
     searchController.addListener(() {
       filterJobs(searchController.text);
     });
@@ -57,6 +57,9 @@ class JobsController extends GetxController {
         var data = json.decode(response.body) as List;
         jobsmodel.value = data.map((item) => AllJobsModel.fromJson(item)).toList();
         filteredJobs.assignAll(jobsmodel);
+
+        // Update filters with the fetched jobs
+        filterController.setFiltersFromJobs(jobsmodel);
       }
     } catch (error) {
       debugPrint('Error: $error');
@@ -71,9 +74,9 @@ class JobsController extends GetxController {
       filteredJobs.assignAll(jobsmodel);
     } else {
       filteredJobs.assignAll(jobsmodel.where((job) =>
-          job.title?.toLowerCase().contains(query.toLowerCase()) == true ||
-          job.company?.toLowerCase().contains(query.toLowerCase()) == true ||
-          job.location?.toLowerCase().contains(query.toLowerCase()) == true));
+          (job.title?.toLowerCase().contains(query.toLowerCase()) ?? false) ||
+          (job.company?.toLowerCase().contains(query.toLowerCase()) ?? false) ||
+          (job.location?.toLowerCase().contains(query.toLowerCase()) ?? false)));
     }
   }
 }
