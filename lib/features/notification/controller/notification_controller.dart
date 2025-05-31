@@ -1,20 +1,5 @@
 import 'package:get/get.dart';
-
-class NotificationItem {
-  final String id;
-  final String message;
-  final String timeAgo;
-  final String imageUrl;
-  RxBool isRead;
-
-  NotificationItem({
-    required this.id,
-    required this.message,
-    required this.timeAgo,
-    required this.imageUrl,
-    bool read = false,
-  }) : isRead = read.obs;
-}
+import 'package:inprep_ai/features/notification/model/notification_model.dart';
 
 class NotificationController extends GetxController {
   final notifications = <NotificationItem>[

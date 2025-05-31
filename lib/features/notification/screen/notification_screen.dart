@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/features/notification/controller/notification_controller.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -14,7 +15,14 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F7),
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text(
+          'Notifications',
+          style: getTextStyle(
+            color: Color(0xff333333),
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: Color(0xFFF6F6F7),
         elevation: 0,
         centerTitle: true,
@@ -32,7 +40,7 @@ class NotificationScreen extends StatelessWidget {
                   onPressed: notificationController.markAllAsRead,
                   child: Text(
                     'Mark all as read',
-                    style: TextStyle(
+                    style: getTextStyle(
                       color: Color(0xFF37B874),
                       fontWeight: FontWeight.w600,
                     ),
@@ -86,7 +94,7 @@ class NotificationScreen extends StatelessWidget {
                                         notification.message
                                             .substring(0, 2)
                                             .toUpperCase(),
-                                        style: TextStyle(
+                                        style: getTextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -96,7 +104,7 @@ class NotificationScreen extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 notification.message,
-                                style: TextStyle(
+                                style: getTextStyle(
                                   color:
                                       notification.isRead.value
                                           ? Color(0xFF333333)
@@ -109,7 +117,7 @@ class NotificationScreen extends StatelessWidget {
                             SizedBox(width: 12),
                             Text(
                               notification.timeAgo,
-                              style: TextStyle(
+                              style: getTextStyle(
                                 color: Color(0xFF475569),
                                 fontSize: 12,
                               ),
