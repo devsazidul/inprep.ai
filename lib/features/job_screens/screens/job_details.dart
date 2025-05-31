@@ -19,7 +19,7 @@ class JobDetailsScreen extends StatelessWidget {
       backgroundColor: Color(0xffF6F6F7),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -108,13 +108,13 @@ class JobDetailsScreen extends StatelessWidget {
               Text('Job Requirements', style: sectionTitleStyle()),
               SizedBox(height: 8),
               Text(
-                'Strong coding skills in JavaScript, Python. Knowledge of cloud technologies.', // Example requirements
+                'Strong coding skills in JavaScript, Python. Knowledge of cloud technologies.',
                 style: bodyStyle(),
               ),
               SizedBox(height: 24),
               Center(
                 child: Container(
-                  width: double.infinity, // Makes the button take full width
+                  width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(

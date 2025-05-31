@@ -12,7 +12,7 @@ class FilterScreen extends StatelessWidget {
     return Column(
       // Only the column part
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min, // Important for dialogs
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Center(
           child: Text(

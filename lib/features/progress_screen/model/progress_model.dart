@@ -100,7 +100,7 @@ class DifferenceBetweenTotalAndWithoutLast {
         behaviouralCue: json["Behavioural_Cue"]?.toDouble() ?? 0.0,
         problemSolving: (json["Problem_Solving"] is int)
             ? (json["Problem_Solving"] as int).toDouble()
-            : json["Problem_Solving"]?.toDouble() ?? 0.0,  // Convert problemSolving to double
+            : json["Problem_Solving"]?.toDouble() ?? 0.0,
         inprepScore: json["Inprep_Score"]?.toDouble() ?? 0.0,
         contentScore: json["Content_Score"]?.toDouble() ?? 0.0,
         average: json["average"]?.toDouble() ?? 0.0,
