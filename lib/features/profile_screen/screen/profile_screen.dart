@@ -5,7 +5,7 @@ import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
-import 'package:inprep_ai/features/profile_screen/screen/chooseplan_screen.dart';
+import 'package:inprep_ai/features/subscription/screen/chooseplan_screen.dart';
 import 'package:inprep_ai/features/profile_screen/widgets/custom_profile_textfield.dart';
 import '../controller/profile_controller.dart';
 

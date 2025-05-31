@@ -8,6 +8,7 @@ import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:inprep_ai/features/job_screens/screens/myjob.dart' show MyJobsScreen;
+import 'package:inprep_ai/features/notification/screen/notification_screen.dart';
 import 'package:inprep_ai/features/progress_screen/controller/Progress_screen_controller.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/placeholder_chart.dart';
@@ -99,19 +100,24 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Container(
-              height: 32,
-              width: 32,
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Color(0xffE0E0E1)),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                Icons.notifications_active_rounded,
-                size: 24,
-                color: Color(0xff3A4C67),
+          GestureDetector(
+            onTap: () {
+              Get.to(NotificationScreen());
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: Container(
+                height: 32,
+                width: 32,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Color(0xffE0E0E1)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.notifications_active_rounded,
+                  size: 24,
+                  color: Color(0xff3A4C67),
+                ),
               ),
             ),
           ),
