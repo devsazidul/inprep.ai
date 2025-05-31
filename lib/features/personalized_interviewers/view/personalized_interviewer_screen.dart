@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart' show getTextStyle;
 import 'package:inprep_ai/features/interview/interview_details/details/view/details_view.dart' show DetailsView;
 import 'package:inprep_ai/features/personalized_interviewers/controller/personalized_interviewers_controller.dart' show PersonalizedInterviewersController;
-import 'package:inprep_ai/features/subscription/screen/subscription_screen.dart';
+import 'package:inprep_ai/features/subscription/screen/chooseplan_screen.dart';
 
 class PersonalizedInterviewerScreen extends StatelessWidget {
    PersonalizedInterviewerScreen({super.key});
@@ -61,7 +61,7 @@ class PersonalizedInterviewerScreen extends StatelessWidget {
                     debugPrint("The title is ${availablemockinterviews['image']}");
                     debugPrint("The title is ${availablemockinterviews['job_titles']}");
                    } else{
-                    Get.to(SubscriptionScreen()); 
+                    Get.to(ChooseplanScreen()); 
                    }
     
                   

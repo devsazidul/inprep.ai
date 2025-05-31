@@ -5,6 +5,7 @@ import 'package:inprep_ai/features/authentication/screen/otp_sent_screen.dart';
 import 'package:inprep_ai/features/authentication/screen/signup_screen.dart';
 import 'package:inprep_ai/features/job_screens/screens/myjob.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
+import 'package:inprep_ai/features/notification/screen/notification_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/genarated_about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider.dart';
 import 'package:inprep_ai/features/splash_screen/screen/splash1_screen.dart';
@@ -26,6 +27,7 @@ class AppRoute {
   static String bottomnavbarview = "/bottomnavbarview";
   static String loginOtpSendScreen = "/loginOtpSendScreen";
   static String genaratedaboutme = "/genaratedaboutme";
+  static String notificationscreen = "/notificationscreen";
 
   static String getLoginScreen() => loginScreen;
   static String getSignupScreen() => signupScreen;
@@ -40,6 +42,7 @@ class AppRoute {
   static String getbottomnavbarview() => bottomnavbarview;
   static String getloginOtpSendScreen() => loginOtpSendScreen;
   static String getgenaratedaboutme() => genaratedaboutme;
+  static String getnotificationscreen() => notificationscreen;
 
   static List<GetPage> routes = [
     GetPage(name: loginScreen, page: () => LoginScreen()),
@@ -53,5 +56,6 @@ class AppRoute {
     GetPage(name: bottomnavbarview, page: () => BottomNavbarView()),
     GetPage(name: loginOtpSendScreen, page: () => LoginOtpSendScreen()),
     GetPage(name: genaratedaboutme, page: () => GenaratedAboutMe()),
+    GetPage(name: notificationscreen, page: () => NotificationScreen()),
   ];
 }
