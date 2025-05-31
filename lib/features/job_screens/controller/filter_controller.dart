@@ -8,6 +8,7 @@ class FilterController extends GetxController {
   var locations = <String>[].obs;
   var statuses = <String>[].obs;
 
+  // Start with empty (no filter selected)
   var selectedCompany = ''.obs;
   var selectedPosition = ''.obs;
   var selectedYear = ''.obs;
@@ -27,11 +28,10 @@ class FilterController extends GetxController {
         .where((e) => e.isNotEmpty)
         .toList();
 
-    // Extract years from createdAt field (if not null)
     years.value = jobs
         .map((job) {
           if (job.createdAt == null) return '';
-          return job.createdAt!.substring(0, 4); // get year part only
+          return job.createdAt!.substring(0, 4); // year only
         })
         .toSet()
         .where((e) => e.isNotEmpty)
@@ -45,11 +45,11 @@ class FilterController extends GetxController {
 
     statuses.value = ['Applied', 'Not Applied'];
 
-    // Set default selections (first element or empty)
-    selectedCompany.value = companies.isNotEmpty ? companies.first : '';
-    selectedPosition.value = positions.isNotEmpty ? positions.first : '';
-    selectedYear.value = years.isNotEmpty ? years.first : '';
-    selectedLocation.value = locations.isNotEmpty ? locations.first : '';
-    selectedStatus.value = statuses.first;
+    // NO default selection: start empty = no filter
+    selectedCompany.value = '';
+    selectedPosition.value = '';
+    selectedYear.value = '';
+    selectedLocation.value = '';
+    selectedStatus.value = '';
   }
 }

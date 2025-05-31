@@ -9,9 +9,9 @@ class FilterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(  // wrap in scrollview to avoid overflow
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -23,22 +23,10 @@ class FilterScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            buildDropdown(
-              'Company',
-              controller.companies,
-              controller.selectedCompany,
-            ),
-            buildDropdown(
-              'Position',
-              controller.positions,
-              controller.selectedPosition,
-            ),
+            buildDropdown('Company', controller.companies, controller.selectedCompany),
+            buildDropdown('Position', controller.positions, controller.selectedPosition),
             buildDropdown('Year', controller.years, controller.selectedYear),
-            buildDropdown(
-              'Location',
-              controller.locations,
-              controller.selectedLocation,
-            ),
+            buildDropdown('Location', controller.locations, controller.selectedLocation),
             buildDropdown('Status', controller.statuses, controller.selectedStatus),
           ],
         ),
@@ -46,27 +34,20 @@ class FilterScreen extends StatelessWidget {
     );
   }
 
-  Widget buildDropdown(
-    String label,
-    RxList<String> items,
-    RxString selectedValue,
-  ) {
+  Widget buildDropdown(String label, RxList<String> items, RxString selectedValue) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFF676768),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(color: Color(0xFF676768), fontSize: 12, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          Obx(
-            () => Container(
+          Obx(() {
+            final allItems = [''].followedBy(items).toList();
+            return Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade300),
@@ -74,22 +55,23 @@ class FilterScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               child: DropdownButton<String>(
-                value: selectedValue.value.isEmpty ? null : selectedValue.value,
+                value: selectedValue.value.isEmpty ? '' : selectedValue.value,
                 isExpanded: true,
                 underline: const SizedBox(),
                 icon: const Icon(Icons.arrow_drop_down),
                 style: const TextStyle(color: Colors.green, fontSize: 16),
-                items: items
-                    .map(
-                      (item) => DropdownMenuItem(value: item, child: Text(item)),
-                    )
+                items: allItems
+                    .map((item) => DropdownMenuItem(
+                          value: item,
+                          child: Text(item.isEmpty ? 'Any' : item),
+                        ))
                     .toList(),
                 onChanged: (value) {
                   if (value != null) selectedValue.value = value;
                 },
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

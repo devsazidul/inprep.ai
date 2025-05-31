@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/job_screens/controller/jobs_controller.dart';
 import 'package:inprep_ai/features/job_screens/screens/job_details.dart';
 import 'package:inprep_ai/features/job_screens/screens/new_filter_screen.dart';
-import 'package:intl/intl.dart'; // Import the intl package
+import 'package:intl/intl.dart';
 
 class MyJobsScreen extends StatelessWidget {
   final JobsController jobsController = Get.put(JobsController());
@@ -24,15 +23,12 @@ class MyJobsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF6F6F7),
+      backgroundColor: const Color(0xFFF6F6F7),
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
                 children: [
                   InkWell(
@@ -54,14 +50,12 @@ class MyJobsScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 10,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: jobsController.searchController,
                       decoration: InputDecoration(
                         hintText: 'Search for jobs...',
                         hintStyle: TextStyle(
@@ -86,7 +80,7 @@ class MyJobsScreen extends StatelessWidget {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         suffixIcon: Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: EdgeInsets.all(12),
                           child: Image.asset(
                             IconPath.search,
                             width: 20,
@@ -116,6 +110,7 @@ class MyJobsScreen extends StatelessWidget {
                             actions: [
                               TextButton(
                                 onPressed: () {
+                                  Get.find<JobsController>().applyFilters();
                                   Get.back();
                                 },
                                 child: Text("Apply"),
@@ -131,17 +126,13 @@ class MyJobsScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Obx(
-                () => ListView.builder(
+              child: Obx(() {
+                final jobs = jobsController.filteredJobs;
+                return ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  itemCount:
-                      jobsController
-                          .jobsmodel
-                          .length, // Correctly use jobsmodel
+                  itemCount: jobs.length,
                   itemBuilder: (context, index) {
-                    final job =
-                        jobsController
-                            .jobsmodel[index]; // Correctly reference jobsmodel
+                    final job = jobs[index];
                     return Container(
                       margin: EdgeInsets.only(bottom: 12),
                       padding: EdgeInsets.all(16),
@@ -150,7 +141,7 @@ class MyJobsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.1),
+                            color: Colors.grey.withAlpha(25),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
@@ -163,11 +154,9 @@ class MyJobsScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Job Title
                                 Text(
-                                  job.title ??
-                                      'No Title', // Added fallback text
-                                  style: getTextStyle(
+                                  job.title ?? 'No Title',
+                                  style: TextStyle(
                                     color: Color(0xff212121),
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -175,9 +164,8 @@ class MyJobsScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  job.company ??
-                                      'No Company', // Added fallback text
-                                  style: getTextStyle(
+                                  job.company ?? 'No Company',
+                                  style: TextStyle(
                                     color: Color(0xffAFAFAF),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
@@ -193,10 +181,9 @@ class MyJobsScreen extends StatelessWidget {
                                         SizedBox(
                                           width: 160,
                                           child: Text(
-                                            job.location ??
-                                                'No Location', // Added fallback text
+                                            job.location ?? 'No Location',
                                             overflow: TextOverflow.ellipsis,
-                                            style: getTextStyle(
+                                            style: TextStyle(
                                               color: Color(0xff676768),
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
@@ -211,10 +198,8 @@ class MyJobsScreen extends StatelessWidget {
                                         Image.asset(IconPath.calendar),
                                         SizedBox(width: 2.5),
                                         Text(
-                                          formatDate(
-                                            job.posted ?? '',
-                                          ), // Formatting the date
-                                          style: getTextStyle(
+                                          formatDate(job.posted ?? ''),
+                                          style: TextStyle(
                                             color: Color(0xff676768),
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
@@ -232,18 +217,20 @@ class MyJobsScreen extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color:
-                                        job.isApplied!
+                                        (job.isApplied ?? false)
                                             ? Colors.green[50]
                                             : Colors.orange[50],
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
-                                    job.isApplied! ? 'Applied' : 'Not Applied',
-                                    style: getTextStyle(
+                                    (job.isApplied ?? false)
+                                        ? 'Applied'
+                                        : 'Not Applied',
+                                    style: TextStyle(
                                       color:
-                                          job.isApplied!
-                                              ? Color(0xFF37B874)
-                                              : Color(0xFFEF9614),
+                                          (job.isApplied ?? false)
+                                              ? const Color(0xFF37B874)
+                                              : const Color(0xFFEF9614),
                                       fontWeight: FontWeight.w500,
                                       fontSize: 12,
                                     ),
@@ -254,7 +241,6 @@ class MyJobsScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // Pass the selected job data to the JobDetailsScreen using Get.to()
                               Get.to(() => JobDetailsScreen(), arguments: job);
                             },
                             child: CircleAvatar(
@@ -271,8 +257,8 @@ class MyJobsScreen extends StatelessWidget {
                       ),
                     );
                   },
-                ),
-              ),
+                );
+              }),
             ),
           ],
         ),
