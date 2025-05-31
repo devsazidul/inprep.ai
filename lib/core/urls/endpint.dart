@@ -16,4 +16,6 @@ class Urls {
   static const String graph = '$baseUrl/graph/average-data';
   static const String allplan = '$baseUrl/plan/all-plans';
   static const String alljob = '$baseUrl/job/applied-job';
+  static const String checkout = '$baseUrl/payment/create-checkout-session';
+  static const String paymentsave = '$baseUrl/payment/save-payment';
 }
