@@ -38,9 +38,9 @@ class CategoryDetailsView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        OverviewWidget(title: "30 min", description: 'Duration'),
-                        OverviewWidget(title: "Intermediate", description: 'Difficulty Level'),
-                        OverviewWidget(title: "Technical", description: 'Type'),
+                        OverviewWidget(title: "${controller.duration.value.toString()} min", description: 'Duration'),
+                        OverviewWidget(title: controller.difficulty.value, description: 'Difficulty Level'),
+                        OverviewWidget(title: controller.questionType.value, description: 'Type'),
                       ],
                     ), 
                     SizedBox(

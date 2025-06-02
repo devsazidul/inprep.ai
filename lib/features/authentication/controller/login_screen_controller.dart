@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart' show SharedPreferencesHelper;
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/authentication/model/login_info.dart';
 import 'package:inprep_ai/features/authentication/screen/login_otp_send_screen.dart';
@@ -59,23 +60,12 @@ class LoginScreenController extends GetxController {
       final loginInfo = LoginInfo.fromJson(jsonDecode(response.body));
 
       if (loginInfo.approvalToken != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+        
 
         // Save tokens and user info as before
-        await prefs.setString('approvalToken', loginInfo.approvalToken ?? '');
-        await prefs.setString('refreshToken', loginInfo.refreshToken ?? '');
-        if (loginInfo.user != null) {
-          await prefs.setString('userId', loginInfo.user?.sId ?? '');
-          await prefs.setString('userName', loginInfo.user?.name ?? '');
-          await prefs.setString('userEmail', loginInfo.user?.email ?? '');
-          await prefs.setString('userPhone', loginInfo.user?.phone ?? '');
-          await prefs.setString('userRole', loginInfo.user?.role ?? '');
-          await prefs.setBool('isLoggedIn', true);
-          await prefs.setBool(
-            'otpVerified',
-            loginInfo.user?.otpVerified ?? false,
-          );
-        }
+        await SharedPreferencesHelper.saveTokenAndRole(
+          loginInfo.approvalToken ?? ''
+        );
 
         EasyLoading.showSuccess(loginInfo.message ?? "Login Successful");
 
