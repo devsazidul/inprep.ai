@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/over_all_feedback.dart' show OverAllFeedback;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/question_wise_feedback.dart' show QuestionWiseFeedback;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/start_interview_view.dart' show StartInterviewView;
@@ -24,20 +26,13 @@ class StartInterviewController extends GetxController {
    @override
   void onInit() {
     super.onInit();
+    generatedQuestion();
     requestPermissions().then((_) => initializeCamera());
   }
 
 
-  List<Map<String, dynamic>> questions = [
-    {'question': 'Can you explain the box model in CSS?'},
-    {
-      'question':
-          'What are semantic HTML elements, and why are they important?',
-    },
-    {'question': 'Can you explain the box model in CSS?'},
-    {'question': 'Can you explain the box model in CSS?'},
-    {'question': 'Can you explain the box model in CSS?'},
-  ];
+  var questions = <Map<String, dynamic>>[].obs;
+
 
   Future<bool> requestPermissions() async {
     bool hasCameraPermission = false;
@@ -162,11 +157,7 @@ class StartInterviewController extends GetxController {
 
 
   void onNextQuestion() {
-    // if (questionNumber.value < questions.length) {
-    //   Get.to(() => QuestionWiseFeedback());
-    // } else {
-    //   Get.off(() => OverAllFeedback());
-    // }
+
     Get.to(() => QuestionWiseFeedback());
   }
 
@@ -191,4 +182,41 @@ class StartInterviewController extends GetxController {
       'title' : 'Post-interview, enhance your body language. You excelled in eye contact and posture; just keep your arms relaxed and use gestures to highlight your points.'
     },
   ]; 
+
+  Future<void> generatedQuestion() async {
+  try {
+    final response = await http.post(
+      Uri.parse("https://freepik.softvenceomega.com/in-prep/api/v1/q_generator/generate-questions?topic=Software%20Engineer"),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if (kDebugMode) {
+      print("The response for generated question is: ${response.body}");
+    }
+
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);   
+      if (decoded['questions'] != null && decoded['questions'] is List) {
+        questions.value = List<Map<String, dynamic>>.from(decoded['questions']);
+        update();  
+      } else {
+        if (kDebugMode) {
+          print("Invalid response format: 'questions' not found or not a list");
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print("Failed to generate questions: ${response.statusCode}");
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print("Exception in generatedQuestion(): $e");
+    }
+  }
+}
+
+
+  
 }

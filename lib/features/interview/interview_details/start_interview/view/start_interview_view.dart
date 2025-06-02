@@ -4,7 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/features/interview/interview_details/start_interview/controller/start_interview_controller.dart';
 import 'package:inprep_ai/features/interview/interview_details/start_interview/widget/next_button.dart';
-import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart' show BottomNavbarView;
+import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart'
+    show BottomNavbarView;
 
 class StartInterviewView extends StatelessWidget {
   StartInterviewView({super.key});
@@ -27,8 +28,8 @@ class StartInterviewView extends StatelessWidget {
                 ),
                 Spacer(),
                 InkWell(
-                  onTap: (){
-                    Get.offAll(()=> BottomNavbarView()); 
+                  onTap: () {
+                    Get.offAll(() => BottomNavbarView());
                   },
                   child: CircleAvatar(
                     radius: 20,
@@ -40,20 +41,31 @@ class StartInterviewView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: 40,
-            ), 
-            Obx(
-              () => Text(
-                'Q. ${controller.questions[controller.questionNumber.value - 1]['question']}',
+            SizedBox(height: 40),
+            Obx(() {
+              if (controller.questions.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final questionIndex = controller.questionNumber.value - 1;
+
+              // Defensive check for index bounds
+              if (questionIndex < 0 ||
+                  questionIndex >= controller.questions.length) {
+                return const Text("Loading question...");
+              }
+
+              return Text(
+                'Q. ${controller.questions[questionIndex]['question']}',
                 style: getTextStyle(
-                  color: Color(0xFF278352), 
-                  fontSize: 20, 
+                  color: Color(0xFF278352),
+                  fontSize: 20,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
-              ),
-            ),
+              );
+            }),
+
             SizedBox(height: 20),
             Obx(
               () => Container(
@@ -79,12 +91,8 @@ class StartInterviewView extends StatelessWidget {
                         ),
               ),
             ),
-            SizedBox(
-              height: 20,
-            ), 
-            NextButton(
-              onTap: controller.onNextQuestion,
-            ),
+            SizedBox(height: 20),
+            NextButton(onTap: controller.onNextQuestion),
           ],
         ),
       ),
