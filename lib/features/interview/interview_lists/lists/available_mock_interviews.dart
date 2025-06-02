@@ -11,17 +11,17 @@ class AvailableMockInterviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double listHeight = controller.availableMockInterviews.length * 120.0;
+    
     return Column(
       children: [
         SizedBox(
-          height: listHeight,
+          height: 400,
           child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
+            
             padding: EdgeInsets.zero,
-            itemCount: controller.availableMockInterviews.length,
+            itemCount: controller.allInterviews.length,
             itemBuilder: (context, index){
-              var availablemockinterviews = controller.availableMockInterviews[index]; 
+              var availablemockinterviews = controller.allInterviews[index]; 
               return Padding(
                 padding: EdgeInsets.only(
                   bottom: 12,
@@ -31,15 +31,15 @@ class AvailableMockInterviews extends StatelessWidget {
     
                     Get.to(() => DetailsView(),
                      arguments: [
-                      availablemockinterviews['title'], 
-                      availablemockinterviews['image'], 
-                      availablemockinterviews['positions'], 
+                      availablemockinterviews.interviewName, 
+                      availablemockinterviews.img, 
+                      availablemockinterviews.totalPositions, 
+                      availablemockinterviews.description, 
+                      availablemockinterviews.id,
                       
                      ]           
                     ); 
-                    debugPrint("The title is ${availablemockinterviews['title']}");
-                    debugPrint("The title is ${availablemockinterviews['image']}");
-                    debugPrint("The title is ${availablemockinterviews['positions']}");
+                    
                   },
                   child: Container(
                     width: double.infinity,
@@ -59,7 +59,7 @@ class AvailableMockInterviews extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             image: DecorationImage(
-                              image: AssetImage(availablemockinterviews['image']),
+                              image: NetworkImage(availablemockinterviews.img),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -72,7 +72,7 @@ class AvailableMockInterviews extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(availablemockinterviews['title'], 
+                              Text(availablemockinterviews.interviewName, 
                                style: getTextStyle(
                                 color: Color(0xFF212121), 
                                 fontSize: 16, 
@@ -82,7 +82,7 @@ class AvailableMockInterviews extends StatelessWidget {
                               SizedBox(
                                 height: 5,
                               ), 
-                              Text("${availablemockinterviews['positions'].toString()} Job Titles", 
+                              Text("${availablemockinterviews.totalPositions.toString()} Job Titles", 
                                style: getTextStyle(
                                 color: Color(0xFFAFAFAF), 
                                 fontSize: 14, 

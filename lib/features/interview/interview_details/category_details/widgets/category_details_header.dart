@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show CircleAvatar, Colors, IconButton, Icons;
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
-import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/interview/interview_details/category_details/controller%20/category_details_controller.dart';
 
 class CategoryDetailsHeader extends StatelessWidget {
@@ -48,7 +47,7 @@ class CategoryDetailsHeader extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(IconPath.codeIcon, 
+                Image.network(controller.img.value, 
                  height: 100,
                  width: 100,
                 ),
@@ -56,7 +55,7 @@ class CategoryDetailsHeader extends StatelessWidget {
                   height: 10,
                 ), 
                 Text(
-                  '${controller.title.value} Interview', 
+                  controller.name.value, 
                  style: getTextStyle(
                   color: Colors.white, 
                   fontSize: 16, 

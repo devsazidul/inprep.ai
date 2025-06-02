@@ -14,7 +14,7 @@ class Header extends StatelessWidget {
       height: 280,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(controller.image.value),
+          image: NetworkImage(controller.image.value),
           fit: BoxFit.cover,
         ),
         borderRadius: BorderRadius.only(

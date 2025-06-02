@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
+import 'package:inprep_ai/core/urls/endpint.dart' show Urls;
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
+import 'package:inprep_ai/features/interview/interview_lists/moddel/interview_model.dart' show Interview, MockInterviewResponse;
 
 class InterviewListController extends GetxController {
   var searchController = TextEditingController(); 
@@ -69,4 +76,48 @@ class InterviewListController extends GetxController {
       "image": ImagePath.image9,
     },
   ];
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchMockInterviews();
+  }
+
+
+  var isLoading = false.obs;
+  var allInterviews = <Interview>[].obs;
+  var suggestedInterviews = <Interview>[].obs;
+
+  Future<void> fetchMockInterviews() async {
+    try {
+      isLoading(true);
+      String? token = await SharedPreferencesHelper.getAccessToken();
+
+      final response = await http.get(
+        Uri.parse('${Urls.baseUrl}/interview/get_mock_interview'),
+        headers: {
+          'Authorization': token!,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (kDebugMode) {
+        print("The interviews are: ${response.body}");
+      } 
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final mockResponse = MockInterviewResponse.fromJson(data);
+
+        allInterviews.assignAll(mockResponse.body.allInterviews);
+        suggestedInterviews.assignAll(mockResponse.body.suggested);
+      } else {
+        Get.snackbar("Error", "Failed to load interviews: ${response.statusCode}");
+      }
+    } catch (e) {
+      Get.snackbar("Exception", e.toString());
+    } finally {
+      isLoading(false);
+    }
+  }
 }

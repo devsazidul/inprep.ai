@@ -11,15 +11,14 @@ class WhatToExpect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var length = controller.whattoexpect.length * 80;
+    
     return SizedBox(
-      height: length.toDouble(),
+      height:800,
       child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
-        itemCount: controller.whattoexpect.length,
+        itemCount: controller.whatToExpect.length,
         itemBuilder: (context, index){
-          var data = controller.whattoexpect[index];
+          var data = controller.whatToExpect[index];
           return Padding(
             padding: const EdgeInsets.only(
               bottom: 12,
@@ -37,7 +36,7 @@ class WhatToExpect extends StatelessWidget {
                   ), 
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: Text(data['title'], 
+                    child: Text(data, 
                      style: getTextStyle(
                       fontSize: 16, 
                       fontWeight: FontWeight.w400, 

@@ -13,67 +13,76 @@ class CategoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var length = controller.categoryList.length * 80;
     return SizedBox(
-      height: length.toDouble(),
-      child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.zero,
-        itemCount: controller.categoryList.length,
-        itemBuilder: (context, index){
-          var data = controller.categoryList[index];
-          return Padding(
-            padding: const EdgeInsets.only(
-              bottom: 12,
-            ),
-            child: GestureDetector(
-              onTap: (){
-                Get.to(() => CategoryDetailsView(),
-                 arguments:  data['title']
-                ); 
-              },
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white, 
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(12), 
-                   child: Row(
-                    children: [
-                      Image.asset(IconPath.codeIcon,
-                       height: 40,
-                       width: 40,
-                      ), 
-                      SizedBox(
-                        width: 20,
-                      ), 
-                      Text(data['title'], 
-                       style: getTextStyle(
-                        fontSize: 16, 
-                        fontWeight: FontWeight.w500, 
-                        color: Color(0xFF212121),
-                       ),
-                      ), 
-                      Spacer(), 
-                      CircleAvatar(
-                        radius: 16,
-                        backgroundColor: Color(0xFF37B874),
-                        child: Center(
-                          child: Icon(Icons.arrow_forward,
-                           color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ],
-                   ),
-                  ),
+      height: 400,
+      child: Obx(
+        () { return ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: controller.questionBanks.length,
+          itemBuilder: (context, index){
+            var data = controller.questionBanks[index];
+            return Padding(
+              padding: const EdgeInsets.only(
+                bottom: 12,
               ),
-            ),
-          ); 
-        }
-        ),
+              child: GestureDetector(
+                onTap: (){
+                  Get.to(() => CategoryDetailsView(),
+                   arguments:  [
+                    data.questionBankName, 
+                    data.img,
+                    data.duration,
+                    data.difficultyLevel,
+                    data.questionType,
+                    data.description,
+                    data.whatToExpect,
+                  
+                    ]
+                  ); 
+                },
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white, 
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12), 
+                     child: Row(
+                      children: [
+                        Image.network(data.img ?? IconPath.codeIcon,
+                         height: 40,
+                         width: 40,
+                        ), 
+                        SizedBox(
+                          width: 20,
+                        ), 
+                        Text(data.questionBankName ?? '', 
+                         style: getTextStyle(
+                          fontSize: 16, 
+                          fontWeight: FontWeight.w500, 
+                          color: Color(0xFF212121),
+                         ),
+                        ), 
+                        Spacer(), 
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Color(0xFF37B874),
+                          child: Center(
+                            child: Icon(Icons.arrow_forward,
+                             color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                     ),
+                    ),
+                ),
+              ),
+            ); 
+          }
+          );}
+      ),
     );
   }
 }

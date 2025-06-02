@@ -6,10 +6,27 @@ class CategoryDetailsController extends GetxController {
       'Lorem ipsum dolor sit amet consectetur. Mi accumsan orci aenean libero aenean. In risus purus ipsum nibh leo. Malesuada fames enim feugiat enim. Dolor aliquam libero facilisi nunc eget justo ante.'
           .obs;
 
+  var name = ''.obs;
+  var img = ''.obs;
+  var duration = 0.obs;
+  var difficulty = ''.obs;
+  var questionType = ''.obs;
+
+  var whatToExpect = <String>[].obs;
+
   @override
   void onInit() {
     super.onInit();
-    title.value = Get.arguments; 
+
+    final args = Get.arguments as List<dynamic>;
+
+    name.value = args[0];
+    img.value = args[1];
+    duration.value = args[2];
+    difficulty.value = args[3];
+    questionType.value = args[4];
+    description.value = args[5];
+    whatToExpect.value = (args[6] as List?)!.map((e) => e.toString()).toList();
   }
 
   List<Map<String, dynamic>> whattoexpect = [
