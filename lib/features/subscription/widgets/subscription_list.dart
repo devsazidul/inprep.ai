@@ -126,7 +126,6 @@ class SubscriptionList extends StatelessWidget {
                         ontap: () {
                           final price = plan.priceMonthly;
                           debugPrint("Price being passed: $price");
-
                           StripeService.makePayment(price, "usd");
                         },
                       ),

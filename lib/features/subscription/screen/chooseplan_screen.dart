@@ -1,4 +1,7 @@
+
+
 // ignore_for_file: unnecessary_to_list_in_spreads
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
@@ -55,8 +58,7 @@ class ChooseplanScreen extends StatelessWidget {
                       priceColor: Color(0xff37BB74),
                       buttonColor: Color(0xff37BB74),
                       priceId: plan.priceId,
-                      onPress:
-                          () => controller.createCheckoutSession(plan.priceId),
+                      controller: controller,
                     ),
                   );
                 }).toList(),

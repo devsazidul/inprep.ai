@@ -18,4 +18,5 @@ class Urls {
   static const String alljob = '$baseUrl/job/applied-job';
   static const String checkout = '$baseUrl/payment/create-checkout-session';
   static const String paymentsave = '$baseUrl/payment/save-payment';
+  static const String allnotification = '$baseUrl/notifications/getAllNotifications';
 }
