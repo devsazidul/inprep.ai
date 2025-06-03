@@ -49,16 +49,20 @@ class StartInterviewView extends StatelessWidget {
 
               final questionIndex = controller.questionNumber.value - 1;
 
-              // Defensive check for index bounds
+              // Safety check in case the index is out of range
               if (questionIndex < 0 ||
                   questionIndex >= controller.questions.length) {
                 return const Text("Loading question...");
               }
 
+              final question =
+                  controller.questions[questionIndex]['question'] ??
+                  "No question found";
+
               return Text(
-                'Q. ${controller.questions[questionIndex]['question']}',
+                'Q. $question',
                 style: getTextStyle(
-                  color: Color(0xFF278352),
+                  color: const Color(0xFF278352),
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                 ),
