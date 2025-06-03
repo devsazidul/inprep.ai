@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
+import 'package:inprep_ai/features/subscription/controller/subscription_controller.dart';
 
 class PlanCard extends StatelessWidget {
   final String planTitle;
@@ -11,8 +13,8 @@ class PlanCard extends StatelessWidget {
   final List<String> features;
   final Color priceColor;
   final Color buttonColor;
-  final VoidCallback onPress;
   final String priceId;
+  final SubscriptionController controller;
 
   const PlanCard({
     super.key,
@@ -23,8 +25,8 @@ class PlanCard extends StatelessWidget {
     required this.features,
     required this.priceColor,
     required this.buttonColor,
-    required this.onPress,
     required this.priceId,
+    required this.controller,
   });
 
   @override
@@ -42,7 +44,7 @@ class PlanCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: padding),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xffE0E0E1), width: 1),
+        border: Border.all(color: Color(0xffE0E0E1), width: 1),
       ),
       child: Padding(
         padding: EdgeInsets.all(padding),
@@ -54,14 +56,14 @@ class PlanCard extends StatelessWidget {
               style: getTextStyle(
                 fontSize: titleFontSize,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xff3A4C67),
+                color: Color(0xff3A4C67),
               ),
             ),
             SizedBox(height: padding / 2),
             Text(
               description,
               style: getTextStyle(
-                color: const Color(0xff676768),
+                color: Color(0xff676768),
                 fontSize: descriptionFontSize,
                 fontWeight: FontWeight.w400,
               ),
@@ -82,7 +84,7 @@ class PlanCard extends StatelessWidget {
                   style: getTextStyle(
                     fontSize: priceSuffixFontSize,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xff174D31),
+                    color: Color(0xff174D31),
                   ),
                 ),
               ],
@@ -93,7 +95,7 @@ class PlanCard extends StatelessWidget {
               style: getTextStyle(
                 fontSize: titleFontSize * 0.9,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xff3A4C67),
+                color: Color(0xff3A4C67),
               ),
             ),
             SizedBox(height: padding),
@@ -113,7 +115,7 @@ class PlanCard extends StatelessWidget {
                           style: getTextStyle(
                             fontSize: featureFontSize,
                             fontWeight: FontWeight.w500,
-                            color: const Color(0xff3A4C67),
+                            color: Color(0xff3A4C67),
                           ),
                         ),
                       ),
@@ -121,13 +123,16 @@ class PlanCard extends StatelessWidget {
                   ),
                 )),
             SizedBox(height: padding),
-            CustomButton1(
-              title: "Get Started",
-              onPress: onPress,
-              backgroundColor: buttonColor,
-              borderColor: Colors.transparent,
-              textcolor:  Color(0xffffffff),
-            ),
+            Obx(() {
+              final isConfirm = controller.buttonStates[priceId]?.value ?? false;
+              return CustomButton1(
+                title: isConfirm ? "Confirm Payment" : "Get Started",
+                onPress: () => controller.handleButtonPress(priceId),
+                backgroundColor: buttonColor,
+                borderColor: Colors.transparent,
+                textcolor: Color(0xffffffff),
+              );
+            }),
           ],
         ),
       ),

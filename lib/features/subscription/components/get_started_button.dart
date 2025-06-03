@@ -18,7 +18,7 @@ class GetStartedButton extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: const Color(0xFF37B874),
+          color:  Color(0xFF37B874),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
