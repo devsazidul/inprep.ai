@@ -9,7 +9,6 @@ import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:http/http.dart' as http;
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:path/path.dart' as path;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileController extends GetxController {
   final TextEditingController fullNameController = TextEditingController();
@@ -95,101 +94,102 @@ class ProfileController extends GetxController {
   }
 
   Future<void> updateProfile({
-  required String name,
-  required String experienceLevel,
-  required String preferredInterviewFocus,
-}) async {
-  try {
-    EasyLoading.show(status: "Updating profile...");
-    debugPrint("EasyLoading status shown: Updating profile...");
+    required String name,
+    required String experienceLevel,
+    required String preferredInterviewFocus,
+  }) async {
+    try {
+      EasyLoading.show(status: "Updating profile...");
+      debugPrint("EasyLoading status shown: Updating profile...");
 
-    // Retrieve the access token using SharedPreferencesHelper
-    String? accessToken = await SharedPreferencesHelper.getAccessToken();
-    debugPrint("Access token retrieved: $accessToken");
+      // Retrieve the access token using SharedPreferencesHelper
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
+      debugPrint("Access token retrieved: $accessToken");
 
-    if (accessToken == null || accessToken.isEmpty) {
-      EasyLoading.showError("Access token is missing. Please login again.");
-      debugPrint("Access token is null or empty.");
-      return;
-    }
-
-    final url = Uri.parse(Urls.updateProfile);
-    debugPrint("Request URL: $url");
-
-    final request = http.MultipartRequest('PATCH', url);
-    request.headers['Authorization'] = accessToken;
-    debugPrint("Request headers: ${request.headers}");
-
-    final requestData = {
-      'name': name,
-      'experienceLevel': experienceLevel,
-      'preferedInterviewFocus': preferredInterviewFocus,
-    };
-    debugPrint("Request data: $requestData");
-
-    request.fields['data'] = jsonEncode(requestData);
-    debugPrint("Request data encoded as JSON: ${jsonEncode(requestData)}");
-
-    if (selectedImagePath.value.isNotEmpty) {
-      final file = File(selectedImagePath.value);
-      debugPrint("Selected image path: ${selectedImagePath.value}");
-      if (await file.exists()) {
-        final fileName = path.basename(file.path);
-        final multipartFile = await http.MultipartFile.fromPath(
-          'img',
-          file.path,
-          filename: fileName,
-        );
-        debugPrint("File attached to request: $fileName");
-        request.files.add(multipartFile);
-      } else {
-        debugPrint("File does not exist at path: ${selectedImagePath.value}");
+      if (accessToken == null || accessToken.isEmpty) {
+        EasyLoading.showError("Access token is missing. Please login again.");
+        debugPrint("Access token is null or empty.");
+        return;
       }
-    } else {
-      debugPrint("No image selected for upload.");
-    }
 
-    debugPrint("Sending request...");
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-    debugPrint("Response received: ${response.body}");
-    debugPrint("Response status code: ${response.statusCode}");
+      final url = Uri.parse(Urls.updateProfile);
+      debugPrint("Request URL: $url");
 
-    final responseData = jsonDecode(response.body);
-    debugPrint("Parsed response data: $responseData");
+      final request = http.MultipartRequest('PATCH', url);
+      request.headers['Authorization'] = accessToken;
+      debugPrint("Request headers: ${request.headers}");
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      if (responseData['success'] == true) {
-        debugPrint("Profile update success: ${responseData['message']}");
-        await _handleSuccessResponse(
-          responseData,
-          name,
-          experienceLevel,
-          preferredInterviewFocus,
-        );
-        EasyLoading.showSuccess("Profile updated successfully!");
-        isEditing.value = false;
-        await homeScreenController.getUser();
+      final requestData = {
+        'name': name,
+        'experienceLevel': experienceLevel,
+        'preferedInterviewFocus': preferredInterviewFocus,
+      };
+      debugPrint("Request data: $requestData");
+
+      request.fields['data'] = jsonEncode(requestData);
+      debugPrint("Request data encoded as JSON: ${jsonEncode(requestData)}");
+
+      if (selectedImagePath.value.isNotEmpty) {
+        final file = File(selectedImagePath.value);
+        debugPrint("Selected image path: ${selectedImagePath.value}");
+        if (await file.exists()) {
+          final fileName = path.basename(file.path);
+          final multipartFile = await http.MultipartFile.fromPath(
+            'img',
+            file.path,
+            filename: fileName,
+          );
+          debugPrint("File attached to request: $fileName");
+          request.files.add(multipartFile);
+        } else {
+          debugPrint("File does not exist at path: ${selectedImagePath.value}");
+        }
       } else {
-        debugPrint("Profile update failed with message: ${responseData['message']}");
-        throw Exception(responseData['message'] ?? "Profile update failed");
+        debugPrint("No image selected for upload.");
       }
-    } else {
-      debugPrint("Failed with status code: ${response.statusCode}");
-      throw Exception(_parseError(responseData, response.statusCode));
+
+      debugPrint("Sending request...");
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      debugPrint("Response received: ${response.body}");
+      debugPrint("Response status code: ${response.statusCode}");
+
+      final responseData = jsonDecode(response.body);
+      debugPrint("Parsed response data: $responseData");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (responseData['success'] == true) {
+          debugPrint("Profile update success: ${responseData['message']}");
+          await _handleSuccessResponse(
+            responseData,
+            name,
+            experienceLevel,
+            preferredInterviewFocus,
+          );
+          EasyLoading.showSuccess("Profile updated successfully!");
+          isEditing.value = false;
+          await homeScreenController.getUser();
+        } else {
+          debugPrint(
+            "Profile update failed with message: ${responseData['message']}",
+          );
+          throw Exception(responseData['message'] ?? "Profile update failed");
+        }
+      } else {
+        debugPrint("Failed with status code: ${response.statusCode}");
+        throw Exception(_parseError(responseData, response.statusCode));
+      }
+    } catch (e) {
+      debugPrint("Exception occurred: $e");
+      EasyLoading.showError(
+        'Update failed: ${e.toString().replaceAll('Exception: ', '')}',
+      );
+      // Revert to original values on failure
+      fullNameController.text = originalFullName;
+      experiecnceController.text = originalExperience;
+      preferredController.text = originalPreferred;
     }
-  } catch (e) {
-    debugPrint("Exception occurred: $e");
-    EasyLoading.showError(
-      'Update failed: ${e.toString().replaceAll('Exception: ', '')}',
-    );
-    // Revert to original values on failure
-    fullNameController.text = originalFullName;
-    experiecnceController.text = originalExperience;
-    preferredController.text = originalPreferred;
   }
-}
-
 
   Future<void> _handleSuccessResponse(
     Map<String, dynamic> data,

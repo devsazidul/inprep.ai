@@ -80,7 +80,7 @@ class SubscriptionController extends GetxController {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken',
+          'Authorization': accessToken,
         },
         body: jsonEncode({'priceId': priceId}),
       );
@@ -131,47 +131,46 @@ class SubscriptionController extends GetxController {
   }
 
   Future<void> verifyPayment() async {
-  if (sessionId.value.isEmpty) {
-    EasyLoading.showError('No payment session to verify');
-    return;
-  }
-  final String apiUrl = Urls.paymentsave;
-  try {
-    EasyLoading.show(status: 'Verifying payment...');
-    
-    // Retrieve access token using SharedPreferencesHelper
-    String? accessToken = await SharedPreferencesHelper.getAccessToken();
-    if (accessToken == null || accessToken.isEmpty) {
-      EasyLoading.showError('Authentication required');
+    if (sessionId.value.isEmpty) {
+      EasyLoading.showError('No payment session to verify');
       return;
     }
+    final String apiUrl = Urls.paymentsave;
+    try {
+      EasyLoading.show(status: 'Verifying payment...');
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',  // 'Bearer' prefix added for the token
-      },
-      body: jsonEncode({"sessionId": sessionId.value}),
-    );
+      // Retrieve access token using SharedPreferencesHelper
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
+      if (accessToken == null || accessToken.isEmpty) {
+        EasyLoading.showError('Authentication required');
+        return;
+      }
 
-    debugPrint('verifyPayment status: ${response.statusCode}');
-    debugPrint('verifyPayment body: ${response.body}');
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': accessToken, // 'Bearer' prefix added for the token
+        },
+        body: jsonEncode({"sessionId": sessionId.value}),
+      );
 
-    if (response.statusCode == 200) {
-      EasyLoading.showSuccess('Payment verified successfully!');
-      Get.toNamed(AppRoute.bottomnavbarview);
-    } else {
-      EasyLoading.showError('Payment verification failed');
+      debugPrint('verifyPayment status: ${response.statusCode}');
+      debugPrint('verifyPayment body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        EasyLoading.showSuccess('Payment verified successfully!');
+        Get.toNamed(AppRoute.bottomnavbarview);
+      } else {
+        EasyLoading.showError('Payment verification failed');
+      }
+    } catch (e) {
+      debugPrint('Exception in verifyPayment: $e');
+      EasyLoading.showError('Error verifying payment');
+    } finally {
+      EasyLoading.dismiss();
     }
-  } catch (e) {
-    debugPrint('Exception in verifyPayment: $e');
-    EasyLoading.showError('Error verifying payment');
-  } finally {
-    EasyLoading.dismiss();
   }
-}
-
 
   Future<void> handleButtonPress(String priceId) async {
     if (priceId.isEmpty) {
