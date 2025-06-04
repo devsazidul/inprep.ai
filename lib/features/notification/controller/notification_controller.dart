@@ -105,6 +105,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inprep_ai/features/notification/model/notification_model.dart';
@@ -122,53 +123,57 @@ class NotificationController extends GetxController {
   }
 
   Future<void> fetchNotifications() async {
-    isLoading.value = true;
-    errorMessage.value = '';
+  isLoading.value = true;
+  errorMessage.value = '';
 
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final accessToken = prefs.getString('approvalToken');
+  try {
+    
+    // Retrieve the access token using SharedPreferencesHelper
+    String? accessToken = await SharedPreferencesHelper.getAccessToken();
+    debugPrint("Access token retrieved: $accessToken");
 
-      if (accessToken == null || accessToken.isEmpty) {
-        EasyLoading.showError('Authentication required');
-        return;
-      }
-
-      final response = await http.get(
-        Uri.parse(Urls.allnotification),
-        headers: {
-          'Authorization': accessToken,
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        final allNotification = AllNotification.fromJson(jsonResponse);
-        final readNotifications = await _loadReadNotifications();
-
-        notifications.assignAll(allNotification.data.notificationList.map((notif) {
-          final isRead = readNotifications.contains(notif.id) || notif.isSeen;
-          return NotificationItem(
-            id: notif.id,
-            message: notif.notificationDetail,
-            timeAgo: _formatTimeAgo(notif.createdAt),
-            imageUrl: 'https://placehold.co/48x48',
-            read: isRead,
-          );
-        }));
-      } else {
-        errorMessage.value = 'Error: ${response.statusCode}';
-        notifications.clear();
-      }
-    } catch (e) {
-      errorMessage.value = 'Failed to fetch data: $e';
-      notifications.clear();
-      debugPrint('Exception: $e');
-    } finally {
-      isLoading.value = false;
+    if (accessToken == null || accessToken.isEmpty) {
+      EasyLoading.showError("Access token is missing. Please login again.");
+      debugPrint("Access token is null or empty.");
+      return;
     }
+
+    final response = await http.get(
+      Uri.parse(Urls.allnotification),
+      headers: {
+        'Authorization': accessToken, // Use the 'Bearer' token format
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final allNotification = AllNotification.fromJson(jsonResponse);
+      final readNotifications = await _loadReadNotifications();
+
+      notifications.assignAll(allNotification.data.notificationList.map((notif) {
+        final isRead = readNotifications.contains(notif.id) || notif.isSeen;
+        return NotificationItem(
+          id: notif.id,
+          message: notif.notificationDetail,
+          timeAgo: _formatTimeAgo(notif.createdAt),
+          imageUrl: 'https://placehold.co/48x48',
+          read: isRead,
+        );
+      }));
+    } else {
+      errorMessage.value = 'Error: ${response.statusCode}';
+      notifications.clear();
+    }
+  } catch (e) {
+    errorMessage.value = 'Failed to fetch data: $e';
+    notifications.clear();
+    debugPrint('Exception: $e');
+  } finally {
+    isLoading.value = false;
   }
+}
+
 
   Future<Set<String>> _loadReadNotifications() async {
     final prefs = await SharedPreferences.getInstance();

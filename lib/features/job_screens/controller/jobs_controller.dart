@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/job_screens/models/all_jobs_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,12 +31,14 @@ class JobsController extends GetxController {
       isLoading(true);
       EasyLoading.show(status: "Fetching Jobs...");
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.reload();
-      final accessToken = prefs.getString('approvalToken');
+      // Retrieve the access token using SharedPreferencesHelper
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
+      debugPrint("Access token retrieved: $accessToken");
 
       if (accessToken == null || accessToken.isEmpty) {
-        throw Exception('No access token found');
+        EasyLoading.showError("Access token is missing. Please login again.");
+        debugPrint("Access token is null or empty.");
+        return;
       }
 
       final response = await http.get(

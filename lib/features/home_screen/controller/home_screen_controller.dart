@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/home_screen/model/userinfo_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,12 +20,9 @@ final Rx<UserInfo?> userInfo = Rx<UserInfo?>(null);
     EasyLoading.show(status: "Loading user data...");
     debugPrint("Starting getUser API call...");
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    debugPrint("SharedPreferences instance obtained.");
-
-    // Make sure your token key is correct - example 'Authorization' or 'accessToken'
-    String? accessToken = prefs.getString('approvalToken');
-    debugPrint("Access token retrieved from prefs: $accessToken");
+    // Retrieve the access token using the SharedPreferencesHelper
+    String? accessToken = await SharedPreferencesHelper.getAccessToken();
+    debugPrint("Access token retrieved from SharedPreferencesHelper: $accessToken");
 
     if (accessToken == null || accessToken.isEmpty) {
       throw Exception('No access token found in SharedPreferences.');
@@ -74,6 +72,7 @@ final Rx<UserInfo?> userInfo = Rx<UserInfo?>(null);
     debugPrint("getUser API call finished.");
   }
 }
+
 
 
 
