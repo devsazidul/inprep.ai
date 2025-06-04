@@ -95,13 +95,15 @@ class ProfileController extends GetxController {
   }
 
   Future<void> updateProfile({
-    required String name,
-    required String experienceLevel,
-    required String preferredInterviewFocus,
-  }) async {
-    try {
-      EasyLoading.show(status: "Updating profile...");
-      // Retrieve the access token using SharedPreferencesHelper
+  required String name,
+  required String experienceLevel,
+  required String preferredInterviewFocus,
+}) async {
+  try {
+    EasyLoading.show(status: "Updating profile...");
+    debugPrint("EasyLoading status shown: Updating profile...");
+
+    // Retrieve the access token using SharedPreferencesHelper
     String? accessToken = await SharedPreferencesHelper.getAccessToken();
     debugPrint("Access token retrieved: $accessToken");
 
@@ -111,62 +113,83 @@ class ProfileController extends GetxController {
       return;
     }
 
-      final url = Uri.parse(Urls.updateProfile);
-      final request = http.MultipartRequest('PATCH', url);
-      request.headers['Authorization'] = accessToken;
+    final url = Uri.parse(Urls.updateProfile);
+    debugPrint("Request URL: $url");
 
-      final requestData = {
-        'name': name,
-        'experienceLevel': experienceLevel,
-        'preferredInterviewFocus': preferredInterviewFocus,
-      };
+    final request = http.MultipartRequest('PATCH', url);
+    request.headers['Authorization'] = accessToken;
+    debugPrint("Request headers: ${request.headers}");
 
-      request.fields['data'] = jsonEncode(requestData);
+    final requestData = {
+      'name': name,
+      'experienceLevel': experienceLevel,
+      'preferedInterviewFocus': preferredInterviewFocus,
+    };
+    debugPrint("Request data: $requestData");
 
-      if (selectedImagePath.value.isNotEmpty) {
-        final file = File(selectedImagePath.value);
-        if (await file.exists()) {
-          final fileName = path.basename(file.path);
-          final multipartFile = await http.MultipartFile.fromPath(
-            'img',
-            file.path,
-            filename: fileName,
-          );
-          request.files.add(multipartFile);
-        }
-      }
+    request.fields['data'] = jsonEncode(requestData);
+    debugPrint("Request data encoded as JSON: ${jsonEncode(requestData)}");
 
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-      final responseData = jsonDecode(response.body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        if (responseData['success'] == true) {
-          await _handleSuccessResponse(
-            responseData,
-            name,
-            experienceLevel,
-            preferredInterviewFocus,
-          );
-          EasyLoading.showSuccess("Profile updated successfully!");
-          isEditing.value = false;
-          await homeScreenController.getUser();
-        } else {
-          throw Exception(responseData['message'] ?? "Profile update failed");
-        }
+    if (selectedImagePath.value.isNotEmpty) {
+      final file = File(selectedImagePath.value);
+      debugPrint("Selected image path: ${selectedImagePath.value}");
+      if (await file.exists()) {
+        final fileName = path.basename(file.path);
+        final multipartFile = await http.MultipartFile.fromPath(
+          'img',
+          file.path,
+          filename: fileName,
+        );
+        debugPrint("File attached to request: $fileName");
+        request.files.add(multipartFile);
       } else {
-        throw Exception(_parseError(responseData, response.statusCode));
+        debugPrint("File does not exist at path: ${selectedImagePath.value}");
       }
-    } catch (e) {
-      EasyLoading.showError(
-        'Update failed: ${e.toString().replaceAll('Exception: ', '')}',
-      );
-      // Revert to original values on failure
-      fullNameController.text = originalFullName;
-      experiecnceController.text = originalExperience;
-      preferredController.text = originalPreferred;
+    } else {
+      debugPrint("No image selected for upload.");
     }
+
+    debugPrint("Sending request...");
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    debugPrint("Response received: ${response.body}");
+    debugPrint("Response status code: ${response.statusCode}");
+
+    final responseData = jsonDecode(response.body);
+    debugPrint("Parsed response data: $responseData");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      if (responseData['success'] == true) {
+        debugPrint("Profile update success: ${responseData['message']}");
+        await _handleSuccessResponse(
+          responseData,
+          name,
+          experienceLevel,
+          preferredInterviewFocus,
+        );
+        EasyLoading.showSuccess("Profile updated successfully!");
+        isEditing.value = false;
+        await homeScreenController.getUser();
+      } else {
+        debugPrint("Profile update failed with message: ${responseData['message']}");
+        throw Exception(responseData['message'] ?? "Profile update failed");
+      }
+    } else {
+      debugPrint("Failed with status code: ${response.statusCode}");
+      throw Exception(_parseError(responseData, response.statusCode));
+    }
+  } catch (e) {
+    debugPrint("Exception occurred: $e");
+    EasyLoading.showError(
+      'Update failed: ${e.toString().replaceAll('Exception: ', '')}',
+    );
+    // Revert to original values on failure
+    fullNameController.text = originalFullName;
+    experiecnceController.text = originalExperience;
+    preferredController.text = originalPreferred;
   }
+}
+
 
   Future<void> _handleSuccessResponse(
     Map<String, dynamic> data,
