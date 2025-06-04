@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart'; // For debugPrint
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/subscription/model/allplan_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,9 +65,8 @@ class SubscriptionController extends GetxController {
       EasyLoading.show(status: "Processing payment...");
       isPaymentInProgress.value = true;
 
-      final prefs = await SharedPreferences.getInstance();
-      final accessToken = prefs.getString('approvalToken');
-
+      // Retrieve access token using the SharedPreferencesHelper
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
       debugPrint('Access token: $accessToken');
 
       if (accessToken == null || accessToken.isEmpty) {
@@ -131,45 +131,47 @@ class SubscriptionController extends GetxController {
   }
 
   Future<void> verifyPayment() async {
-    if (sessionId.value.isEmpty) {
-      EasyLoading.showError('No payment session to verify');
+  if (sessionId.value.isEmpty) {
+    EasyLoading.showError('No payment session to verify');
+    return;
+  }
+  final String apiUrl = Urls.paymentsave;
+  try {
+    EasyLoading.show(status: 'Verifying payment...');
+    
+    // Retrieve access token using SharedPreferencesHelper
+    String? accessToken = await SharedPreferencesHelper.getAccessToken();
+    if (accessToken == null || accessToken.isEmpty) {
+      EasyLoading.showError('Authentication required');
       return;
     }
-    final String apiUrl = Urls.paymentsave;
-    try {
-      EasyLoading.show(status: 'Verifying payment...');
-      final prefs = await SharedPreferences.getInstance();
-      final accessToken = prefs.getString('approvalToken');
-      if (accessToken == null || accessToken.isEmpty) {
-        EasyLoading.showError('Authentication required');
-        return;
-      }
 
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': accessToken,
-        },
-        body: jsonEncode({"sessionId": sessionId.value}),
-      );
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',  // 'Bearer' prefix added for the token
+      },
+      body: jsonEncode({"sessionId": sessionId.value}),
+    );
 
-      debugPrint('verifyPayment status: ${response.statusCode}');
-      debugPrint('verifyPayment body: ${response.body}');
+    debugPrint('verifyPayment status: ${response.statusCode}');
+    debugPrint('verifyPayment body: ${response.body}');
 
-      if (response.statusCode == 200) {
-        EasyLoading.showSuccess('Payment verified successfully!');
-        Get.toNamed(AppRoute.bottomnavbarview);
-      } else {
-        EasyLoading.showError('Payment verification failed');
-      }
-    } catch (e) {
-      debugPrint('Exception in verifyPayment: $e');
-      EasyLoading.showError('Error verifying payment');
-    } finally {
-      EasyLoading.dismiss();
+    if (response.statusCode == 200) {
+      EasyLoading.showSuccess('Payment verified successfully!');
+      Get.toNamed(AppRoute.bottomnavbarview);
+    } else {
+      EasyLoading.showError('Payment verification failed');
     }
+  } catch (e) {
+    debugPrint('Exception in verifyPayment: $e');
+    EasyLoading.showError('Error verifying payment');
+  } finally {
+    EasyLoading.dismiss();
   }
+}
+
 
   Future<void> handleButtonPress(String priceId) async {
     if (priceId.isEmpty) {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/personalized_interviewers/view/personalized_interviewer_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/about_me_contrller.dart';
@@ -22,9 +23,8 @@ Future<void> saveResume() async {
     EasyLoading.show(status: "Saving resume...");
     debugPrint('DEBUG: EasyLoading shown with status "Saving resume..."');
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    debugPrint('DEBUG: SharedPreferences instance obtained');
-    String? accessToken = prefs.getString('approvalToken');
+    // Retrieve the access token using SharedPreferencesHelper
+    String? accessToken = await SharedPreferencesHelper.getAccessToken();
     debugPrint('DEBUG: Access token retrieved: $accessToken');
     if (accessToken == null || accessToken.isEmpty) {
       debugPrint('DEBUG: Access token is null or empty, throwing exception');
@@ -130,7 +130,7 @@ Future<void> saveResume() async {
     final response = await http.put(
       url,
       headers: {
-        'Authorization': accessToken,
+        'Authorization': 'Bearer $accessToken', // Added 'Bearer' prefix
         'Content-Type': 'application/json',
       },
       body: jsonEncode(resumeData.toJson()),
@@ -162,3 +162,4 @@ Future<void> saveResume() async {
     EasyLoading.dismiss();
   }
 }
+

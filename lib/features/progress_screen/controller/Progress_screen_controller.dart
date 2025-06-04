@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide Progress;
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/progress_screen/model/progress_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProgressScreenController extends GetxController {
   var progress = Rxn<Progress>();
@@ -19,14 +19,12 @@ class ProgressScreenController extends GetxController {
       debugPrint(
         'DEBUG: EasyLoading shown with status "Fetching average data..."',
       );
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      debugPrint('DEBUG: SharedPreferences instance obtained');
-      String? accessToken = prefs.getString('approvalToken');
-      debugPrint('DEBUG: Access token retrieved: $accessToken');
-      if (accessToken == null || accessToken.isEmpty) {
-        debugPrint('DEBUG: Access token is null or empty, throwing exception');
-        throw Exception('No access token found.');
-      }
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
+    debugPrint("Access token retrieved from SharedPreferencesHelper: $accessToken");
+
+    if (accessToken == null || accessToken.isEmpty) {
+      throw Exception('No access token found in SharedPreferences.');
+    }
       final response = await http.get(
         url,
         headers: {
