@@ -1,25 +1,24 @@
+
+// ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/common/widgets/custom_button.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
-
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:inprep_ai/features/job_screens/screens/myjob.dart' show MyJobsScreen;
 import 'package:inprep_ai/features/notification/screen/notification_screen.dart';
+import 'package:inprep_ai/features/notification/widgets/notification_badge.dart';
 import 'package:inprep_ai/features/progress_screen/controller/Progress_screen_controller.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/line_chart.dart';
 import 'package:inprep_ai/features/progress_screen/widgets/placeholder_chart.dart';
 
-// ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   HomeScreenController homeScreenController = Get.put(HomeScreenController());
-  ProgressScreenController progressScreenController = Get.put(
-    ProgressScreenController(),
-  );
+  ProgressScreenController progressScreenController = Get.put(ProgressScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +52,6 @@ class HomeScreen extends StatelessWidget {
             }
           }),
         ),
-
         title: Column(
           children: [
             Align(
@@ -82,8 +80,7 @@ class HomeScreen extends StatelessWidget {
                 );
               } else {
                 final name =
-                    homeScreenController.userInfo.value?.data?.name ??
-                    "Nolan Saris";
+                    homeScreenController.userInfo.value?.data?.name ?? "Nolan Saris";
                 return Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -102,23 +99,38 @@ class HomeScreen extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () {
-              Get.to(NotificationScreen());
+              // Reset the notification count when the user taps on the notification icon
+              homeScreenController.resetNotificationCount();
+              
+              // Navigate to the NotificationScreen
+              Get.to(() => NotificationScreen());
             },
             child: Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: Container(
-                height: 32,
-                width: 32,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Color(0xffE0E0E1)),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.notifications_active_rounded,
-                  size: 24,
-                  color: Color(0xff3A4C67),
-                ),
-              ),
+              padding: const EdgeInsets.only(right: 16),
+              child: Obx(() {
+                final stats = homeScreenController.notificationResponse.value;
+                final newCount = stats?.data.newNotification ?? 0;
+
+                return NotificationBadge(
+                  count: newCount,
+                  child: Container(
+                    height: 32,
+                    width: 32,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1,
+                        color: const Color(0xffE0E0E1),
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.notifications_active_rounded,
+                      size: 24,
+                      color: const Color(0xff3A4C67),
+                    ),
+                  ),
+                );
+              }),
             ),
           ),
         ],
@@ -197,46 +209,24 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              // SizedBox(
-              //   height: 152,
-              //   width: double.infinity,
-              //   child: CustomPaint(painter: LineChartPainter()),
-              // ),
-              // Obx(() {
-              //   final progress = progressScreenController.progress.value;
-              //   if (progress == null ||
-              //       progress.weeklyOverallAverages.isEmpty) {
-              //     return const Center(child: CircularProgressIndicator());
-              //   }
-
-              //   return SizedBox(
-              //     height: 152,
-              //     width: double.infinity,
-              //     child: CustomPaint(
-              //       painter: LineChartPainter(
-              //         data: progress.weeklyOverallAverages,
-              //       ),
-              //     ),
-              //   );
-              // }),
               Obx(() {
-                    final progress = progressScreenController.progress.value;
-                    if (progress == null || progress.weeklyOverallAverages.isEmpty) {
-                      // Show static chart when no data is available (all values as 0)
-                      return const PlaceholderChart();
-                    }
+                final progress = progressScreenController.progress.value;
+                if (progress == null ||
+                    progress.weeklyOverallAverages.isEmpty) {
+                  // Show static chart when no data is available (all values as 0)
+                  return const PlaceholderChart();
+                }
 
-                    return SizedBox(
-                      height: 152,
-                      width: double.infinity,
-                      child: CustomPaint(
-                        painter: LineChartPainter(
-                          data: progress.weeklyOverallAverages,
-                        ),
-                      ),
-                    );
-                  }),
-              
+                return SizedBox(
+                  height: 152,
+                  width: double.infinity,
+                  child: CustomPaint(
+                    painter: LineChartPainter(
+                      data: progress.weeklyOverallAverages,
+                    ),
+                  ),
+                );
+              }),
 
               SizedBox(height: 48),
               Align(

@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/job_screens/models/all_jobs_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'filter_controller.dart';
 
 class JobsController extends GetxController {

@@ -8,7 +8,6 @@ import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/authentication/screen/login_screen.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OTPController extends GetxController {
   // OTP related controllers

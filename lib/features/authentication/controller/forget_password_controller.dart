@@ -8,7 +8,6 @@ import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/authentication/screen/Forget_password_otp_screen.dart';
 import 'package:inprep_ai/features/authentication/screen/change_password.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgetPasswordController extends GetxController {
   // Controllers - GetX will manage disposal automatically

@@ -9,7 +9,6 @@ import 'package:inprep_ai/features/profile_setup.dart/controller/about_me_contrl
 import 'package:inprep_ai/features/profile_setup.dart/controller/education_controller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/experience_controller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/models/resume_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 // Assume these controllers are passed or accessible:
