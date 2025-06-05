@@ -30,7 +30,9 @@ class CategoryDetailsView extends StatelessWidget {
                 child: Column(
                   children: [
                     StartMockInterviewContainer(onTap: (){
-                      Get.to(()=> StartInterviewView()); 
+                      Get.to(()=> StartInterviewView(),
+                       arguments: controller.id.value, 
+                      ); 
                     }), 
                     SizedBox(
                       height: 30,

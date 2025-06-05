@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart' show SharedPreferencesHelper;
+import 'package:inprep_ai/core/urls/endpint.dart';
+import 'package:inprep_ai/features/interview/interview_details/start_interview/model/user_model.dart';
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/over_all_feedback.dart' show OverAllFeedback;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/question_wise_feedback.dart' show QuestionWiseFeedback;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/start_interview_view.dart' show StartInterviewView;
@@ -22,12 +25,16 @@ class StartInterviewController extends GetxController {
   final maxRecordingTime = 180;  
   String? videoPath;
   var questionNumber = 1.obs; 
+  var id = "".obs; 
 
    @override
   void onInit() {
     super.onInit();
-    generatedQuestion();
+    id.value = Get.arguments;
+    getQuestion();
     requestPermissions().then((_) => initializeCamera());
+
+    print("The id is: ${id.value}");
   }
 
 
@@ -183,39 +190,85 @@ class StartInterviewController extends GetxController {
     },
   ]; 
 
-  Future<void> generatedQuestion() async {
+
+
+Future<void> getQuestion() async {
   try {
-    final response = await http.post(
-      Uri.parse("https://freepik.softvenceomega.com/in-prep/api/v1/q_generator/generate-questions?topic=Software%20Engineer"),
+    String? token = await SharedPreferencesHelper.getAccessToken();
+
+    final response = await http.get(
+      Uri.parse('${Urls.baseUrl}/interview/genarateQuestionSet_ByAi?questionBank_id=${id.value}'),
       headers: {
         'Content-Type': 'application/json',
+        'Authorization':  token!,
       },
     );
+
     if (kDebugMode) {
-      print("The response for generated question is: ${response.body}");
+      print("getQuestion() response: ${response.body}");
     }
 
     if (response.statusCode == 200) {
-      final decoded = jsonDecode(response.body);   
-      if (decoded['questions'] != null && decoded['questions'] is List) {
-        questions.value = List<Map<String, dynamic>>.from(decoded['questions']);
-        update();  
+      final decoded = jsonDecode(response.body);
+
+      if (decoded['body'] != null &&
+          decoded['body']['remainingQuestions'] != null &&
+          decoded['body']['remainingQuestions'] is List) {
+        questions.value =
+            List<Map<String, dynamic>>.from(decoded['body']['remainingQuestions']);
+        update();
       } else {
         if (kDebugMode) {
-          print("Invalid response format: 'questions' not found or not a list");
+          print("Invalid format: 'remainingQuestions' not found");
         }
       }
     } else {
       if (kDebugMode) {
-        print("Failed to generate questions: ${response.statusCode}");
+        print("Failed to fetch questions: ${response.statusCode}");
       }
     }
   } catch (e) {
     if (kDebugMode) {
-      print("Exception in generatedQuestion(): $e");
+      print("Exception in getQuestion(): $e");
     }
   }
 }
+
+
+ RxString userId = ''.obs;
+
+  Future<void> fetchUserProfile() async {
+    try {
+      String? token = await SharedPreferencesHelper.getAccessToken();
+
+      if (token == null) {
+        print("Token is null");
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse('${Urls.baseUrl}/users/getProfile'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = json.decode(response.body);
+        final data = body['data'];
+
+        UserIdModel profile = UserIdModel.fromJson(data);
+        userId.value = profile.id ?? '';
+
+        print("Fetched User ID: ${userId.value}");
+      } else {
+        print("Failed to fetch profile. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching profile: $e");
+    }
+  }
+
 
 
   
