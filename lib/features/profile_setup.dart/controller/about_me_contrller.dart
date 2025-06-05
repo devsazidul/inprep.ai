@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/profile_setup.dart/models/skills_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:inprep_ai/features/profile_screen/model/country_model.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/country_controller.dart';
@@ -33,46 +33,49 @@ class AboutMeController extends GetxController {
   }
 
   Future<void> getAllSkills() async {
-    try {
-      EasyLoading.show(status: "Loading skills data...");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? accessToken = prefs.getString('approvalToken');
-      if (accessToken == null || accessToken.isEmpty) {
-        throw Exception('No access token found.');
-      }
-      final Uri url = Uri.parse(Urls.getAllSkills);
+  try {
+    EasyLoading.show(status: "Loading skills data...");
 
-      final response = await http.get(
-        url,
-        headers: {
-          'Authorization': accessToken,
-          'Content-Type': 'application/json',
-        },
-      );
+    // Retrieve the access token using SharedPreferencesHelper
+    String? accessToken = await SharedPreferencesHelper.getAccessToken();
+    if (accessToken == null || accessToken.isEmpty) {
+      throw Exception('No access token found.');
+    }
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData['success'] == true) {
-          final skillsResponse = Skills.fromJson(responseData);
-          if (skillsResponse.data != null) {
-            skills.assignAll(skillsResponse.data!);
-          }
-        } else {
-          throw Exception(
-            'Failed to fetch skills data: ${responseData['message']}',
-          );
+    final Uri url = Uri.parse(Urls.getAllSkills);
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $accessToken',  // 'Bearer' added for token authorization
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (responseData['success'] == true) {
+        final skillsResponse = Skills.fromJson(responseData);
+        if (skillsResponse.data != null) {
+          skills.assignAll(skillsResponse.data!);
         }
       } else {
         throw Exception(
-          'Failed to load skills, status code: ${response.statusCode}',
+          'Failed to fetch skills data: ${responseData['message']}',
         );
       }
-    } catch (e) {
-      EasyLoading.showError("Failed to load skills data: $e");
-    } finally {
-      EasyLoading.dismiss();
+    } else {
+      throw Exception(
+        'Failed to load skills, status code: ${response.statusCode}',
+      );
     }
+  } catch (e) {
+    EasyLoading.showError("Failed to load skills data: $e");
+  } finally {
+    EasyLoading.dismiss();
   }
+}
+
 
   @override
   void onClose() {

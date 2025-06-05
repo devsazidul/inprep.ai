@@ -6,10 +6,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:mime/mime.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileSetupcontroller extends GetxController {
   TextEditingController citycontroller = TextEditingController();
@@ -46,95 +46,95 @@ class ProfileSetupcontroller extends GetxController {
 //=======================================================================
   // Function to upload the file to the server
   Future<void> uploadFile() async {
-    if (selectedFile.value == null) {
-      debugPrint('Error: No file selected');
-      EasyLoading.showError('No file selected'); // Show error with EasyLoading
-      return;
+  if (selectedFile.value == null) {
+    debugPrint('Error: No file selected');
+    EasyLoading.showError('No file selected'); // Show error with EasyLoading
+    return;
+  }
+
+  // Show loading indicator
+  EasyLoading.show(status: 'Uploading...');
+
+  try {
+    // Retrieve the access token using SharedPreferencesHelper
+    String? approvalToken = await SharedPreferencesHelper.getAccessToken();
+
+    debugPrint(
+      'Debug: Retrieved approvalToken: $approvalToken',
+    ); // Debug print the token
+
+    if (approvalToken == null || approvalToken.isEmpty) {
+      throw Exception('No access token found.');
     }
 
-    // Show loading indicator
-    EasyLoading.show(status: 'Uploading...');
+    // Prepare the file for uploading
+    var uri = Uri.parse(Urls.resumeupload);
+    debugPrint('Debug: Request URL: $uri'); // Debug print the URL being used
 
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? approvalToken = prefs.getString('approvalToken');
+    var request = http.MultipartRequest('POST', uri);
 
-      debugPrint(
-        'Debug: Retrieved approvalToken: $approvalToken',
-      ); // Debug print the token
+    // Adding headers (Authorization with approvalToken)
+    request.headers.addAll({
+      'Authorization': 'Bearer $approvalToken', // Authorization header with Bearer token
+      'Content-Type': 'multipart/form-data', // Specifies that the request body will be multipart
+    });
 
-      // Prepare the file for uploading
-      var uri = Uri.parse(
-        Urls.resumeupload,
-      );
-      debugPrint('Debug: Request URL: $uri'); // Debug print the URL being used
+    debugPrint(
+      'Debug: Request Headers: ${request.headers}',
+    ); // Debug print the headers
 
-      var request = http.MultipartRequest('POST', uri);
+    String? mimeType = lookupMimeType(selectedFile.value!.path);
+    String? fileExtension = selectedFile.value!.path.split('.').last;
+    debugPrint('Debug: File Path: ${selectedFile.value!.path}');
+    debugPrint('Debug: File MIME Type: $mimeType');
+    debugPrint('Debug: File Extension: $fileExtension');
 
-      // Adding headers (Authorization with approvalToken)
-      request.headers.addAll({
-        'Authorization':
-            '$approvalToken', // Assuming the token needs to be in Bearer format
-        'Content-Type':
-            'multipart/form-data', // Specifies that the request body will be multipart
-      });
+    // Attach the file to the request
+    var file = await http.MultipartFile.fromPath(
+      'resumeFile', // The key for the file field
+      selectedFile.value!.path,
+      contentType: mimeType != null ? MediaType('application', fileExtension) : null,
+    );
 
-      debugPrint(
-        'Debug: Request Headers: ${request.headers}',
-      ); // Debug print the headers
+    debugPrint(
+      'Debug: File added to request: ${file.filename}',
+    ); // Debug print the file info
 
-      String? mimeType = lookupMimeType(selectedFile.value!.path);
-      String? fileExtension = selectedFile.value!.path.split('.').last;
-      debugPrint('Debug: File Path: ${selectedFile.value!.path}');
-      debugPrint('Debug: File MIME Type: $mimeType');
-      debugPrint('Debug: File Extension: $fileExtension');
+    request.files.add(file);
 
-      // Attach the file to the request
-      var file = await http.MultipartFile.fromPath(
-        'resumeFile', // The key for the file field
-        selectedFile.value!.path,
-        contentType:
-            mimeType != null ? MediaType('application', fileExtension) : null,
-      );
+    debugPrint('Debug: Sending request...');
+    var response = await request.send();
 
-      debugPrint(
-        'Debug: File added to request: ${file.filename}',
-      ); // Debug print the file info
+    debugPrint(
+      'Debug: Response status code: ${response.statusCode}',
+    ); // Debug print the status code
 
-      request.files.add(file);
+    // Dismiss loading indicator
+    EasyLoading.dismiss();
 
-      debugPrint('Debug: Sending request...');
-      var response = await request.send();
-
-      debugPrint(
-        'Debug: Response status code: ${response.statusCode}',
-      ); // Debug print the status code
-
-      // Dismiss loading indicator
-      EasyLoading.dismiss();
-
-      // Check the response status
-      if (response.statusCode == 200) {
-        debugPrint('Debug: File uploaded successfully');
-        EasyLoading.showSuccess(
-          'File uploaded successfully',
-        ); // Success message using EasyLoading
-        Get.to(BottomNavbarView());
-      } else {
-        debugPrint('Debug: Failed to upload file');
-        EasyLoading.showError(
-          'Failed to upload file',
-        ); // Error message using EasyLoading
-      }
-    } catch (e) {
-      // Dismiss loading indicator on error
-      EasyLoading.dismiss();
-      debugPrint('Error: An error occurred while uploading the file: $e');
+    // Check the response status
+    if (response.statusCode == 200) {
+      debugPrint('Debug: File uploaded successfully');
+      EasyLoading.showSuccess(
+        'File uploaded successfully',
+      ); // Success message using EasyLoading
+      Get.to(BottomNavbarView());
+    } else {
+      debugPrint('Debug: Failed to upload file');
       EasyLoading.showError(
-        'An error occurred while uploading the file',
+        'Failed to upload file',
       ); // Error message using EasyLoading
     }
+  } catch (e) {
+    // Dismiss loading indicator on error
+    EasyLoading.dismiss();
+    debugPrint('Error: An error occurred while uploading the file: $e');
+    EasyLoading.showError(
+      'An error occurred while uploading the file',
+    ); // Error message using EasyLoading
   }
+}
+
 
 
 //==========================================================================

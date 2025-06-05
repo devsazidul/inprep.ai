@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:http/http.dart' as http;
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
 import 'package:path/path.dart' as path;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileController extends GetxController {
   final TextEditingController fullNameController = TextEditingController();
@@ -100,28 +100,38 @@ class ProfileController extends GetxController {
   }) async {
     try {
       EasyLoading.show(status: "Updating profile...");
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.reload();
-      final accessToken = prefs.getString('approvalToken');
+      debugPrint("EasyLoading status shown: Updating profile...");
+
+      // Retrieve the access token using SharedPreferencesHelper
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
+      debugPrint("Access token retrieved: $accessToken");
 
       if (accessToken == null || accessToken.isEmpty) {
-        throw Exception('No access token found');
+        EasyLoading.showError("Access token is missing. Please login again.");
+        debugPrint("Access token is null or empty.");
+        return;
       }
 
       final url = Uri.parse(Urls.updateProfile);
+      debugPrint("Request URL: $url");
+
       final request = http.MultipartRequest('PATCH', url);
       request.headers['Authorization'] = accessToken;
+      debugPrint("Request headers: ${request.headers}");
 
       final requestData = {
         'name': name,
         'experienceLevel': experienceLevel,
-        'preferredInterviewFocus': preferredInterviewFocus,
+        'preferedInterviewFocus': preferredInterviewFocus,
       };
+      debugPrint("Request data: $requestData");
 
       request.fields['data'] = jsonEncode(requestData);
+      debugPrint("Request data encoded as JSON: ${jsonEncode(requestData)}");
 
       if (selectedImagePath.value.isNotEmpty) {
         final file = File(selectedImagePath.value);
+        debugPrint("Selected image path: ${selectedImagePath.value}");
         if (await file.exists()) {
           final fileName = path.basename(file.path);
           final multipartFile = await http.MultipartFile.fromPath(
@@ -129,16 +139,27 @@ class ProfileController extends GetxController {
             file.path,
             filename: fileName,
           );
+          debugPrint("File attached to request: $fileName");
           request.files.add(multipartFile);
+        } else {
+          debugPrint("File does not exist at path: ${selectedImagePath.value}");
         }
+      } else {
+        debugPrint("No image selected for upload.");
       }
 
+      debugPrint("Sending request...");
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
+      debugPrint("Response received: ${response.body}");
+      debugPrint("Response status code: ${response.statusCode}");
+
       final responseData = jsonDecode(response.body);
+      debugPrint("Parsed response data: $responseData");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (responseData['success'] == true) {
+          debugPrint("Profile update success: ${responseData['message']}");
           await _handleSuccessResponse(
             responseData,
             name,
@@ -149,12 +170,17 @@ class ProfileController extends GetxController {
           isEditing.value = false;
           await homeScreenController.getUser();
         } else {
+          debugPrint(
+            "Profile update failed with message: ${responseData['message']}",
+          );
           throw Exception(responseData['message'] ?? "Profile update failed");
         }
       } else {
+        debugPrint("Failed with status code: ${response.statusCode}");
         throw Exception(_parseError(responseData, response.statusCode));
       }
     } catch (e) {
+      debugPrint("Exception occurred: $e");
       EasyLoading.showError(
         'Update failed: ${e.toString().replaceAll('Exception: ', '')}',
       );

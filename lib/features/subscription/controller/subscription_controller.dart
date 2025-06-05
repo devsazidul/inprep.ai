@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart'; // For debugPrint
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/subscription/model/allplan_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/material.dart';
 import 'package:inprep_ai/routes/app_routes.dart';
 
 class SubscriptionController extends GetxController {
@@ -14,71 +15,65 @@ class SubscriptionController extends GetxController {
   var sessionId = ''.obs;
   var isPaymentInProgress = false.obs;
 
+  // Button states per priceId: false = "Get Started", true = "Confirm Payment"
+  var buttonStates = <String, RxBool>{}.obs;
+
   @override
   void onInit() {
     super.onInit();
-    debugPrint('SubscriptionController initialized');
     fetchPlans();
   }
 
   Future<void> fetchPlans() async {
-    debugPrint('fetchPlans started');
     try {
       EasyLoading.show(status: 'Loading plans...');
-      debugPrint('EasyLoading shown for loading plans');
-
       final response = await http.get(Uri.parse(Urls.allplan));
-      debugPrint(
-        'HTTP GET ${Urls.allplan} responded with status ${response.statusCode}',
-      );
-
       EasyLoading.dismiss();
-      debugPrint('EasyLoading dismissed after loading plans');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final allplan = Allplan.fromJson(data);
         plans.assignAll(allplan.data);
-        debugPrint('Plans fetched and assigned: ${plans.length} items');
+
+        // Initialize button states for each plan
+        for (var plan in plans) {
+          buttonStates[plan.priceId] = false.obs;
+        }
       } else {
-        debugPrint(
-          'Failed to load plans with status code: ${response.statusCode}',
-        );
         EasyLoading.showError('Failed to load plans');
+        debugPrint('fetchPlans error: status code ${response.statusCode}');
       }
     } catch (e) {
       EasyLoading.dismiss();
-      debugPrint('Exception in fetchPlans: $e');
       EasyLoading.showError('Error fetching plans');
+      debugPrint('Exception in fetchPlans: $e');
     }
   }
 
-  Future<void> createCheckoutSession(String priceId) async {
-    debugPrint('createCheckoutSession called with priceId: $priceId');
+  /// Returns true if payment session created (not free plan), false otherwise.
+  Future<bool> createCheckoutSession(String? priceId) async {
     final url = Uri.parse(Urls.checkout);
-    debugPrint('Checkout API URL: $url');
+
+    // Free plan case - do not toggle button state
+    if (priceId == null || priceId.isEmpty) {
+      EasyLoading.showSuccess('You are in Free Plan Now');
+      Get.toNamed(AppRoute.bottomnavbarview);
+      return false;
+    }
 
     try {
       EasyLoading.show(status: "Processing payment...");
-      debugPrint('EasyLoading shown for payment processing');
       isPaymentInProgress.value = true;
-      debugPrint('isPaymentInProgress set to true');
 
-      final prefs = await SharedPreferences.getInstance();
-      debugPrint('SharedPreferences instance obtained');
-
-      await prefs.reload();
-      debugPrint('SharedPreferences reloaded');
-
-      final accessToken = prefs.getString('approvalToken');
-      debugPrint('Access token retrieved: $accessToken');
+      // Retrieve access token using the SharedPreferencesHelper
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
+      debugPrint('Access token: $accessToken');
 
       if (accessToken == null || accessToken.isEmpty) {
-        debugPrint('No access token found, aborting createCheckoutSession');
         EasyLoading.showError('Authentication required');
         isPaymentInProgress.value = false;
-        debugPrint('isPaymentInProgress set to false due to missing token');
-        return;
+        Get.toNamed(AppRoute.bottomnavbarview);
+        return false;
       }
 
       final response = await http.post(
@@ -89,106 +84,84 @@ class SubscriptionController extends GetxController {
         },
         body: jsonEncode({'priceId': priceId}),
       );
-      debugPrint(
-        'POST request sent to checkout URL, status: ${response.statusCode}',
-      );
+
+      debugPrint('createCheckoutSession status: ${response.statusCode}');
+      debugPrint('createCheckoutSession body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        debugPrint('Response body decoded: $data');
-
         final checkoutUrlString = data['url'];
-        debugPrint('Checkout URL extracted: $checkoutUrlString');
-
         final session = _extractSessionIdFromUrl(checkoutUrlString);
-        debugPrint('Session ID extracted from URL: $session');
-
         if (session.isNotEmpty) {
           sessionId.value = session;
-          debugPrint('sessionId observable updated');
+          debugPrint('Session ID extracted: $session');
+        } else {
+          debugPrint('No session ID found in URL');
         }
 
         final checkoutUrl = Uri.tryParse(checkoutUrlString);
         if (checkoutUrl != null && await canLaunchUrl(checkoutUrl)) {
-          debugPrint('Launching checkout URL...');
           await launchUrl(checkoutUrl, mode: LaunchMode.externalApplication);
-          debugPrint('Checkout URL launched in external browser');
         } else {
-          debugPrint('Could not launch checkout URL');
           EasyLoading.showError('Failed to open payment gateway');
+          Get.toNamed(AppRoute.bottomnavbarview);
+          return false;
         }
+        return true;
       } else {
-        debugPrint('Failed to create checkout session: ${response.body}');
         EasyLoading.showError('Payment session creation failed');
+        Get.toNamed(AppRoute.bottomnavbarview);
+        return false;
       }
     } catch (e) {
       debugPrint('Exception in createCheckoutSession: $e');
       EasyLoading.showError('An error occurred');
+      Get.toNamed(AppRoute.bottomnavbarview);
+      return false;
     } finally {
       EasyLoading.dismiss();
-      debugPrint('EasyLoading dismissed after createCheckoutSession');
       isPaymentInProgress.value = false;
-      debugPrint('isPaymentInProgress set to false');
     }
   }
 
   String _extractSessionIdFromUrl(String url) {
-    debugPrint('Extracting session ID from URL: $url');
     RegExp regExp = RegExp(r"cs_test_[a-zA-Z0-9]+");
     var match = regExp.firstMatch(url);
-    final extracted = match?.group(0) ?? '';
-    debugPrint('Extracted session ID: $extracted');
-    return extracted;
+    return match?.group(0) ?? '';
   }
 
   Future<void> verifyPayment() async {
-    debugPrint('verifyPayment started');
     if (sessionId.value.isEmpty) {
-      debugPrint('No session ID available for verification');
       EasyLoading.showError('No payment session to verify');
       return;
     }
-
-    final String apiUrl = '${Urls.paymentsave}${sessionId.value}';
-    debugPrint('Verifying payment with API URL: $apiUrl');
-
+    final String apiUrl = Urls.paymentsave;
     try {
       EasyLoading.show(status: 'Verifying payment...');
-      debugPrint('EasyLoading shown for payment verification');
 
-      final prefs = await SharedPreferences.getInstance();
-      debugPrint('SharedPreferences instance obtained for verification');
-
-      await prefs.reload();
-      debugPrint('SharedPreferences reloaded for verification');
-
-      final accessToken = prefs.getString('approvalToken');
-      debugPrint('Access token retrieved for verification: $accessToken');
-
+      // Retrieve access token using SharedPreferencesHelper
+      String? accessToken = await SharedPreferencesHelper.getAccessToken();
       if (accessToken == null || accessToken.isEmpty) {
-        debugPrint('No access token found, aborting verifyPayment');
         EasyLoading.showError('Authentication required');
-        isPaymentInProgress.value = false;
-        debugPrint('isPaymentInProgress set to false due to missing token');
         return;
       }
 
-      final response = await http.get(
+      final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': accessToken,
+          'Authorization': accessToken, // 'Bearer' prefix added for the token
         },
+        body: jsonEncode({"sessionId": sessionId.value}),
       );
-      debugPrint('Verification response status: ${response.statusCode}');
+
+      debugPrint('verifyPayment status: ${response.statusCode}');
+      debugPrint('verifyPayment body: ${response.body}');
 
       if (response.statusCode == 200) {
         EasyLoading.showSuccess('Payment verified successfully!');
-        isPaymentInProgress.value = false;
-        debugPrint('Payment verified successfully, navigating...');
         Get.toNamed(AppRoute.bottomnavbarview);
       } else {
-        debugPrint('Payment verification failed: ${response.body}');
         EasyLoading.showError('Payment verification failed');
       }
     } catch (e) {
@@ -196,7 +169,26 @@ class SubscriptionController extends GetxController {
       EasyLoading.showError('Error verifying payment');
     } finally {
       EasyLoading.dismiss();
-      debugPrint('EasyLoading dismissed after verifyPayment');
+    }
+  }
+
+  Future<void> handleButtonPress(String priceId) async {
+    if (priceId.isEmpty) {
+      EasyLoading.showError('Invalid plan selected');
+      return;
+    }
+
+    final isConfirm = buttonStates[priceId]?.value ?? false;
+
+    if (!isConfirm) {
+      bool sessionCreated = await createCheckoutSession(priceId);
+      if (sessionCreated) {
+        buttonStates[priceId]?.value = true;
+      }
+      // else do nothing to keep button as "Get Started"
+    } else {
+      await verifyPayment();
+      buttonStates[priceId]?.value = false;
     }
   }
 }
