@@ -12,6 +12,7 @@ class CategoryDetailsController extends GetxController {
   var difficulty = ''.obs;
   var questionType = ''.obs;
   var id = ''.obs;
+  var interviewId = ''.obs;
 
   var whatToExpect = <String>[].obs;
 
@@ -29,6 +30,8 @@ class CategoryDetailsController extends GetxController {
     description.value = args[5];
     whatToExpect.value = (args[6] as List?)!.map((e) => e.toString()).toList();
     id.value = args[7];
+    interviewId.value = args[8];
+
   }
 
   List<Map<String, dynamic>> whattoexpect = [

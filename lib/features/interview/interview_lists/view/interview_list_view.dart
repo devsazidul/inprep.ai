@@ -22,33 +22,33 @@ class InterviewListView extends StatelessWidget {
 
       body: Padding(
         padding: EdgeInsets.only(top: 70, left: 20, right: 20),
-        child: Column(
-          children: [
-            CustomTextField(
-              hintText: "Search Interview ... ",
-              controller: controller.searchController,
-              suffixIcon: Icon(
-                Icons.search,
-                size: 28,
-                color: Color(0xFFABB7C2),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CustomTextField(
+                hintText: "Search Interview ... ",
+                controller: controller.searchController,
+                suffixIcon: Icon(
+                  Icons.search,
+                  size: 28,
+                  color: Color(0xFFABB7C2),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            IncompleteSessions(),
-            SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Available Mock Interviews",
-                style: getTextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              SizedBox(height: 20),
+              IncompleteSessions(),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Available Mock Interviews",
+                  style: getTextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            SizedBox(height: 15),
-            Expanded(
-              child: SingleChildScrollView(child: AvailableMockInterviews()),
-            ),
-            
-          ],
+              SizedBox(height: 15),
+              AvailableMockInterviews(),
+              
+            ],
+          ),
         ),
       ),
     );

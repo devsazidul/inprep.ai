@@ -14,7 +14,7 @@ class CategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 400,
+      height: 300,
       child: Obx(
         () { return ListView.builder(
           padding: EdgeInsets.zero,
@@ -36,7 +36,8 @@ class CategoryList extends StatelessWidget {
                     data.questionType,
                     data.description,
                     data.whatToExpect,
-                    data.id
+                    data.id, 
+                    data.interviewId
                     ]
                   ); 
                 },
