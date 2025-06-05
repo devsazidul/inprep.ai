@@ -17,7 +17,7 @@ class AvailableMockInterviews extends StatelessWidget {
         SizedBox(
           height: 400,
           child: ListView.builder(
-            
+            scrollDirection: Axis.vertical,
             padding: EdgeInsets.zero,
             itemCount: controller.allInterviews.length,
             itemBuilder: (context, index){
@@ -28,7 +28,7 @@ class AvailableMockInterviews extends StatelessWidget {
                 ),
                 child: GestureDetector(
                   onTap: (){
-    
+            
                     Get.to(() => DetailsView(),
                      arguments: [
                       availablemockinterviews.interviewName, 

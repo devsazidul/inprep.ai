@@ -10,11 +10,12 @@ import 'package:inprep_ai/features/interview/interview_details/start_interview/w
 class OverAllFeedback extends StatelessWidget {
   OverAllFeedback({super.key});
 
-  final StartInterviewController controller = Get.find<StartInterviewController>();
+  final StartInterviewController controller = Get.put(StartInterviewController()); 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
          padding: EdgeInsets.only(

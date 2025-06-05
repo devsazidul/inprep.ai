@@ -15,6 +15,7 @@ class CategoryDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           CategoryDetailsHeader(), 
@@ -31,7 +32,11 @@ class CategoryDetailsView extends StatelessWidget {
                   children: [
                     StartMockInterviewContainer(onTap: (){
                       Get.to(()=> StartInterviewView(),
-                       arguments: controller.id.value, 
+                       arguments: 
+                       [
+                        controller.id.value, 
+                        controller.interviewId.value, 
+                       ]
                       ); 
                     }), 
                     SizedBox(
