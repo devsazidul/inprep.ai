@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
@@ -8,8 +7,8 @@ class SharedPreferencesHelper {
   static const String _categoriesKey = "categories";
   static const String _isWelcomeDialogShownKey =
       'isDriverVerificationDialogShown';
-
   static const String _selectedGameKey = 'selected_game';
+  static const String _fcmTokenKey = 'fcm_token'; // Add FCM Token key
 
   // Save categories (id and name only)
   static Future<void> saveCategories(
@@ -33,11 +32,9 @@ class SharedPreferencesHelper {
   // Save access token
   static Future<void> saveTokenAndRole(
     String token,
-
   ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_accessTokenKey, token);
-
     await prefs.setBool('isLogin', true);
   }
 
@@ -47,6 +44,18 @@ class SharedPreferencesHelper {
     if (isSubscribed != null) {
       await prefs.setString('isSubscribed', isSubscribed.toString());
     }
+  }
+
+  // Save FCM token
+  static Future<void> saveFCMToken(String fcmToken) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_fcmTokenKey, fcmToken); // Save the FCM token
+  }
+
+  // Retrieve FCM token
+  static Future<String?> getFCMToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_fcmTokenKey); // Retrieve the saved FCM token
   }
 
   // Retrieve access token

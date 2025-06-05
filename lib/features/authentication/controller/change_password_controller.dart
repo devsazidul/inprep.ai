@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/routes/app_routes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangePasswordController extends GetxController {
   final newPasswordEditingController = TextEditingController();

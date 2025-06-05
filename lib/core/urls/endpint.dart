@@ -19,4 +19,6 @@ class Urls {
   static const String checkout = '$baseUrl/payment/create-checkout-session';
   static const String paymentsave = '$baseUrl/payment/save-payment';
   static const String allnotification = '$baseUrl/notifications/getAllNotifications';
+  static const String notification = '$baseUrl/notifications/getNotificationForNotificationBell';
+  static const String fcmToken = '$baseUrl/users/setFCMToken';
 }

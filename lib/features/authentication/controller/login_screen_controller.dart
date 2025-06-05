@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:inprep_ai/core/services/shared_preferences_helper.dart' show SharedPreferencesHelper;
+import 'package:inprep_ai/core/services/shared_preferences_helper.dart'
+    show SharedPreferencesHelper;
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:inprep_ai/features/authentication/model/login_info.dart';
 import 'package:inprep_ai/features/authentication/screen/login_otp_send_screen.dart';
@@ -37,77 +38,73 @@ class LoginScreenController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-
-
   Future<void> login() async {
-  EasyLoading.show(status: 'Logging in...');
-  try {
-    Map<String, dynamic> requestBody = {
-      'email': emailController.text.trim(),
-      'password': passwordControler.text.trim(),
-    };
+    EasyLoading.show(status: 'Logging in...');
+    try {
+      Map<String, dynamic> requestBody = {
+        'email': emailController.text.trim(),
+        'password': passwordControler.text.trim(),
+      };
 
-    final response = await http.post(
-      Uri.parse(Urls.login),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(requestBody),
-    );
+      final response = await http.post(
+        Uri.parse(Urls.login),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(requestBody),
+      );
 
-    debugPrint("Response body: ${response.body}");
-    debugPrint("Status code: ${response.statusCode}");
+      debugPrint("Response body: ${response.body}");
+      debugPrint("Status code: ${response.statusCode}");
 
-    if (response.statusCode == 200) {
-      final loginInfo = LoginInfo.fromJson(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        final loginInfo = LoginInfo.fromJson(jsonDecode(response.body));
 
-      if (loginInfo.approvalToken != null) {
-        
-
-        // Save tokens and user info as before
-        await SharedPreferencesHelper.saveTokenAndRole(
-          loginInfo.approvalToken ?? ''
-        );
-
-        EasyLoading.showSuccess(loginInfo.message ?? "Login Successful");
-
-        // Check if OTP is verified
-        if (loginInfo.user?.otpVerified == false) {
-          Get.to(
-            () => LoginOtpSendScreen(),
-            arguments: {
-              'approvalToken': loginInfo.approvalToken ?? '',
-              'email': emailController.text.trim(),
-            },
+        if (loginInfo.approvalToken != null) {
+          // Save tokens and user info as before
+          await SharedPreferencesHelper.saveTokenAndRole(
+            loginInfo.approvalToken ?? '',
           );
-          sendCode();
-        } else if (loginInfo.meta?.isAboutMeGenerated == false) {
-          Get.put(ProfileSetupcontroller());
-          Get.to(() => ProfileSetup());
+
+          EasyLoading.showSuccess(loginInfo.message ?? "Login Successful");
+
+          await setFCMToken();
+          // Check if OTP is verified
+          if (loginInfo.user?.otpVerified == false) {
+            Get.to(
+              () => LoginOtpSendScreen(),
+              arguments: {
+                'approvalToken': loginInfo.approvalToken ?? '',
+                'email': emailController.text.trim(),
+              },
+            );
+            sendCode();
+          } else if (loginInfo.meta?.isAboutMeGenerated == false) {
+            Get.put(ProfileSetupcontroller());
+            Get.to(() => ProfileSetup());
+          } else {
+            Get.offAll(() => BottomNavbarView());
+          }
         } else {
-          Get.offAll(() => BottomNavbarView());
+          EasyLoading.showError(
+            loginInfo.message ?? "Login Failed - No approval token",
+          );
         }
       } else {
-        EasyLoading.showError(
-          loginInfo.message ?? "Login Failed - No approval token",
-        );
+        try {
+          final errorResponse = jsonDecode(response.body);
+          EasyLoading.showError(errorResponse['message'] ?? "Login Failed");
+        } catch (e) {
+          EasyLoading.showError(
+            "Login Failed with status code: ${response.statusCode}",
+          );
+        }
       }
-    } else {
-      try {
-        final errorResponse = jsonDecode(response.body);
-        EasyLoading.showError(errorResponse['message'] ?? "Login Failed");
-      } catch (e) {
-        EasyLoading.showError(
-          "Login Failed with status code: ${response.statusCode}",
-        );
-      }
+    } catch (e) {
+      EasyLoading.showError("An error occurred during login");
+      debugPrint("Login Error: $e");
+    } finally {
+      EasyLoading.dismiss();
     }
-  } catch (e) {
-    EasyLoading.showError("An error occurred during login");
-    debugPrint("Login Error: $e");
-  } finally {
-    EasyLoading.dismiss();
   }
-}
-
 
   //===========================================================================================
   void sendCode() async {
@@ -186,6 +183,67 @@ class LoginScreenController extends GetxController {
       EasyLoading.dismiss();
     }
   }
+
+  //===========================================================================================
+
+  Future<void> setFCMToken() async {
+  try {
+    // First get the FCM token
+    final fcmToken = await SharedPreferencesHelper.getFCMToken();
+    if (fcmToken == null || fcmToken.isEmpty) {
+      debugPrint('❌ FCM token not found or empty.');
+      return;
+    }
+
+    // Then get the access token
+    final accessToken = await SharedPreferencesHelper.getAccessToken();
+    if (accessToken == null || accessToken.isEmpty) {
+      debugPrint('❌ Access token not found or empty.');
+      EasyLoading.showError('Session expired. Please log in again.');
+      return;
+    }
+
+    final url = Uri.parse(
+      Urls.fcmToken,
+    );
+
+    final body = {"fcmToken": fcmToken};
+
+    debugPrint('🔑 Access token: $accessToken');
+    debugPrint('📤 Sending FCM token to server...');
+    debugPrint('📱 FCM Token: $fcmToken');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken,
+      },
+      body: jsonEncode(body),
+    );
+
+    debugPrint('🔽 Response status: ${response.statusCode}');
+    debugPrint('📥 Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      debugPrint('✅ Success: FCM token updated!');
+      // Don't show success message here to avoid UI clutter
+    } else if (response.statusCode == 401) {
+      debugPrint('❌ Error 401: Unauthorized (invalid/expired token)');
+      EasyLoading.showError('Session expired. Please log in again.');
+    } else {
+      debugPrint('❌ Error ${response.statusCode}: ${response.body}');
+      // Don't show error message here as it might not be critical
+    }
+  } on http.ClientException catch (e) {
+    debugPrint('❌ Network error: $e');
+    // Don't show error message for network issues
+  } on FormatException catch (e) {
+    debugPrint('❌ JSON parsing error: $e');
+  } catch (e) {
+    debugPrint('❌ Unexpected error in setFCMToken(): $e');
+  }
+}
 
   //===========================================================================================
 
