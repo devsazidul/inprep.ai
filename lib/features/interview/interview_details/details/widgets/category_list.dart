@@ -37,7 +37,7 @@ class CategoryList extends StatelessWidget {
                     data.description,
                     data.whatToExpect,
                     data.id, 
-                    data.interviewId
+                    controller.id.value
                     ]
                   ); 
                 },

@@ -8,7 +8,8 @@ import 'package:inprep_ai/features/interview/interview_details/start_interview/w
 class QuestionWiseFeedback extends StatelessWidget {
   QuestionWiseFeedback({super.key});
 
-  final StartInterviewController controller = Get.put(StartInterviewController()); 
+  final StartInterviewController controller = Get.find<StartInterviewController>();
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,8 @@ class QuestionWiseFeedback extends StatelessWidget {
         final behavioural = assessment['Behavioural_Cue'] ?? {};
         final inprepScore = assessment['Inprep_Score']?['total_score'];
         final summary = assessment['what_can_i_do_better']?['overall_feedback'];
+
+        print("The last updated response is: $response");
 
         return SingleChildScrollView(
           child: Padding(

@@ -6,6 +6,7 @@ import 'package:inprep_ai/core/utils/constants/icon_path.dart' show IconPath;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/controller/start_interview_controller.dart';
 import 'package:inprep_ai/features/interview/interview_details/start_interview/widget/start_new_button.dart' show StartNewButton;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/widget/to_improve_container.dart' show ToImproveContainer;
+import 'package:inprep_ai/features/interview/interview_lists/view/interview_list_view.dart' show InterviewListView;
 
 class OverAllFeedback extends StatelessWidget {
   OverAllFeedback({super.key});
@@ -191,7 +192,7 @@ class OverAllFeedback extends StatelessWidget {
                       ),
                     ),
                   ), 
-                  StartNewButton(onTap: () =>Get.back(),)
+                  StartNewButton(onTap: () =>Get.offAll(InterviewListView()),)
                 ],
               ), 
              
