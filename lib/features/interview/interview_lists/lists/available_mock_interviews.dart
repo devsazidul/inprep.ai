@@ -15,7 +15,7 @@ class AvailableMockInterviews extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 400,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: ListView.builder(
             scrollDirection: Axis.vertical,
             padding: EdgeInsets.zero,

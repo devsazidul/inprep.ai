@@ -7,11 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:inprep_ai/core/services/shared_preferences_helper.dart'
     show SharedPreferencesHelper;
 import 'package:inprep_ai/core/urls/endpint.dart';
-import 'package:inprep_ai/features/interview/interview_details/start_interview/model/user_model.dart';
 import 'package:camera/camera.dart';
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/over_all_feedback.dart';
-import 'package:inprep_ai/features/interview/interview_details/start_interview/view/question_wise_feedback.dart';
-import 'package:inprep_ai/features/interview/interview_details/start_interview/view/start_interview_view.dart';
+import 'package:inprep_ai/routes/app_routes.dart' show AppRoute;
 import 'package:path_provider/path_provider.dart';
 
 class StartInterviewController extends GetxController {
@@ -24,7 +22,7 @@ class StartInterviewController extends GetxController {
   var questionNumber = 1.obs;
   var id = "".obs;
   var interviewId = "".obs;
-  RxString userId = ''.obs;
+  // RxString userId = ''.obs;
   var lastResponse = {}.obs;
 
   @override
@@ -45,8 +43,6 @@ class StartInterviewController extends GetxController {
       print("The id is: ${id.value}");
       print("The interviewId is: ${interviewId.value}");
     }
-
-    fetchUserProfile();
     fetchQuestions();
     initializeCamera();
   }
@@ -76,6 +72,8 @@ class StartInterviewController extends GetxController {
         headers: {'Authorization': token},
       );
 
+      print("The question bank response is: ${response.body}");
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final remainingQuestions = data['body']['remainingQuestions'];
@@ -96,6 +94,11 @@ class StartInterviewController extends GetxController {
     }
   }
 
+
+  var timeLeft = 0.obs;
+  Timer? countdownTimer;
+
+
   Future<void> startRecording() async {
     if (!cameraController!.value.isInitialized || isRecording.value) return;
 
@@ -105,6 +108,18 @@ class StartInterviewController extends GetxController {
           '${directory.path}/video_${DateTime.now().millisecondsSinceEpoch}.mp4';
       await cameraController!.startVideoRecording();
       isRecording.value = true;
+
+      // 🕒 Start countdown
+    final currentQuestion = questions[currentQuestionIndex.value];
+    timeLeft.value = currentQuestion['time_to_answer'] ?? 180;
+    countdownTimer?.cancel();
+    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (timeLeft.value > 0) {
+        timeLeft.value--;
+      } else {
+        stopRecording();
+      }
+    });
     } catch (e) {
       Get.snackbar('Error', 'Failed to start recording: $e');
     }
@@ -114,6 +129,7 @@ class StartInterviewController extends GetxController {
     if (!isRecording.value) return;
 
     try {
+      countdownTimer?.cancel(); // ⛔ Cancel the timer
       final file = await cameraController!.stopVideoRecording();
       isRecording.value = false;
 
@@ -149,7 +165,7 @@ class StartInterviewController extends GetxController {
       request.fields['qid'] = currentQuestion['_id'];
       request.fields['interview_id'] = interviewId.value;
       request.fields['questionBank_id'] = id.value;
-      request.fields['user_id'] = userId.value;
+      request.fields['user_id'] = currentQuestion['user_id'];
       request.fields['isSummary'] = 'true';
       request.fields['islast'] = isLast.toString();
       request.fields['question'] = currentQuestion['question'];
@@ -165,7 +181,7 @@ class StartInterviewController extends GetxController {
 
       if (response.statusCode == 200) {
         lastResponse.value = jsonDecode(responseBody.body);
-        Get.to(() => QuestionWiseFeedback());
+        Get.toNamed(AppRoute.questionWiseFeedback);
       } else {
         Get.snackbar('Error', 'Failed to submit video');
       }
@@ -176,10 +192,11 @@ class StartInterviewController extends GetxController {
     }
   }
 
-  void nextQuestion() {
+  void nextQuestion() async {
+    await submitVideoAnalysis();
     if (currentQuestionIndex.value < questions.length - 1) {
       currentQuestionIndex.value++;
-      Get.offAll(StartInterviewView());
+      Get.toNamed(AppRoute.startInterviewScreen);
     } else {
       Get.offAll(OverAllFeedback());
     }
@@ -194,38 +211,107 @@ class StartInterviewController extends GetxController {
     },
   ];
 
-  Future<void> fetchUserProfile() async {
-    try {
-      String? token = await SharedPreferencesHelper.getAccessToken();
-      if (token == null) {
-        if (kDebugMode) {
-          print("Token is null");
-        }
-        return;
-      }
+  
 
-      final response = await http.get(
-        Uri.parse('${Urls.baseUrl}/users/getProfile'),
-        headers: {'Authorization': token},
-      );
+  Future<void> submitVideoAnalysis() async {
+  isLoading.value = true;
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> body = json.decode(response.body);
-        final data = body['data'];
-        UserIdModel profile = UserIdModel.fromJson(data);
-        userId.value = profile.id ?? '';
-        if (kDebugMode) {
-          print("Fetched User ID: ${userId.value}");
-        }
-      } else {
-        if (kDebugMode) {
-          print("Failed to fetch profile. Status code: ${response.statusCode}");
-        }
+  try {
+    String? token = await SharedPreferencesHelper.getAccessToken();
+    if (token == null) {
+      Get.snackbar('Error', 'Authorization token is missing.');
+      return;
+    }
+
+    final currentQuestion = questions[currentQuestionIndex.value];
+    final isLast = currentQuestionIndex.value == questions.length - 1;
+
+    final videoUrl = lastResponse['video_url'];
+    final assessment = lastResponse['assessment'] ?? {};
+
+    final questionBankId = lastResponse['questionBank_id'];
+    final questionId = lastResponse['qid'];
+    final interviewId = lastResponse['interview_id'];
+    final userId = currentQuestion['user_id'];
+
+    print("The user id is : $userId");
+    print("The question bank id is : $questionBankId");
+    print("The question id is : $questionId");
+    print("The interview id is : $interviewId");
+    print("The video url is: $videoUrl");
+
+     print("Is Last Question: $isLast");
+    print("Video URL: $videoUrl");
+    print("Assessment:");
+    
+
+    print("The last response for sending the data is: $lastResponse");
+   
+
+ 
+    final body = {
+      "user_id": currentQuestion['user_id'],
+      "interview_id": interviewId,
+      "questionBank_id": questionBankId,
+      "question_id": questionId,
+      "isSummary": false,
+      "islast": isLast.toString(),
+      "video_url": videoUrl,
+      "assessment": {
+        "Articulation": {
+          "feedback": assessment["Articulation"]?["feedback"] ?? "",
+          "score": assessment["Articulation"]?["score"] ?? 0,
+        },
+        "Behavioural_Cue": {
+          "feedback": assessment["Behavioural_Cue"]?["feedback"] ?? "",
+          "score": assessment["Behavioural_Cue"]?["score"] ?? 0,
+        },
+        "Problem_Solving": {
+          "feedback": assessment["Problem_Solving"]?["feedback"] ?? "",
+          "score": assessment["Problem_Solving"]?["score"] ?? 0,
+        },
+        "Inprep_Score": {
+          "total_score": assessment["Inprep_Score"]?["total_score"] ?? 0,
+        },
+        "what_can_i_do_better": {
+          "overall_feedback":
+              assessment["what_can_i_do_better"]?["overall_feedback"] ?? "",
+        },
+        "Content_Score": assessment["Content_Score"] ?? 0,
       }
-    } catch (e) {
+    };
+
+    final response = await http.post(
+      Uri.parse('${Urls.baseUrl}/video/submit_Video_Analysis_and_Summary'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      },
+      body: jsonEncode(body),
+    );
+
+    if (kDebugMode) {
+      print("The submitted video analysis response: ${response.body}");
+    }
+
+    if (response.statusCode == 200) {
       if (kDebugMode) {
-        print("Error fetching profile: $e");
+        print('Video analysis submitted successfully');
+      }
+    } else {
+      Get.snackbar('Error', 'Failed to submit video analysis');
+      if (kDebugMode) {
+        print('Response: ${response.body}');
       }
     }
+  } catch (e) {
+    Get.snackbar('Error', 'Exception occurred: $e');
+    if (kDebugMode) {
+      print('Exception: $e');
+    }
+  } finally {
+    isLoading.value = false;
   }
+}
+
 }
