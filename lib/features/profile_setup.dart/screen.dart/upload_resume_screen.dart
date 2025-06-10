@@ -4,14 +4,14 @@ import 'package:inprep_ai/core/common/styles/global_text_style.dart' show getTex
 import 'package:inprep_ai/core/utils/constants/icon_path.dart' show IconPath;
 import 'package:inprep_ai/core/utils/constants/image_path.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
-import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart' show ProfileSetupcontroller;
+import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart' show ProfileSetupcontroller, ProfileSetupController;
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider.dart' show ProfileSlider;
 import 'package:inprep_ai/features/splash_screen/widgets/custom_button.dart';
 
 class UploadResumeScreen extends StatelessWidget {
    UploadResumeScreen({super.key});
 
-  final ProfileSetupcontroller controller = Get.put(ProfileSetupcontroller()); 
+  final ProfileSetupController controller = Get.put(ProfileSetupController()); 
 
   @override
   Widget build(BuildContext context) {

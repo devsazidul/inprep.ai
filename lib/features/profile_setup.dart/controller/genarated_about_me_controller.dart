@@ -1,7 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class GenaratedAboutMeController extends GetxController{
+class GenaratedAboutMeController extends GetxController {
+  TextEditingController aboutme = TextEditingController();
 
-  TextEditingController aboutme =TextEditingController();
+  @override
+  void onClose() {
+    aboutme.dispose();
+    super.onClose();
+  }
 }
