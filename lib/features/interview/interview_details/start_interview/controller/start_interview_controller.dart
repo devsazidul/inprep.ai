@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:inprep_ai/core/services/shared_preferences_helper.dart'
     show SharedPreferencesHelper;
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:camera/camera.dart';
+import 'package:inprep_ai/features/interview/interview_details/start_interview/model/summery_model.dart' show SummaryModel;
 import 'package:inprep_ai/features/interview/interview_details/start_interview/view/over_all_feedback.dart';
 import 'package:inprep_ai/routes/app_routes.dart' show AppRoute;
 import 'package:path_provider/path_provider.dart';
@@ -85,7 +87,7 @@ class StartInterviewController extends GetxController {
           Get.snackbar('Notice', 'No questions found in the response.');
         }
       } else {
-        Get.snackbar('Error', 'Failed to fetch questions');
+        Get.snackbar('Credit Over', 'Please buy more credit');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch questions: $e');
@@ -197,8 +199,9 @@ class StartInterviewController extends GetxController {
     if (currentQuestionIndex.value < questions.length - 1) {
       currentQuestionIndex.value++;
       Get.toNamed(AppRoute.startInterviewScreen);
-    } else {
-      Get.offAll(OverAllFeedback());
+    } else { 
+      fetchSummary(); 
+      Get.to(OverAllFeedback());
     }
   }
 
@@ -217,6 +220,7 @@ class StartInterviewController extends GetxController {
   isLoading.value = true;
 
   try {
+    EasyLoading.show(status: "Submitting video analysis...");
     String? token = await SharedPreferencesHelper.getAccessToken();
     if (token == null) {
       Get.snackbar('Error', 'Authorization token is missing.');
@@ -232,23 +236,10 @@ class StartInterviewController extends GetxController {
     final questionBankId = lastResponse['questionBank_id'];
     final questionId = lastResponse['qid'];
     final interviewId = lastResponse['interview_id'];
-    final userId = currentQuestion['user_id'];
+    // final userId = currentQuestion['user_id'];
 
-    print("The user id is : $userId");
-    print("The question bank id is : $questionBankId");
-    print("The question id is : $questionId");
-    print("The interview id is : $interviewId");
-    print("The video url is: $videoUrl");
+    print("The question bank id is: $questionBankId");
 
-     print("Is Last Question: $isLast");
-    print("Video URL: $videoUrl");
-    print("Assessment:");
-    
-
-    print("The last response for sending the data is: $lastResponse");
-   
-
- 
     final body = {
       "user_id": currentQuestion['user_id'],
       "interview_id": interviewId,
@@ -295,6 +286,7 @@ class StartInterviewController extends GetxController {
     }
 
     if (response.statusCode == 200) {
+      EasyLoading.showSuccess("Submitted video analysis successfully");
       if (kDebugMode) {
         print('Video analysis submitted successfully');
       }
@@ -311,7 +303,39 @@ class StartInterviewController extends GetxController {
     }
   } finally {
     isLoading.value = false;
+    EasyLoading.dismiss();
   }
 }
+
+
+var summary = Rxn<SummaryModel>();
+Future<void> fetchSummary() async {
+    try {
+      isLoading.value = true;
+      String? token = await SharedPreferencesHelper.getAccessToken();
+
+      final response = await http.get(
+        Uri.parse('${Urls.baseUrl}video/getSummary?questionBank_id=${id.value}'),
+        headers: {
+          'Authorization': token!,
+          'Content-Type': 'application/json',
+        },
+      );
+
+
+      print("The summary response body is : ${response.body}");
+
+      if (response.statusCode == 200) {
+        final jsonBody = json.decode(response.body);
+        summary.value = SummaryModel.fromJson(jsonBody);
+      } else {
+        Get.snackbar('Error', 'Failed to fetch summary: ${response.statusCode}');
+      }
+    } catch (e) {
+      Get.snackbar('Exception', e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
 }

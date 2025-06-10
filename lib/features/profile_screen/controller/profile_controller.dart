@@ -8,6 +8,7 @@ import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
 import 'package:http/http.dart' as http;
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
+import 'package:inprep_ai/routes/app_routes.dart';
 import 'package:path/path.dart' as path;
 
 class ProfileController extends GetxController {
@@ -277,6 +278,11 @@ class ProfileController extends GetxController {
           ],
         );
       },
-    );
+    );  
   }
+
+   Future<void> logout() async {
+      await SharedPreferencesHelper.clearAllData(); 
+      Get.offAllNamed(AppRoute.loginScreen);
+    }
 }
