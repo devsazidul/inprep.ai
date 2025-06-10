@@ -114,7 +114,7 @@ class ForgetPasswordController extends GetxController {
       Uri.parse(Urls.verifyOtp),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',  // Ensure Bearer token is used
+        'Authorization': accessToken,  // Ensure Bearer token is used
       },
       body: jsonEncode({
         "token": accessToken,

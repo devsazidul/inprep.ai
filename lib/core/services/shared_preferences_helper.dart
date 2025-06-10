@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  static const String _accessTokenKey = 'token';
+  static const String _accessTokenKey = 'approvalToken';
   static const String _selectedRoleKey = 'selectedRole';
   static const String _categoriesKey = "categories";
   static const String _isWelcomeDialogShownKey =

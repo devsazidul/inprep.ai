@@ -49,7 +49,7 @@ class LoginOtpSendScreen extends StatelessWidget {
                   'Verification code has been sent to the email',
                   style: getTextStyle(
                     color: AppColors.textThird,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
                 ),

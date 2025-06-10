@@ -129,7 +129,7 @@ Future<void> saveResume() async {
     final response = await http.put(
       url,
       headers: {
-        'Authorization': 'Bearer $accessToken', // Added 'Bearer' prefix
+        'Authorization': accessToken, 
         'Content-Type': 'application/json',
       },
       body: jsonEncode(resumeData.toJson()),
@@ -151,7 +151,7 @@ Future<void> saveResume() async {
       debugPrint(
         'DEBUG: Failed to update resume - Status: ${response.statusCode}, Body: ${response.body}',
       );
-      EasyLoading.showError('Failed to update resume: ${response.body}');
+      EasyLoading.showError('Failed to update resume: please Fill all the fields');
     }
   } catch (e) {
     debugPrint('DEBUG: Error caught in saveResume: $e');

@@ -78,7 +78,7 @@ class LoginScreenController extends GetxController {
             );
             sendCode();
           } else if (loginInfo.meta?.isAboutMeGenerated == false) {
-            Get.put(ProfileSetupcontroller());
+            Get.put(ProfileSetupController());
             Get.to(() => ProfileSetup());
           } else {
             Get.offAll(() => BottomNavbarView());

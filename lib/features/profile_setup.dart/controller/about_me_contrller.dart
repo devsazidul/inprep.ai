@@ -47,7 +47,7 @@ class AboutMeController extends GetxController {
     final response = await http.get(
       url,
       headers: {
-        'Authorization': 'Bearer $accessToken',  // 'Bearer' added for token authorization
+        'Authorization': accessToken,  // 'Bearer' added for token authorization
         'Content-Type': 'application/json',
       },
     );

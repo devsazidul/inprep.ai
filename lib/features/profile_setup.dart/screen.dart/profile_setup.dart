@@ -8,7 +8,7 @@ import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider
 // ignore: must_be_immutable
 class ProfileSetup extends StatelessWidget {
   ProfileSetup({super.key});
-  ProfileSetupcontroller profileSetupcontroller = Get.put(ProfileSetupcontroller());
+  ProfileSetupController profileSetupcontroller = Get.put(ProfileSetupController());
 
   @override
   Widget build(BuildContext context) {
