@@ -5,6 +5,7 @@ import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
+import 'package:inprep_ai/features/splash_screen/widgets/custom_button.dart';
 import 'package:inprep_ai/features/subscription/screen/chooseplan_screen.dart';
 import 'package:inprep_ai/features/profile_screen/widgets/custom_profile_textfield.dart';
 import '../controller/profile_controller.dart';
@@ -293,6 +294,16 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  ), 
+                  CustomButton(
+                    onTap: (){
+                      profileController.logout();
+                    },
+                    buttonColor: AppColors.buttonColor,
+                    textColor: Colors.white,
+                    text: "Logout", width: double.infinity, height: 50),
                   SizedBox(height: MediaQuery.of(context).size.width * 0.28),
                 ],
               ),
