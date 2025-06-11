@@ -170,15 +170,16 @@ class OTPController extends GetxController {
     }
   }
 
-
   void resendCode() async {
     debugPrint("Entered resendCode function.");
     try {
       EasyLoading.show(status: 'Sending OTP...');
       debugPrint("EasyLoading status shown: Sending OTP...");
 
-      // Retrieve the access token using SharedPreferencesHelper
-      String? accessToken = await SharedPreferencesHelper.getAccessToken();
+       SharedPreferences prefs = await SharedPreferences.getInstance();
+      debugPrint("SharedPreferences instance obtained.");
+
+      String? accessToken = prefs.getString('token');
       debugPrint("Access token retrieved: $accessToken");
 
       if (accessToken == null || accessToken.isEmpty) {
