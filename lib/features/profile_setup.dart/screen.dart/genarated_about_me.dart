@@ -159,6 +159,7 @@ class GenaratedAboutMe extends StatelessWidget {
               TextField(
                 scrollPhysics: const NeverScrollableScrollPhysics(),
                 maxLines: maxLines,
+                readOnly: true,
                 controller: genaratedAboutMeController.aboutme,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -186,7 +187,7 @@ class GenaratedAboutMe extends StatelessWidget {
                   // Navigate to video recording screen and wait for result
                   final videoPath = await Get.to(() => VideoRecordingScreen());
                   if (videoPath != null) {
-                    print("Video recorded and saved at: $videoPath");
+                    debugPrint("Video recorded and saved at: $videoPath");
                     Get.snackbar(
                       'Success',
                       'Video recorded successfully at: $videoPath',

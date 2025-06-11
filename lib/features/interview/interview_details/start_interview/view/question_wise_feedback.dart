@@ -23,7 +23,7 @@ class QuestionWiseFeedback extends StatelessWidget {
         final inprepScore = assessment['Inprep_Score']?['total_score'];
         final summary = assessment['what_can_i_do_better']?['overall_feedback'];
 
-        print("The last updated response is: $response");
+        debugPrint("The last updated response is: $response");
 
         return SingleChildScrollView(
           child: Padding(

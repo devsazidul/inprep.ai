@@ -11,6 +11,7 @@ import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dar
 import 'package:inprep_ai/features/notification/screen/notification_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/genarated_about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider.dart';
+import 'package:inprep_ai/features/profile_setup.dart/screen.dart/record_feedback.dart';
 import 'package:inprep_ai/features/splash_screen/screen/splash1_screen.dart';
 import 'package:inprep_ai/features/splash_screen/screen/splash_screen.dart';
 import '../features/authentication/screen/change_password.dart'
@@ -33,6 +34,7 @@ class AppRoute {
   static String notificationscreen = "/notificationscreen";
   static String startInterviewScreen = "/startInterviewScreen";
   static String questionWiseFeedback = "/questionWiseFeedback";
+  static String recordfeedback = "/recordfeedback";
 
   static String getLoginScreen() => loginScreen;
   static String getSignupScreen() => signupScreen;
@@ -49,6 +51,7 @@ class AppRoute {
   static String getgenaratedaboutme() => genaratedaboutme;
   static String getnotificationscreen() => notificationscreen;
   static String getStartInterviewScreen() => startInterviewScreen;
+  static String getrecordfeedback() => recordfeedback;
   
 
   static List<GetPage> routes = [
@@ -64,6 +67,7 @@ class AppRoute {
     GetPage(name: loginOtpSendScreen, page: () => LoginOtpSendScreen()),
     GetPage(name: genaratedaboutme, page: () => GenaratedAboutMe()),
     GetPage(name: notificationscreen, page: () => NotificationScreen()),
+    GetPage(name: recordfeedback, page: () => RecordFeedback()),
 
     /// ✅ StartInterview Screen with Binding
     GetPage(

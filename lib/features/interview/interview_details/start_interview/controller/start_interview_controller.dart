@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -74,7 +75,7 @@ class StartInterviewController extends GetxController {
         headers: {'Authorization': token},
       );
 
-      print("The question bank response is: ${response.body}");
+     
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -174,12 +175,12 @@ class StartInterviewController extends GetxController {
       request.files
           .add(await http.MultipartFile.fromPath('file', videoPath!));
 
-      print("The uploaded video path: $videoPath");
+      debugPrint("The uploaded video path: $videoPath");
 
       final response = await request.send();
       final responseBody = await http.Response.fromStream(response);
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${responseBody.body}');
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${responseBody.body}');
 
       if (response.statusCode == 200) {
         lastResponse.value = jsonDecode(responseBody.body);
@@ -238,7 +239,7 @@ class StartInterviewController extends GetxController {
     final interviewId = lastResponse['interview_id'];
     // final userId = currentQuestion['user_id'];
 
-    print("The question bank id is: $questionBankId");
+    debugPrint("The question bank id is: $questionBankId");
 
     final body = {
       "user_id": currentQuestion['user_id'],
@@ -323,7 +324,7 @@ Future<void> fetchSummary() async {
       );
 
 
-      print("The summary response body is : ${response.body}");
+      debugPrint("The summary response body is : ${response.body}");
 
       if (response.statusCode == 200) {
         final jsonBody = json.decode(response.body);
