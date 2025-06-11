@@ -72,8 +72,13 @@ class StartInterviewController extends GetxController {
       final response = await http.get(
         Uri.parse(
             'https://ai-interview-server-s2a5.onrender.com/api/v1/interview/genarateQuestionSet_ByAi?questionBank_id=${id.value}'),
-        headers: {'Authorization': token},
+        headers: {
+          'Authorization': token, 
+          'Content-Type': 'application/json',
+          },
       );
+
+      print("The response for question bank is: ${response.body}");
 
      
 
@@ -81,8 +86,10 @@ class StartInterviewController extends GetxController {
         final data = jsonDecode(response.body);
         final remainingQuestions = data['body']['remainingQuestions'];
 
-        if (remainingQuestions != null && remainingQuestions is List) {
+        if (remainingQuestions != null) {
           questions.value = List<Map<String, dynamic>>.from(remainingQuestions);
+
+          print("The questions are: ${questions.value}");
         } else {
           questions.clear();
           Get.snackbar('Notice', 'No questions found in the response.');
