@@ -19,24 +19,37 @@ class InterviewListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryBackground,
-
       body: Padding(
-        padding: EdgeInsets.only(top: 70, left: 20, right: 20),
+        padding: const EdgeInsets.only(top: 70, left: 20, right: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [
               CustomTextField(
                 hintText: "Search Interview ... ",
                 controller: controller.searchController,
-                suffixIcon: Icon(
+                suffixIcon: const Icon(
                   Icons.search,
                   size: 28,
                   color: Color(0xFFABB7C2),
                 ),
               ),
-              SizedBox(height: 20),
-              IncompleteSessions(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+
+              // ✅ Conditionally show IncompleteSessions
+              Obx(() {
+                if (controller.interviewList.isNotEmpty) {
+                  return Column(
+                    children:  [
+                      IncompleteSessions(),
+                       
+                      SizedBox(height: 20),
+                    ],
+                  );
+                } else {
+                  return const SizedBox.shrink(); // don't render anything
+                }
+              }),
+
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -44,9 +57,8 @@ class InterviewListView extends StatelessWidget {
                   style: getTextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               AvailableMockInterviews(),
-              
             ],
           ),
         ),
