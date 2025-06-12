@@ -74,7 +74,7 @@ class InterviewListController extends GetxController {
       );
 
 
-      print("The imcomplete interviews are: ${response.body}");
+      debugPrint("The imcomplete interviews are: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

@@ -18,14 +18,14 @@ class StartInterviewView extends StatelessWidget {
         if (controller.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         }
-      
+
         if (controller.questions.isEmpty) {
           return Center(child: Text('No questions available'));
         }
-      
+
         final question =
             controller.questions[controller.currentQuestionIndex.value];
-      
+
         return Column(
           children: [
             Padding(
@@ -37,24 +37,29 @@ class StartInterviewView extends StatelessWidget {
               ),
             ),
 
-            Obx(() => controller.isRecording.value
-                        ? Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha:  0.5),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Time left: ${controller.timeLeft.value}s',
-                              style: TextStyle(
-                                color: AppColors.buttonColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        : const SizedBox()),
+            Obx(
+              () =>
+                  controller.isRecording.value
+                      ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Time left: ${controller.timeLeft.value}s',
+                          style: TextStyle(
+                            color: AppColors.buttonColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                      : const SizedBox(),
+            ),
             Expanded(
               child:
                   controller.cameraController != null &&
@@ -75,15 +80,10 @@ class StartInterviewView extends StatelessWidget {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        AppColors.buttonColor,  
-                    padding: EdgeInsets.symmetric(
-                      vertical: 16,
-                    ),  
+                    backgroundColor: AppColors.buttonColor,
+                    padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        8,
-                      ),  
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text(
@@ -92,7 +92,7 @@ class StartInterviewView extends StatelessWidget {
                         : 'Start Recording',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white,  
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

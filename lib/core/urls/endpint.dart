@@ -21,4 +21,5 @@ class Urls {
   static const String allnotification = '$baseUrl/notifications/getAllNotifications';
   static const String notification = '$baseUrl/notifications/getNotificationForNotificationBell';
   static const String fcmToken = '$baseUrl/users/setFCMToken';
+  static const String singlequestion = '$baseUrl/interview/genarateSingleQuestion_ByAi_for_Retake';
 }
