@@ -83,8 +83,10 @@ class NotificationScreen extends StatelessWidget {
         // Show dialog with full message
         showDialog(
           context: context,
+          
           builder: (BuildContext context) {
             return AlertDialog(
+              backgroundColor: Colors.white,
               title: Text('Notification Details'),
               content: Text(notification.message),
               actions: <Widget>[

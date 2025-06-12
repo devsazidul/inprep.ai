@@ -138,7 +138,7 @@
 
 
 
-
+//==========================================================================
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -155,10 +155,15 @@ class SignupController extends GetxController {
   TextEditingController emailController1 = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypepasswordController = TextEditingController();
+  var isTermsAccepted = false.obs;
 
   var isPasswordVisible = false.obs;
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  void toggleTermsAcceptance() {
+    isTermsAccepted.toggle();
   }
 
   var isPasswordVisible1 = false.obs;
@@ -175,9 +180,13 @@ class SignupController extends GetxController {
     bool passwordValid = passwordController.text.length >= 8;
     bool passwordsMatch =
         passwordController.text == retypepasswordController.text;
+  
 
     isFromValid.value =
-        nameValid && emailValid && passwordValid && passwordsMatch;
+        nameValid &&
+        emailValid &&
+        passwordValid &&
+        passwordsMatch ;
   }
 
   @override
@@ -269,3 +278,6 @@ class SignupController extends GetxController {
     }
   }
 }
+//==========================================================================
+
+

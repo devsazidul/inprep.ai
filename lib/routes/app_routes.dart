@@ -3,12 +3,17 @@ import 'package:inprep_ai/features/authentication/screen/login_otp_send_screen.d
 import 'package:inprep_ai/features/authentication/screen/login_screen.dart';
 import 'package:inprep_ai/features/authentication/screen/otp_sent_screen.dart';
 import 'package:inprep_ai/features/authentication/screen/signup_screen.dart';
-import 'package:inprep_ai/features/interview/interview_details/start_interview/binding/start_interview_binding.dart' show StartInterviewBinding;
-import 'package:inprep_ai/features/interview/interview_details/start_interview/view/question_wise_feedback.dart' show QuestionWiseFeedback;
-import 'package:inprep_ai/features/interview/interview_details/start_interview/view/start_interview_view.dart' show StartInterviewView;
+import 'package:inprep_ai/features/interview/interview_details/start_interview/binding/start_interview_binding.dart'
+    show StartInterviewBinding;
+import 'package:inprep_ai/features/interview/interview_details/start_interview/view/question_wise_feedback.dart'
+    show QuestionWiseFeedback;
+import 'package:inprep_ai/features/interview/interview_details/start_interview/view/start_interview_view.dart'
+    show StartInterviewView;
 import 'package:inprep_ai/features/job_screens/screens/myjob.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/features/notification/screen/notification_screen.dart';
+import 'package:inprep_ai/features/profile_screen/screen/privacy_policy.dart';
+import 'package:inprep_ai/features/profile_screen/screen/terms&condition.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/genarated_about_me.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_slider.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/record_feedback.dart';
@@ -35,6 +40,8 @@ class AppRoute {
   static String startInterviewScreen = "/startInterviewScreen";
   static String questionWiseFeedback = "/questionWiseFeedback";
   static String recordfeedback = "/recordfeedback";
+  static String privacypolicy = "/privacypolicy";
+  static String termscondition = "/termscondition";
 
   static String getLoginScreen() => loginScreen;
   static String getSignupScreen() => signupScreen;
@@ -52,7 +59,8 @@ class AppRoute {
   static String getnotificationscreen() => notificationscreen;
   static String getStartInterviewScreen() => startInterviewScreen;
   static String getrecordfeedback() => recordfeedback;
-  
+  static String getprivacypolicy() => privacypolicy;
+  static String gettermscondition() => termscondition;
 
   static List<GetPage> routes = [
     GetPage(name: loginScreen, page: () => LoginScreen()),
@@ -68,6 +76,8 @@ class AppRoute {
     GetPage(name: genaratedaboutme, page: () => GenaratedAboutMe()),
     GetPage(name: notificationscreen, page: () => NotificationScreen()),
     GetPage(name: recordfeedback, page: () => RecordFeedback()),
+    GetPage(name: privacypolicy, page: () => PrivacyPolicy()),
+    GetPage(name: termscondition, page: () => Termscondition()),
 
     /// ✅ StartInterview Screen with Binding
     GetPage(
@@ -79,7 +89,7 @@ class AppRoute {
     GetPage(
       name: questionWiseFeedback,
       page: () => QuestionWiseFeedback(),
-       binding: StartInterviewBinding(), // ✅ Add this line
+      binding: StartInterviewBinding(), // ✅ Add this line
     ),
   ];
 }

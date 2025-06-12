@@ -185,28 +185,65 @@ class SignupScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: 10),
+                Obx(
+                  () => Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'I agree to the terms of service and privacy policy',
+                          style: getTextStyle(color: Colors.black),
+                        ),
+                      ),
+                      Theme(
+                        data: ThemeData(
+                          checkboxTheme: CheckboxThemeData(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                50,
+                              ), // Makes it circular
+                            ),
+                          ),
+                        ),
+                        child: Checkbox(
+                          value: singupController.isTermsAccepted.value,
+                          onChanged:
+                              (_) => singupController.toggleTermsAcceptance(),
+                          activeColor: Color(0xff37B874), // Your gold color
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+               
+
+                SizedBox(height: 32),
                 Obx(
                   () => CustomButton1(
                     title: 'Sign Up',
-                    textcolor: singupController.isFromValid.value
-                        ? Colors.white
-                        : const Color(0xFF37B874),
-                    onPress: singupController.isFromValid.value
-                        ? () {
-                            if (_formKey.currentState!.validate()) {
-                              singupController.signup();
+                    textcolor:
+                        singupController.isFromValid.value
+                            ? Colors.white
+                            : const Color(0xFF37B874),
+                    onPress:
+                        singupController.isFromValid.value
+                            ? () {
+                              if (_formKey.currentState!.validate()) {
+                                singupController.signup();
+                              }
                             }
-                          }
-                        : null,
-                    backgroundColor: singupController.isFromValid.value
-                        ? const Color(0xFF37B874)
-                        : const Color(0xFFEBF8F1),
-                    borderColor: singupController.isFromValid.value
-                        ? const Color(0xFF37B874)
-                        : const Color(0xFFEBF8F1),
+                            : null,
+                    backgroundColor:
+                        singupController.isFromValid.value
+                            ? const Color(0xFF37B874)
+                            : const Color(0xFFEBF8F1),
+                    borderColor:
+                        singupController.isFromValid.value
+                            ? const Color(0xFF37B874)
+                            : const Color(0xFFEBF8F1),
                   ),
                 ),
+
                 const SizedBox(height: 28),
                 const SizedBox(height: 32),
                 if (Platform.isAndroid || Platform.isIOS) ...[],

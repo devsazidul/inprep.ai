@@ -5,6 +5,8 @@ import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/core/utils/constants/icon_path.dart';
 import 'package:inprep_ai/features/home_screen/controller/home_screen_controller.dart';
+import 'package:inprep_ai/features/profile_screen/screen/privacy_policy.dart';
+import 'package:inprep_ai/features/profile_screen/screen/terms&condition.dart';
 import 'package:inprep_ai/features/splash_screen/widgets/custom_button.dart';
 import 'package:inprep_ai/features/subscription/screen/chooseplan_screen.dart';
 import 'package:inprep_ai/features/profile_screen/widgets/custom_profile_textfield.dart';
@@ -31,7 +33,7 @@ class ProfileScreen extends StatelessWidget {
     }
     return CircleAvatar(
       radius: 80,
-      backgroundImage: const AssetImage(IconPath.profileicon),
+      backgroundImage: AssetImage(IconPath.profileicon),
     );
   }
 
@@ -42,11 +44,11 @@ class ProfileScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (profileController.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -77,7 +79,7 @@ class ProfileScreen extends StatelessWidget {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.edit,
                                   size: 12,
                                   color: Color(0xff37BB74),
@@ -89,7 +91,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     profileController.fullNameController.text.isNotEmpty
                         ? profileController.fullNameController.text
@@ -294,16 +296,83 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 40,
-                  ), 
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Legal",
+                        style: getTextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff212121),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12,
+                        right: 12,
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => PrivacyPolicy());
+                              },
+                              child: Text(
+                                "Privacy Policy",
+                                style: getTextStyle(
+                                  color: Color(0xff212121),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => Termscondition());
+                              },
+                              child: Text(
+                                "Terms & Conditions",
+                                style: getTextStyle(
+                                  color: Color(0xff212121),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 40),
                   CustomButton(
-                    onTap: (){
+                    onTap: () {
                       profileController.logout();
                     },
                     buttonColor: AppColors.buttonColor,
                     textColor: Colors.white,
-                    text: "Logout", width: double.infinity, height: 50),
+                    text: "Logout",
+                    width: double.infinity,
+                    height: 50,
+                  ),
                   SizedBox(height: MediaQuery.of(context).size.width * 0.28),
                 ],
               ),
