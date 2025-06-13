@@ -199,24 +199,22 @@ class SignupScreen extends StatelessWidget {
                         data: ThemeData(
                           checkboxTheme: CheckboxThemeData(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                50,
-                              ), // Makes it circular
+                              borderRadius: BorderRadius.circular(50),
                             ),
                           ),
                         ),
                         child: Checkbox(
                           value: singupController.isTermsAccepted.value,
-                          onChanged:
-                              (_) => singupController.toggleTermsAcceptance(),
-                          activeColor: Color(0xff37B874), // Your gold color
+                          onChanged: (_) {
+                            singupController
+                                .toggleTermsAcceptance(); // Call this to update state
+                          },
+                          activeColor: Color(0xff37B874),
                         ),
                       ),
                     ],
                   ),
                 ),
-               
-
                 SizedBox(height: 32),
                 Obx(
                   () => CustomButton1(
