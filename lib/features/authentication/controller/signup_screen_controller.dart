@@ -136,8 +136,6 @@
 //   }
 // }
 
-
-
 //==========================================================================
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
@@ -163,7 +161,8 @@ class SignupController extends GetxController {
   }
 
   void toggleTermsAcceptance() {
-    isTermsAccepted.toggle();
+    isTermsAccepted.toggle(); // Toggle the checkbox
+    validateFrom(); // Revalidate the form whenever the checkbox state changes
   }
 
   var isPasswordVisible1 = false.obs;
@@ -180,13 +179,15 @@ class SignupController extends GetxController {
     bool passwordValid = passwordController.text.length >= 8;
     bool passwordsMatch =
         passwordController.text == retypepasswordController.text;
-  
+    bool termsAccepted = isTermsAccepted.value;
 
+    // Update isFromValid based on all the validation checks
     isFromValid.value =
         nameValid &&
         emailValid &&
         passwordValid &&
-        passwordsMatch ;
+        passwordsMatch &&
+        termsAccepted;
   }
 
   @override
@@ -226,40 +227,56 @@ class SignupController extends GetxController {
       );
       debugPrint('[6] Response body: ${response.body}');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        debugPrint('[7] Registration successful, parsing response');
+      // Check if the response is successful (status code 200)
+      if (response.statusCode == 200) {
+        debugPrint('[7] Registration response received, parsing data');
         final responseData = jsonDecode(response.body);
         debugPrint('[8] Parsed response data: $responseData');
 
-        debugPrint('[9] Attempting to save access token');
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? token = responseData["token"] ?? responseData["data"]?["token"];
-        debugPrint('[10] Token to save: $token');
+        // Check for 'success' inside the response body
+        bool success = responseData["data"]?["success"] ?? false;
 
-        if (token != null) {
-          await prefs.setString('token', token);
-          debugPrint('[11] Token saved successfully');
+        if (success) {
+          // Registration successful, process token and navigate to OTP screen
+          debugPrint('[9] Registration successful, processing token');
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String? token = responseData["data"]?["token"];
+          debugPrint('[10] Token to save: $token');
+
+          if (token != null) {
+            await prefs.setString('token', token);
+            debugPrint('[11] Token saved successfully');
+          } else {
+            debugPrint('[11] WARNING: No token received in response');
+          }
+
+          // Navigate to OTP screen
+          Get.offNamed(
+            AppRoute.otpSentScreen,
+            arguments: emailController1.text,
+          );
+
+          // Clear all controllers after successful signup
+          nameController.clear();
+          phoneController1.clear();
+          emailController1.clear();
+          passwordController.clear();
+          retypepasswordController.clear();
+          debugPrint('[12] All text controllers cleared');
+
+          EasyLoading.showSuccess("Registration Successful");
         } else {
-          debugPrint('[11] WARNING: No token received in response');
+          // If success is false, show the error message and navigate to the login screen
+          String errorMessage =
+              responseData["message"] ?? "Registration failed";
+          debugPrint('[8] Error message: $errorMessage');
+          EasyLoading.showError(errorMessage);
+
+          // Navigate to the login screen if user already exists
+          Get.offNamed(AppRoute.loginScreen);
         }
-        Get.offNamed(AppRoute.otpSentScreen, arguments: emailController1.text);
-
-        // Clear all controllers after successful signup
-        nameController.clear();
-        phoneController1.clear();
-        emailController1.clear();
-        passwordController.clear();
-        retypepasswordController.clear();
-        debugPrint('[12] All text controllers cleared');
-
-        debugPrint('[13] Attempting navigation to OTP screen');
-        debugPrint('[14] Route name: ${AppRoute.otpSentScreen}');
-        debugPrint('[15] Email argument: ${emailController1.text}');
-
-        debugPrint('[16] Navigation successful');
-
-        EasyLoading.showSuccess("Registration Successful");
       } else {
+        // Handle other unexpected status codes
         debugPrint(
           '[7] Registration failed with status ${response.statusCode}',
         );
@@ -278,6 +295,5 @@ class SignupController extends GetxController {
     }
   }
 }
+
 //==========================================================================
-
-
