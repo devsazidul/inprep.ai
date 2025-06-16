@@ -684,24 +684,31 @@ class StartInterviewController extends GetxController {
   }
 
   Future<void> retakeQuestion() async {
+    debugPrint('retakeQuestion() called - setting isLoading to true');
     isLoading.value = true;
     try {
+      debugPrint('Getting access token from SharedPreferences');
       String? token = await SharedPreferencesHelper.getAccessToken();
       if (token == null) {
-        Get.snackbar('Error', 'Token is null');
+        debugPrint('Token is null - showing error');
+        await EasyLoading.showError('Token is null');
         return;
       }
 
+      debugPrint('Getting current question from questions list');
       final currentQuestion = questions[currentQuestionIndex.value];
 
       // Request body to retake the question
+      debugPrint('Creating request body for retake');
       final body = {
         'questionBank_id': id.value,
         'user_id': currentQuestion['user_id'],
         'interview_id': interviewId.value,
         'question_id': currentQuestion['_id'],
       };
+      debugPrint('Request body: $body');
 
+      debugPrint('Making POST request to retake question endpoint');
       final response = await http.post(
         Uri.parse(
           'https://ai-interview-server-3cg1.onrender.com/api/v1/interview/genarateSingleQuestion_ByAi_for_Retake',
@@ -709,19 +716,27 @@ class StartInterviewController extends GetxController {
         headers: {'Authorization': token, 'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
+      debugPrint('Response status code: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        // You can refresh the questions or reset the state if needed
-        Get.snackbar('Success', 'Question retaken successfully!');
-        // Optionally, reload the questions here or reset the current question index
+        debugPrint('Question retake successful - showing success message');
+        await EasyLoading.showSuccess('Question retaken successfully!');
+        
+        debugPrint('Refreshing questions list');
         fetchQuestions(); // If you need to reload questions after retake
+        
+        debugPrint('Navigating back to previous screen');
         Get.back(); // Go back to the previous screen
       } else {
-        Get.snackbar('Error', 'Failed to retake the question');
+        debugPrint('Question retake failed - showing error');
+        await EasyLoading.showError('Failed to retake the question');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to retake the question: $e');
+      debugPrint('Exception in retakeQuestion: $e');
+      await EasyLoading.showError('Failed to retake the question: ${e.toString()}');
     } finally {
+      debugPrint('Setting isLoading to false');
       isLoading.value = false;
     }
   }
