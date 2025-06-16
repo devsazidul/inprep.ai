@@ -409,6 +409,8 @@ class StartInterviewController extends GetxController {
     update();
   }
 
+  var history = <Map<String, dynamic>>[].obs;
+
   Future<void> fetchQuestions() async {
     isLoading.value = true;
     try {
@@ -429,6 +431,7 @@ class StartInterviewController extends GetxController {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final remainingQuestions = data['body']['remainingQuestions'];
+        final historyData = data['body']['history'];
 
         if (remainingQuestions != null) {
           questions.value = List<Map<String, dynamic>>.from(remainingQuestions);
@@ -436,13 +439,25 @@ class StartInterviewController extends GetxController {
           debugPrint("The questions are: ${questions.value}");
         } else {
           questions.clear();
-          Get.snackbar('Notice', 'No questions found in the response.');
         }
+        
+
+        // Store history if available
+        if (historyData != null) {
+          history.value = List<Map<String, dynamic>>.from(historyData);
+          debugPrint("The history is: ${history.value}");
+        } else {
+          history.clear();
+          debugPrint("No history found in the response.");
+        }
+
       } else {
         Get.snackbar('Credit Over', 'Please buy more credit');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch questions: $e');
+      if (kDebugMode) {
+        print("The exception is $e");
+      } 
     } finally {
       isLoading.value = false;
     }
@@ -548,6 +563,7 @@ class StartInterviewController extends GetxController {
     await submitVideoAnalysis();
     if (currentQuestionIndex.value < questions.length - 1) {
       currentQuestionIndex.value++;
+      questionNumber.value = currentQuestionIndex.value + 1;
       Get.toNamed(AppRoute.startInterviewScreen);
     } else {
       fetchSummary();
@@ -684,60 +700,71 @@ class StartInterviewController extends GetxController {
   }
 
   Future<void> retakeQuestion() async {
-    debugPrint('retakeQuestion() called - setting isLoading to true');
-    isLoading.value = true;
-    try {
-      debugPrint('Getting access token from SharedPreferences');
-      String? token = await SharedPreferencesHelper.getAccessToken();
-      if (token == null) {
-        debugPrint('Token is null - showing error');
-        await EasyLoading.showError('Token is null');
-        return;
-      }
-
-      debugPrint('Getting current question from questions list');
-      final currentQuestion = questions[currentQuestionIndex.value];
-
-      // Request body to retake the question
-      debugPrint('Creating request body for retake');
-      final body = {
-        'questionBank_id': id.value,
-        'user_id': currentQuestion['user_id'],
-        'interview_id': interviewId.value,
-        'question_id': currentQuestion['_id'],
-      };
-      debugPrint('Request body: $body');
-
-      debugPrint('Making POST request to retake question endpoint');
-      final response = await http.post(
-        Uri.parse(
-          'https://ai-interview-server-3cg1.onrender.com/api/v1/interview/genarateSingleQuestion_ByAi_for_Retake',
-        ),
-        headers: {'Authorization': token, 'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      );
-      debugPrint('Response status code: ${response.statusCode}');
-      debugPrint('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        debugPrint('Question retake successful - showing success message');
-        await EasyLoading.showSuccess('Question retaken successfully!');
-        
-        debugPrint('Refreshing questions list');
-        fetchQuestions(); // If you need to reload questions after retake
-        
-        debugPrint('Navigating back to previous screen');
-        Get.back(); // Go back to the previous screen
-      } else {
-        debugPrint('Question retake failed - showing error');
-        await EasyLoading.showError('Failed to retake the question');
-      }
-    } catch (e) {
-      debugPrint('Exception in retakeQuestion: $e');
-      await EasyLoading.showError('Failed to retake the question: ${e.toString()}');
-    } finally {
-      debugPrint('Setting isLoading to false');
-      isLoading.value = false;
+  debugPrint('retakeQuestion() called - setting isLoading to true');
+  isLoading.value = true;
+  try {
+    debugPrint('Getting access token from SharedPreferences');
+    String? token = await SharedPreferencesHelper.getAccessToken();
+    if (token == null) {
+      debugPrint('Token is null - showing error');
+      await EasyLoading.showError('Token is null');
+      return;
     }
+
+    debugPrint('Getting current question from questions list');
+    final currentQuestion = questions[currentQuestionIndex.value];
+
+    // Request body to retake the question
+    debugPrint('Creating request body for retake');
+    final body = {
+      'questionBank_id': id.value,
+      'user_id': currentQuestion['user_id'],
+      'interview_id': interviewId.value,
+      'question_id': currentQuestion['_id'],
+    };
+    debugPrint('Request body: $body');
+
+    debugPrint('Making POST request to retake question endpoint');
+    final response = await http.post(
+      Uri.parse(
+        'https://ai-interview-server-3cg1.onrender.com/api/v1/interview/genarateSingleQuestion_ByAi_for_Retake',
+      ),
+      headers: {'Authorization': token, 'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+    debugPrint('Response status code: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      debugPrint('Question retake successful - parsing new question');
+      final responseData = jsonDecode(response.body);
+      final newQuestion = responseData['body']['question']; // Adjust based on your API response structure
+
+      if (newQuestion != null) {
+        // Update the question at the current index
+        questions[currentQuestionIndex.value] = newQuestion;
+        debugPrint('Updated question at index ${currentQuestionIndex.value}: $newQuestion');
+
+        // Show success message
+        await EasyLoading.showSuccess('Question retaken successfully!');
+
+        // Navigate back to StartInterviewView
+        debugPrint('Navigating back to StartInterviewView');
+        Get.offNamed(AppRoute.startInterviewScreen); // Use offNamed to refresh the screen
+      } else {
+        debugPrint('New question is null - showing error');
+        await EasyLoading.showError('Failed to retrieve new question');
+      }
+    } else {
+      debugPrint('Question retake failed - showing error');
+      await EasyLoading.showError('Failed to retake the question: ${response.body}');
+    }
+  } catch (e) {
+    debugPrint('Exception in retakeQuestion: $e');
+    await EasyLoading.showError('Failed to retake the question: ${e.toString()}');
+  } finally {
+    debugPrint('Setting isLoading to false');
+    isLoading.value = false;
   }
+}
 }
