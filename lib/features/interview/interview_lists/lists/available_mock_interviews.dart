@@ -15,7 +15,7 @@ class AvailableMockInterviews extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.35,
           child: Obx(() {
             if (controller.isLoading.value) {
               // Show shimmer while loading
