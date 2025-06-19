@@ -358,76 +358,46 @@ class StartInterviewController extends GetxController {
   }
 
   Future<void> retakeQuestion() async {
-    debugPrint('retakeQuestion() called - setting isLoading to true');
-    isLoading.value = true;
-    try {
-      debugPrint('Getting access token from SharedPreferences');
-      String? token = await SharedPreferencesHelper.getAccessToken();
-      if (token == null) {
-        debugPrint('Token is null - showing error');
-        await EasyLoading.showError('Token is null');
-        return;
-      }
+  // 1️⃣  Show a blocking loader as soon as the method is entered
+  EasyLoading.show(status: 'Retaking…');
 
-      debugPrint('Getting current question from questions list');
-      final currentQuestion = questions[currentQuestionIndex.value];
+  try {
+    // ─── your existing logic ────────────────────────────────────────────────────
+    final token = await SharedPreferencesHelper.getAccessToken();
+    if (token == null) throw Exception('Token is null');
 
-      // Request body to retake the question
-      debugPrint('Creating request body for retake');
+    final currentQuestion = questions[currentQuestionIndex.value];
+    final body = {
+      'questionBank_id': lastResponse['questionBank_id'],
+      'user_id'       : currentQuestion['user_id'],
+      'interview_id'  : lastResponse['interview_id'],
+      'question_id'   : lastResponse['qid'],
+    };
 
-      final questionBankId = lastResponse['questionBank_id'];
-      final questionId = lastResponse['qid'];
-      final interId = lastResponse['interview_id'];
-
-      final body = {
-        'questionBank_id': questionBankId,
-        'user_id': currentQuestion['user_id'],
-        'interview_id': interId,
-        'question_id': questionId,
-      };
-      debugPrint('Request body: $body');
-
-      debugPrint('Making POST request to retake question endpoint');
-      final response = await http.post(
-        Uri.parse(
-          '${Urls.baseUrl}/interview/genarateSingleQuestion_ByAi_for_Retake',
-        ),
-        headers: {'Authorization': token, 'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      );
-      debugPrint('Response status code: ${response.statusCode}');
-      debugPrint('Response body for the retake question is: ${response.body}');
-
-      if (response.statusCode == 200) {
-        debugPrint('Question retake successful - parsing new question');
-        final responseData = jsonDecode(response.body);
-        final newQuestion = responseData['body'] as Map<String, dynamic>;
-
-        if (newQuestion.isNotEmpty) {
-          // Update the question at the current index
-          questions[currentQuestionIndex.value] = newQuestion;
-          debugPrint('Updated question at index ${currentQuestionIndex.value}: $newQuestion');
-
-          // Show success message
-          await EasyLoading.showSuccess('Question retaken successfully!');
-
-          // Navigate back to StartInterviewView
-          debugPrint('Navigating back to StartInterviewView');
-          Get.offNamed(AppRoute.startInterviewScreen); // Refresh the screen
-        } else {
-          debugPrint('New question is empty - showing error');
-          await EasyLoading.showError('Failed to retrieve new question');
-        }
-      } else {
-        debugPrint('Question retake failed - showing error');
-        await EasyLoading.showError('Failed to retake the question: ${response.body}');
-      }
-    } catch (e) {
-      debugPrint('Exception in retakeQuestion: $e');
-      await EasyLoading.showError('Failed to retake the question: ${e.toString()}');
-    } finally {
-      debugPrint('Setting isLoading to false');
-      isLoading.value = false;
+    final response = await http.post(
+      Uri.parse('${Urls.baseUrl}/interview/genarateSingleQuestion_ByAi_for_Retake'),
+      headers: {'Authorization': token, 'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to retake: ${response.body}');
     }
+
+    final newQuestion = (jsonDecode(response.body)['body'] as Map<String, dynamic>);
+    if (newQuestion.isEmpty) throw Exception('Empty question returned');
+
+    questions[currentQuestionIndex.value] = newQuestion;
+    // ────────────────────────────────────────────────────────────────────────────
+
+    // 2️⃣  Replace the loader with a green “success” toast
+    await EasyLoading.dismiss();
+    await EasyLoading.showSuccess('Question retaken!');
+    Get.offNamed(AppRoute.startInterviewScreen);
+  } catch (e) {
+    // 3️⃣  Replace the loader with a red “error” toast
+    await EasyLoading.dismiss();
+    await EasyLoading.showError(e.toString());
   }
+}
+
 }

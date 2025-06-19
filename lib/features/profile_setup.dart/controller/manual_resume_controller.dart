@@ -10,6 +10,7 @@ import 'package:inprep_ai/features/profile_setup.dart/controller/education_contr
 import 'package:inprep_ai/features/profile_setup.dart/controller/experience_controller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/models/resume_model.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:inprep_ai/features/profile_setup.dart/screen.dart/genarated_about_me.dart';
 
 // Assume these controllers are passed or accessible:
 final AboutMeController aboutMeController = Get.find();
@@ -146,7 +147,8 @@ Future<void> saveResume() async {
         'DEBUG: Resume updated successfully, navigating to PersonalizedInterviewerScreen',
       );
       EasyLoading.showSuccess('Resume updated successfully');
-      Get.to(PersonalizedInterviewerScreen());
+      // Get.to(PersonalizedInterviewerScreen());
+      Get.offAll(GenaratedAboutMe());
     } else {
       debugPrint(
         'DEBUG: Failed to update resume - Status: ${response.statusCode}, Body: ${response.body}',
