@@ -179,7 +179,7 @@ class AvailableMockInterviews extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.99,
+          height: MediaQuery.of(context).size.height * 0.38,
           child: Obx(() {
             if (controller.isLoading.value) {
               // Show shimmer while loading
@@ -320,6 +320,7 @@ class AvailableMockInterviews extends StatelessWidget {
             }
           }),
         ),
+        
       ],
     );
   }

@@ -30,14 +30,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:inprep_ai/core/services/shared_preferences_helper.dart';
 import 'package:inprep_ai/core/urls/endpint.dart';
-import 'package:inprep_ai/features/authentication/screen/login_screen.dart';
-import 'package:inprep_ai/features/authentication/screen/signup_screen.dart';
 import 'package:inprep_ai/features/home_screen/model/userinfo_model.dart';
 import 'package:inprep_ai/features/navigationbar/screen/navigationbar_screen.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/profile_setupcontroller.dart';
 import 'package:inprep_ai/features/profile_setup.dart/screen.dart/profile_setup.dart';
 import 'package:inprep_ai/features/splash_screen/screen/splash1_screen.dart';
-import 'package:inprep_ai/features/splash_screen/screen/splash_screen.dart';
 
 class SplashScreenController extends GetxController {
   final RxBool isLoadingUser = false.obs;
