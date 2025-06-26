@@ -79,7 +79,7 @@ import 'package:inprep_ai/features/interview/interview_lists/lists/incomplete_se
 import 'package:inprep_ai/features/interview/interview_lists/widgets/search_textfield.dart';
 
 class InterviewListView extends StatelessWidget {
-  InterviewListView({super.key});
+  const InterviewListView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class InterviewListView extends StatelessWidget {
     final InterviewListController controller = Get.find<InterviewListController>();
 
     return Scaffold(
-      backgroundColor: AppColors.primaryBackground,
+      backgroundColor: AppColors.primaryColor,
       body: Padding(
         padding: const EdgeInsets.only(top: 70, left: 20, right: 20),
         child: SingleChildScrollView(

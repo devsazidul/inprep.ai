@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/features/interview/interview_details/category_details/controller%20/category_details_controller.dart' show CategoryDetailsController;
 import 'package:inprep_ai/features/interview/interview_details/category_details/widgets/category_details_header.dart' show CategoryDetailsHeader;
 import 'package:inprep_ai/features/interview/interview_details/category_details/widgets/overview_widget.dart';
@@ -15,7 +16,7 @@ class CategoryDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.primaryColor,
       body: Column(
         children: [
           CategoryDetailsHeader(), 
