@@ -19,7 +19,7 @@ class ProfileSetupController extends GetxController {
   TextEditingController describeController = TextEditingController();
   TextEditingController summaryController = TextEditingController();
   TextEditingController jobTitleController = TextEditingController();
-  var userName = ''.obs;
+  var userName = ''.obs;    
   void setUserName(String name) {
     userName.value = name;
   }
