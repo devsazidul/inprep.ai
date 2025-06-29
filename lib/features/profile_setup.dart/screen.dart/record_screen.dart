@@ -165,6 +165,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/utils/constants/colors.dart';
 import 'package:inprep_ai/features/profile_setup.dart/controller/record_controller.dart';
 import 'package:inprep_ai/core/common/styles/global_text_style.dart';
 
@@ -176,7 +177,9 @@ class VideoRecordingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
         centerTitle: true,
         title: Text(
           "Record Interview Video",
