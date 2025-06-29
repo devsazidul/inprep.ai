@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inprep_ai/core/utils/constants/colors.dart' show AppColors;
 
 import 'package:inprep_ai/features/interview/interview_details/category_details/controller%20/category_details_controller.dart'
     show CategoryDetailsController;
